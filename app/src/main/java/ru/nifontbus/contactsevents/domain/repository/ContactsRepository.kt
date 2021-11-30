@@ -25,7 +25,8 @@ class ContactsRepository(private val context: Context) {
 
     init {
         personsUpdate()
-        updateGroups()
+        groupsUpdate()
+        eventsUpdate()
     }
 
     // +contacts
@@ -33,17 +34,22 @@ class ContactsRepository(private val context: Context) {
 
     private fun personsUpdate() = CoroutineScope(Dispatchers.Default).launch {
         val uri = ContactsContract.Contacts.CONTENT_URI
+        /*.buildUpon()
+            .appendQueryParameter(ContactsContract.AggregationExceptions.TYPE,
+                ContactsContract.AggregationExceptions.TYPE_KEEP_SEPARATE.toString())
+            .build()
+*/
         val projection = arrayOf(
             ContactsContract.Contacts._ID,
             ContactsContract.Contacts.DISPLAY_NAME,
             ContactsContract.Contacts.HAS_PHONE_NUMBER,
         )
-/*        val where = ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?"
-        val selectionArgs = arrayOf("%")*/
+        val where = ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?"
+        val selectionArgs = arrayOf("А%")
         val sortOrder = ContactsContract.Contacts.DISPLAY_NAME
 
         val cursor = context.contentResolver.query(
-            uri, projection,null, null, sortOrder
+            uri, projection, null, null, sortOrder
         )
 
 //        Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
@@ -55,7 +61,6 @@ class ContactsRepository(private val context: Context) {
             val displayNameRef = it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
             val hasPhoneNumberRef = it.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)
 
-            var previousPerson = Person()
             while (it.moveToNext()) {
 //                val key = it.getString(keyRef) // LookUp Key
                 val id = it.getInt(idRef)
@@ -63,22 +68,8 @@ class ContactsRepository(private val context: Context) {
                 val displayName = it.getString(displayNameRef) ?: "?"
                 val groups = getGroupsByContact(id)
 
-                // Исключение дублирования контактов без номера
-                if (previousPerson.displayName == displayName &&
-                    !previousPerson.hasPhoneNumber && hasPhoneNumber
-                ) {
-                    previousPerson.id = id
-                }
-
-                if (previousPerson.displayName != displayName ||
-                    (previousPerson.displayName == displayName &&
-                            previousPerson.hasPhoneNumber && hasPhoneNumber)
-                ) {
-                    val newPerson = Person(displayName, groups, hasPhoneNumber, id)
-                    personsList.add(newPerson)
-                    _persons.value = personsList.toList()
-                    previousPerson = newPerson.copy()
-                }
+                personsList.add(Person(displayName, groups, hasPhoneNumber, id))
+                _persons.value = personsList.toList()
             }
             cursor.close()
         }
@@ -116,7 +107,8 @@ class ContactsRepository(private val context: Context) {
         return resultList
     }
 
-    private fun updateGroups() = CoroutineScope(Dispatchers.Default).launch {
+    private fun groupsUpdate() = CoroutineScope(Dispatchers.Default).launch {
+
         val uri: Uri = ContactsContract.Groups.CONTENT_URI
         val projection = arrayOf(
             ContactsContract.Groups.TITLE,
@@ -149,20 +141,24 @@ class ContactsRepository(private val context: Context) {
         }
     }
 
-    private fun getContactsBirthdays(): Cursor? {
+    private fun getEventsCursor(): Cursor? {
         val uri: Uri = ContactsContract.Data.CONTENT_URI
+        /*.buildUpon()
+        .appendQueryParameter(
+            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE,
+            ContactsContract.Data.MIMETYPE
+        )
+        .build()*/
         val projection = arrayOf(
-            ContactsContract.Contacts._ID,
-            ContactsContract.Contacts.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Event._ID,
+            ContactsContract.CommonDataKinds.Event.DISPLAY_NAME,
             ContactsContract.CommonDataKinds.Event.CONTACT_ID,
+            ContactsContract.CommonDataKinds.Event.LABEL,
             ContactsContract.CommonDataKinds.Event.START_DATE,
             ContactsContract.CommonDataKinds.Event.TYPE,
         )
-//        val projection = null
+
         val where = ContactsContract.Data.MIMETYPE + "= ?"
-        /*+ " AND " +
-        CommonDataKinds.Event.TYPE + "=" +
-        CommonDataKinds.Event.TYPE_BIRTHDAY*/
         val selectionArgs = arrayOf(
             ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
         )
@@ -170,26 +166,47 @@ class ContactsRepository(private val context: Context) {
         return context.contentResolver.query(uri, projection, where, selectionArgs, sortOrder)
     }
 
-    fun getEvents() {
-        val cursor = getContactsBirthdays()
+    private fun eventsUpdate() = CoroutineScope(Dispatchers.Default).launch {
+        val cursor = getEventsCursor()
         Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
 
-        val bDayColumn = cursor!!.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE)
-        val nameRef = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
-        val typeRef = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE)
-        /*val numberRef = cursor.getColumnIndex(CommonDataKinds.Phone.NUMBER)
-        val number = cursor.getString(numberRef)*/
-        while (cursor.moveToNext()) {
-            val bDay = cursor.getString(bDayColumn)
-            val name = cursor.getString(nameRef)
-            val type = cursor.getString(typeRef)
-            Log.d("my", "$name, Event: $bDay, type = $type")
+        cursor?.let {
+
+            val labelIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL)
+            val contactIdIdx =
+                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.CONTACT_ID)
+            val dateIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE)
+            val typeIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE)
+
+            while (cursor.moveToNext()) {
+                val date = cursor.getString(dateIdx)
+                val contactId = cursor.getInt(contactIdIdx)
+                val label = cursor.getString(labelIdx)
+                val type = cursor.getInt(typeIdx)
+                val typeStr =
+                    context.getString(ContactsContract.CommonDataKinds.Event.getTypeResource(type))
+
+                Log.d("my", "$label, ContactId: $contactId, type = $typeStr")
+            }
+            cursor.close()
         }
     }
-}
 
-class UserContactDetail {
-    var name: String? = null
-    var emailId: List<String> = ArrayList()
-    var phoneNumber: List<String> = ArrayList()
+    private fun getAggregationContacts(id: Int) {
+        val uri = ContactsContract.Contacts.CONTENT_URI.buildUpon()
+            .appendEncodedPath(id.toString())
+            .appendPath(ContactsContract.Contacts.AggregationSuggestions.CONTENT_DIRECTORY)
+            .appendQueryParameter("limit", "3")
+            .build()
+        val cursor = context.contentResolver.query(
+            uri,
+            arrayOf(
+                ContactsContract.Contacts.DISPLAY_NAME,
+                ContactsContract.Contacts._ID,
+                ContactsContract.Contacts.LOOKUP_KEY
+            ),
+            null, null, null
+        );
+        Log.d("my", DatabaseUtils.dumpCursorToString(cursor))
+    }
 }

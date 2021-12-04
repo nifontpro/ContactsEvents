@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.flow.MutableStateFlow
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.utils.Search
 import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
@@ -42,9 +41,9 @@ fun PersonsScreen(
 ) {
     val viewModel: PersonsViewModel = hiltViewModel()
     val scaffoldState = rememberScaffoldState()
-    val persons = viewModel.persons.collectAsState(emptyList())
+    val persons = viewModel.persons.value
 
-    BottomNavItem.PersonItem.badgeCount.value = persons.value.size
+    BottomNavItem.PersonItem.badgeCount.value = persons.size
 
     Scaffold(
         /*floatingActionButton = {
@@ -59,14 +58,14 @@ fun PersonsScreen(
                 }
             }
         },*/
-        topBar = { SearchView(state = viewModel.searchState) },
+        topBar = { SearchView(state = viewModel.searchState) { viewModel.refresh() } },
         scaffoldState = scaffoldState,
         backgroundColor = MaterialTheme.colors.background,
         modifier = Modifier
             .padding(bottom = bottomPadding)
     ) {
 
-        if (persons.value.isEmpty()) {
+        if (persons.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize()) {
                 Text(
                     "No persons in group",
@@ -98,7 +97,7 @@ fun PersonsScreen(
 
         ) {
 
-            items(persons.value) { person ->
+            items(persons) { person ->
                 Box(
                     modifier = Modifier
                         .padding(vertical = 5.dp)
@@ -110,11 +109,10 @@ fun PersonsScreen(
 //                            )
                         },
                 ) {
-                    val search = viewModel.searchState.collectAsState().value
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             text = Search.colorSubstring(
-                                person.displayName, search,
+                                person.displayName, viewModel.searchState.value,
                                 MaterialTheme.colors.onBackground, Color.Red
                             ),
                             modifier = Modifier.padding(
@@ -147,11 +145,12 @@ fun PersonsScreen(
 }
 
 @Composable
-fun SearchView(state: MutableStateFlow<String>) {
+fun SearchView(state: MutableState<String>, onUpdate: () -> Unit) {
     TextField(
-        value = state.collectAsState().value,
+        value = state.value,
         onValueChange = { value ->
             state.value = value
+            onUpdate()
         },
         modifier = Modifier
             .fillMaxWidth(),
@@ -166,11 +165,12 @@ fun SearchView(state: MutableStateFlow<String>) {
             )
         },
         trailingIcon = {
-            if (state.collectAsState().value != "") {
+            if (state.value != "") {
                 IconButton(
                     onClick = {
                         // Remove text from TextField when you press the 'X' icon
                         state.value = ""
+                        onUpdate()
                     }
                 ) {
                     Icon(

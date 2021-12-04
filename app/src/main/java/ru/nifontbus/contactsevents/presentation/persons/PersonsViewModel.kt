@@ -1,25 +1,46 @@
 package ru.nifontbus.contactsevents.presentation.persons
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.settings.SettingsUseCases
 import javax.inject.Inject
 
 @HiltViewModel
 class PersonsViewModel @Inject constructor(
-    personsUseCases: PersonsUseCases,
+    private val personsUseCases: PersonsUseCases,
     settingsUseCases: SettingsUseCases
 ) : ViewModel() {
 
-    var searchState = MutableStateFlow("")
-
-//    var searchState = mutableStateOf("")
+    var searchState = mutableStateOf("")
     private val currentGroup = settingsUseCases.getCurrentGroup()
 
-    val persons = /*if (searchState.value.isEmpty()) personsUseCases.getPersonsFromGroup(currentGroup)
-    else*/ personsUseCases.getPersonsFilteredFromGroup(currentGroup, searchState)
+    private val _persons = mutableStateOf(emptyList<Person>())
+    val persons: State<List<Person>> = _persons
 
+    init {
+        updatePerson()
+    }
+
+    private fun updatePerson() = viewModelScope.launch {
+        personsUseCases.getPersonsFilteredFromGroup(currentGroup, searchState.value).collect {
+            _persons.value = it
+        }
+    }
+
+    fun refresh() = viewModelScope.launch {
+//        delay(500)
+        personsUseCases.getPersonsFilteredFromGroup(currentGroup, searchState.value).collect {
+            _persons.value = it
+        }
+    }
 }

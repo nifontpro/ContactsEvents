@@ -6,12 +6,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import ru.nifontbus.contactsevents.ui.theme.BadgeBackground
+import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
 import ru.nifontbus.contactsevents.ui.theme.PrimaryLightColor
+import ru.nifontbus.contactsevents.ui.theme.TextWhite
 
 @ExperimentalMaterialApi
 @Composable
@@ -21,10 +26,13 @@ fun BottomNavigationBar(
     modifier: Modifier = Modifier,
     onItemClick: (BottomNavItem) -> Unit
 ) {
+ /*   val backgroundColor = Color(
+        ColorUtils.blendARGB(MaterialTheme.colors.background.toArgb(), 0x000000, 0.2f)
+    )*/
     val backStackEntry = navController.currentBackStackEntryAsState()
     BottomNavigation(
         modifier = modifier,
-        backgroundColor = Color.DarkGray,
+        backgroundColor = MaterialTheme.colors.onSecondary,
         elevation = 5.dp
     ) {
         items.forEach { item ->
@@ -39,19 +47,23 @@ fun BottomNavigationBar(
                 onClick = {
                     onItemClick(item)
                 },
-                selectedContentColor = PrimaryLightColor,
+                selectedContentColor = PrimaryDarkColor,
                 unselectedContentColor = Color.Gray,
                 icon = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         if (item.badgeCount.value > 0) {
                             BadgeBox(
+                                backgroundColor = BadgeBackground,
                                 badgeContent = {
-                                    Text(text = item.badgeCount.value.toString())
+                                    Text(text = item.badgeCount.value.toString(),
+                                        color = Color.White
+//                                    color = MaterialTheme.colors.onBackground)
+                                    )
                                 }
                             ) {
                                 Icon(
                                     imageVector = item.icon,
-                                    contentDescription = item.name
+                                    contentDescription = item.name,
                                 )
                             }
                         } else {

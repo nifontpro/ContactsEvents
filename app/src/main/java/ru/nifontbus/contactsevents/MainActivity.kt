@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
+import ru.nifontbus.contactsevents.presentation.events.EventsScreen
 import ru.nifontbus.contactsevents.presentation.groups.GroupScreen
 import ru.nifontbus.contactsevents.presentation.navigation.BottomBar
 import ru.nifontbus.contactsevents.presentation.navigation.GetPermission
@@ -57,7 +58,7 @@ private fun MainScreen(extNavController: NavHostController) {
             NavHost(navController = navController, startDestination = Screen.NavEventScreen.route) {
 
                 composable(Screen.NavEventScreen.route) {
-//                    EventsScreen(/*extNavController*/)
+                    EventsScreen(extNavController, bottomPadding)
                 }
                 composable(Screen.NavPersonScreen.route) {
                     PersonsScreen(extNavController, bottomPadding)

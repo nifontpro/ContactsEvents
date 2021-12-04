@@ -1,0 +1,26 @@
+package ru.nifontbus.contactsevents.presentation.events
+
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import ru.nifontbus.contactsevents.domain.data.Person
+import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
+import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
+import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
+import javax.inject.Inject
+
+@HiltViewModel
+class EventsViewModel @Inject constructor(
+    eventsUseCases: EventsUseCases,
+    private val personsUseCases: PersonsUseCases,
+    private val groupsUseCases: GroupsUseCases
+) : ViewModel() {
+
+//    val events = eventsUseCases.getEvents()
+    val events = eventsUseCases.getSortedEvents()
+
+    fun getPersonById(id: Long): Flow<Person?> = personsUseCases.getPersonById(id)
+
+//    fun getGroupsById(id: String) = groupsUseCases.getGroupById(id)
+}

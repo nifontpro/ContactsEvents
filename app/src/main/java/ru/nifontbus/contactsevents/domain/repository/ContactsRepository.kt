@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.nifontbus.contactsevents.domain.data.ContactsGroup
+import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Person
 
 
@@ -22,6 +23,9 @@ class ContactsRepository(private val context: Context) {
 
     private val _groups = MutableStateFlow<List<ContactsGroup>>(emptyList())
     val groups = _groups.asStateFlow()
+
+    private val _events = MutableStateFlow<List<Event>>(emptyList())
+    val events = _events.asStateFlow()
 
     init {
         personsUpdate()
@@ -34,18 +38,14 @@ class ContactsRepository(private val context: Context) {
 
     private fun personsUpdate() = CoroutineScope(Dispatchers.Default).launch {
         val uri = ContactsContract.Contacts.CONTENT_URI
-        /*.buildUpon()
-            .appendQueryParameter(ContactsContract.AggregationExceptions.TYPE,
-                ContactsContract.AggregationExceptions.TYPE_KEEP_SEPARATE.toString())
-            .build()
-*/
+
         val projection = arrayOf(
             ContactsContract.Contacts._ID,
             ContactsContract.Contacts.DISPLAY_NAME,
             ContactsContract.Contacts.HAS_PHONE_NUMBER,
         )
-        val where = ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?"
-        val selectionArgs = arrayOf("А%")
+/*        val where = ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?"
+        val selectionArgs = arrayOf("А%")*/
         val sortOrder = ContactsContract.Contacts.DISPLAY_NAME
 
         val cursor = context.contentResolver.query(
@@ -54,7 +54,6 @@ class ContactsRepository(private val context: Context) {
 
 //        Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
 
-        val personsList = mutableListOf<Person>()
         cursor?.let {
 //            val keyRef = it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY)
             val idRef = it.getColumnIndex(ContactsContract.Contacts._ID)
@@ -63,19 +62,19 @@ class ContactsRepository(private val context: Context) {
 
             while (it.moveToNext()) {
 //                val key = it.getString(keyRef) // LookUp Key
-                val id = it.getInt(idRef)
+                val id = it.getLong(idRef)
                 val hasPhoneNumber = it.getInt(hasPhoneNumberRef) == 1
                 val displayName = it.getString(displayNameRef) ?: "?"
                 val groups = getGroupsByContact(id)
 
-                personsList.add(Person(displayName, groups, hasPhoneNumber, id))
-                _persons.value = personsList.toList()
+                _persons.value =
+                    persons.value + listOf(Person(displayName, groups, hasPhoneNumber, id))
             }
             cursor.close()
         }
     }
 
-    private fun getGroupsByContact(contactId: Int): List<Int> {
+    private fun getGroupsByContact(contactId: Long): List<Long> {
         val uri: Uri = ContactsContract.Data.CONTENT_URI
         val projection = arrayOf(
             ContactsContract.CommonDataKinds.GroupMembership.CONTACT_ID,
@@ -94,12 +93,12 @@ class ContactsRepository(private val context: Context) {
             uri, projection, where, selectionArgs, sortOrder
         )
 
-        val resultList = mutableListOf<Int>()
+        val resultList = mutableListOf<Long>()
         cursor?.let {
             val groupIdRef =
                 it.getColumnIndex(ContactsContract.CommonDataKinds.GroupMembership.GROUP_ROW_ID)
             while (it.moveToNext()) {
-                val groupId = it.getInt(groupIdRef)
+                val groupId = it.getLong(groupIdRef)
                 resultList.add(groupId)
             }
             cursor.close()
@@ -130,9 +129,9 @@ class ContactsRepository(private val context: Context) {
             val groupsList = mutableListOf<ContactsGroup>()
 
             while (it.moveToNext()) {
-                val id = it.getInt(idIdx)
-                val title = it.getString(titleIdx)
-                val account = it.getString(accountIdx)
+                val id = it.getLong(idIdx)
+                val title = it.getString(titleIdx) ?: "?"
+                val account = it.getString(accountIdx) ?: ""
                 val newGroup = ContactsGroup(title, account, id)
                 groupsList.add(newGroup)
             }
@@ -168,10 +167,8 @@ class ContactsRepository(private val context: Context) {
 
     private fun eventsUpdate() = CoroutineScope(Dispatchers.Default).launch {
         val cursor = getEventsCursor()
-        Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
-
         cursor?.let {
-
+            val idIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event._ID)
             val labelIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL)
             val contactIdIdx =
                 cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.CONTACT_ID)
@@ -179,20 +176,19 @@ class ContactsRepository(private val context: Context) {
             val typeIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE)
 
             while (cursor.moveToNext()) {
+                val id = cursor.getLong(idIdx)
+                val contactId = cursor.getLong(contactIdIdx)
+                val label = cursor.getString(labelIdx) ?: ""
                 val date = cursor.getString(dateIdx)
-                val contactId = cursor.getInt(contactIdIdx)
-                val label = cursor.getString(labelIdx)
                 val type = cursor.getInt(typeIdx)
-                val typeStr =
-                    context.getString(ContactsContract.CommonDataKinds.Event.getTypeResource(type))
-
-                Log.d("my", "$label, ContactId: $contactId, type = $typeStr")
+                _events.value = events.value +
+                        listOf(Event(label, date, type, contactId, id))
             }
             cursor.close()
         }
     }
 
-    private fun getAggregationContacts(id: Int) {
+ /*   private fun getAggregationContacts(id: Int) {
         val uri = ContactsContract.Contacts.CONTENT_URI.buildUpon()
             .appendEncodedPath(id.toString())
             .appendPath(ContactsContract.Contacts.AggregationSuggestions.CONTENT_DIRECTORY)
@@ -208,5 +204,5 @@ class ContactsRepository(private val context: Context) {
             null, null, null
         );
         Log.d("my", DatabaseUtils.dumpCursorToString(cursor))
-    }
+    }*/
 }

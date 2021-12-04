@@ -56,7 +56,7 @@ fun GroupScreen(
             }
         },*/
         scaffoldState = scaffoldState,
-        backgroundColor = ScreenBackgroundColor,
+        backgroundColor = MaterialTheme.colors.background,
         modifier = Modifier.padding(bottom = bottomPadding)
     ) {
         LazyColumn(
@@ -88,13 +88,13 @@ fun GroupScreen(
                                 "[${group.title}]",
                                 modifier = Modifier.padding(10.dp),
                                 style = MaterialTheme.typography.h5,
-                                color = OrangeYellow3
+                                color = MaterialTheme.colors.onBackground
                             )
                             Text(
                                 group.account,
                                 modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
                                 style = MaterialTheme.typography.h6,
-                                color = TextWhite
+                                color = PrimaryDarkColor
                             )
                         }
                         IconButton(
@@ -108,7 +108,7 @@ fun GroupScreen(
                                 },
                                 contentDescription = "Current group",
                                 tint = if (group.id == currentGroup?.id) {
-                                    LightGreen2
+                                    PrimaryDarkColor
                                 } else {
                                     Color.Gray
                                 }

@@ -8,13 +8,15 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.nifontbus.contactsevents.domain.repository.ContactsRepository
 import ru.nifontbus.contactsevents.domain.repository.SettingsRepo
+import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
+import ru.nifontbus.contactsevents.domain.use_cases.events.GetEvents
+import ru.nifontbus.contactsevents.domain.use_cases.events.GetSortedEvents
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GetGroups
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
-import ru.nifontbus.contactsevents.domain.use_cases.persons.GetPersons
-import ru.nifontbus.contactsevents.domain.use_cases.persons.GetPersonsFromGroup
-import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
+import ru.nifontbus.contactsevents.domain.use_cases.persons.*
 import ru.nifontbus.contactsevents.domain.use_cases.settings.GetCurrentGroup
 import ru.nifontbus.contactsevents.domain.use_cases.settings.SetCurrentGroup
 import ru.nifontbus.contactsevents.domain.use_cases.settings.SettingsUseCases
@@ -39,18 +41,18 @@ object AppModule {
         @ApplicationContext context: Context
     ): SettingsRepo = SettingsRepo(context)
 
-/*    @ExperimentalCoroutinesApi
+    @ExperimentalCoroutinesApi
     @Provides
     @Singleton
-    fun provideEventUseCases(repository: FirebaseRepo): EventsUseCases {
+    fun provideEventUseCases(repository: ContactsRepository): EventsUseCases {
         return EventsUseCases(
-            addEvent = AddEvent(repository),
+//            addEvent = AddEvent(repository),
             getEvents = GetEvents(repository),
             getSortedEvents = GetSortedEvents(repository),
-            getEventsByPerson = GetEventsByPerson(repository),
-            deleteEvent = DeleteEvent(repository)
+//            getEventsByPerson = GetEventsByPerson(repository),
+//            deleteEvent = DeleteEvent(repository)
         )
-    }*/
+    }
 
 /*    @Provides
     @Singleton
@@ -69,9 +71,10 @@ object AppModule {
         PersonsUseCases(
 //            addPerson = AddPerson(repository),
             getPersons = GetPersons(repository),
-//            getPersonById = GetPersonById(repository),
+            getPersonById = GetPersonById(repository),
 //            deletePerson = DeletePerson(repository),
             getPersonsFromGroup = GetPersonsFromGroup(repository),
+            getPersonsFilteredFromGroup = GetPersonsFilteredFromGroup(repository)
 //            getPersonAge = GetPersonAge(repository),
 //            updatePerson = UpdatePerson(repository),
 //            deletePersonWithEvents = DeletePersonWithEvents(repository)

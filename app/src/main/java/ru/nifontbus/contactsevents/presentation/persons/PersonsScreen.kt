@@ -9,18 +9,27 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.flow.MutableStateFlow
 import ru.nifontbus.contactsevents.R
+import ru.nifontbus.contactsevents.domain.utils.Search
 import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
 import ru.nifontbus.contactsevents.ui.theme.*
 
@@ -33,9 +42,9 @@ fun PersonsScreen(
 ) {
     val viewModel: PersonsViewModel = hiltViewModel()
     val scaffoldState = rememberScaffoldState()
-    val persons = viewModel.persons.collectAsState(emptyList()).value
+    val persons = viewModel.persons.collectAsState(emptyList())
 
-    BottomNavItem.PersonItem.badgeCount.value = persons.size
+    BottomNavItem.PersonItem.badgeCount.value = persons.value.size
 
     Scaffold(
         /*floatingActionButton = {
@@ -50,14 +59,14 @@ fun PersonsScreen(
                 }
             }
         },*/
+        topBar = { SearchView(state = viewModel.searchState) },
         scaffoldState = scaffoldState,
-        backgroundColor = ScreenBackgroundColor,
+        backgroundColor = MaterialTheme.colors.background,
         modifier = Modifier
-//            .background(ScreenBackgroundColor)
             .padding(bottom = bottomPadding)
     ) {
 
-        if (persons.isEmpty()) {
+        if (persons.value.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize()) {
                 Text(
                     "No persons in group",
@@ -83,9 +92,13 @@ fun PersonsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(10.dp)
+//                .simpleVerticalScrollbar(listState),
+
+//            state = listState,
+
         ) {
 
-            items(persons) { person ->
+            items(persons.value) { person ->
                 Box(
                     modifier = Modifier
                         .padding(vertical = 5.dp)
@@ -97,15 +110,18 @@ fun PersonsScreen(
 //                            )
                         },
                 ) {
+                    val search = viewModel.searchState.collectAsState().value
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
-                            text = person.displayName,
+                            text = Search.colorSubstring(
+                                person.displayName, search,
+                                MaterialTheme.colors.onBackground, Color.Red
+                            ),
                             modifier = Modifier.padding(
                                 horizontal = 10.dp,
                                 vertical = 10.dp
                             ),
                             style = MaterialTheme.typography.h5,
-                            color = TextWhite,
                         )
                         Text(
                             "id: ${person.id}",
@@ -121,11 +137,63 @@ fun PersonsScreen(
                                 .padding(horizontal = 10.dp)
                                 .padding(bottom = 10.dp),
                             style = MaterialTheme.typography.h6,
-                            color = LightGreen2,
+                            color = PrimaryDarkColor,
                         )
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+fun SearchView(state: MutableStateFlow<String>) {
+    TextField(
+        value = state.collectAsState().value,
+        onValueChange = { value ->
+            state.value = value
+        },
+        modifier = Modifier
+            .fillMaxWidth(),
+        textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
+        leadingIcon = {
+            Icon(
+                Icons.Default.Search,
+                contentDescription = "",
+                modifier = Modifier
+                    .padding(15.dp)
+                    .size(24.dp)
+            )
+        },
+        trailingIcon = {
+            if (state.collectAsState().value != "") {
+                IconButton(
+                    onClick = {
+                        // Remove text from TextField when you press the 'X' icon
+                        state.value = ""
+                    }
+                ) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .padding(15.dp)
+                            .size(24.dp)
+                    )
+                }
+            }
+        },
+        singleLine = true,
+        shape = RectangleShape, // The TextFiled has rounded corners top left and right by default
+/*        colors = TextFieldDefaults.textFieldColors(
+            textColor = Color.White,
+            cursorColor = Color.White,
+            leadingIconColor = Color.White,
+            trailingIconColor = Color.White,
+            backgroundColor = colorResource(id = R.color.colorPrimary),
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        )*/
+    )
 }

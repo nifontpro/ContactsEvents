@@ -28,15 +28,15 @@ class SettingsRepo(context: Context) {
     private fun saveCurrentGroup(group: ContactsGroup?) =
         CoroutineScope(Dispatchers.Main).launch {
             val editor = sharedPreference.edit()
-            editor.putInt(GROUP_ID, group?.id ?: -1)
+            editor.putLong(GROUP_ID, group?.id ?: -1L)
             editor.putString(GROUP_NAME, group?.title)
             editor.apply()
         }
 
     private fun loadCurrentGroupId() {
-        val id: Int = sharedPreference.getInt(GROUP_ID, -1)
+        val id: Long = sharedPreference.getLong(GROUP_ID, -1L)
         val name: String? = sharedPreference.getString(GROUP_NAME, null)
-        if (id != -1 && name != null) {
+        if (id != -1L && name != null) {
             _currentGroup.value = ContactsGroup(title = name, id = id)
         } else {
             _currentGroup.value = null

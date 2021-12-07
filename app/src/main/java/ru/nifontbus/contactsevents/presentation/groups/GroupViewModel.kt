@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import ru.nifontbus.contactsevents.domain.data.ContactsGroup
+import ru.nifontbus.contactsevents.domain.data.PersonsGroup
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.settings.SettingsUseCases
 import javax.inject.Inject
@@ -38,7 +38,7 @@ class GroupViewModel @Inject constructor(
     }
 */
 
-    fun setCurrentGroup(group: ContactsGroup) {
+    fun setCurrentGroup(group: PersonsGroup) {
         if (currentGroup.value?.id != group.id) {
             settingsUseCases.setCurrentGroup(group)
         }

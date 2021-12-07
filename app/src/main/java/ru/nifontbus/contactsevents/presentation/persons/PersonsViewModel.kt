@@ -1,13 +1,10 @@
 package ru.nifontbus.contactsevents.presentation.persons
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.nifontbus.contactsevents.domain.data.Person
@@ -31,14 +28,7 @@ class PersonsViewModel @Inject constructor(
         updatePerson()
     }
 
-    private fun updatePerson() = viewModelScope.launch {
-        personsUseCases.getPersonsFilteredFromGroup(currentGroup, searchState.value).collect {
-            _persons.value = it
-        }
-    }
-
-    fun refresh() = viewModelScope.launch {
-//        delay(500)
+    fun updatePerson() = viewModelScope.launch {
         personsUseCases.getPersonsFilteredFromGroup(currentGroup, searchState.value).collect {
             _persons.value = it
         }

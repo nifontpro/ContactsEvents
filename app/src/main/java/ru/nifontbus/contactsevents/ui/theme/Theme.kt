@@ -8,20 +8,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200,
+    primary = PrimaryColor,
+    primaryVariant = PrimaryColor,
+    secondary = SecondaryColor,
     background = Dark2Gray,
+    surface = HalfGrayDark,
     onBackground = TextWhite,
     onSecondary = Dark3Gray
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200,
+    primary = PrimaryColor,
+    primaryVariant = PrimaryDarkColor,
+    secondary = SecondaryLightColor,
     background = Color.White,
-    surface = Color.White,
+    surface = HalfGray,
     onPrimary = Color.White,
     onSecondary = TextWhite,
     onBackground = Color.Black,
@@ -31,7 +32,7 @@ private val LightColorPalette = lightColors(
 @Composable
 fun ContactsEventsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) {
         DarkColorPalette

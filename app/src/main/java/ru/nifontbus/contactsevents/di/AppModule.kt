@@ -13,7 +13,9 @@ import ru.nifontbus.contactsevents.domain.repository.ContactsRepository
 import ru.nifontbus.contactsevents.domain.repository.SettingsRepo
 import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.events.GetEvents
+import ru.nifontbus.contactsevents.domain.use_cases.events.GetEventsByPerson
 import ru.nifontbus.contactsevents.domain.use_cases.events.GetSortedEvents
+import ru.nifontbus.contactsevents.domain.use_cases.groups.GetGroupById
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GetGroups
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.persons.*
@@ -49,7 +51,7 @@ object AppModule {
 //            addEvent = AddEvent(repository),
             getEvents = GetEvents(repository),
             getSortedEvents = GetSortedEvents(repository),
-//            getEventsByPerson = GetEventsByPerson(repository),
+            getEventsByPerson = GetEventsByPerson(repository),
 //            deleteEvent = DeleteEvent(repository)
         )
     }
@@ -74,10 +76,11 @@ object AppModule {
             getPersonById = GetPersonById(repository),
 //            deletePerson = DeletePerson(repository),
             getPersonsFromGroup = GetPersonsFromGroup(repository),
-            getPersonsFilteredFromGroup = GetPersonsFilteredFromGroup(repository)
+            getPersonsFilteredFromGroup = GetPersonsFilteredFromGroup(repository),
 //            getPersonAge = GetPersonAge(repository),
 //            updatePerson = UpdatePerson(repository),
 //            deletePersonWithEvents = DeletePersonWithEvents(repository)
+            getPersonInfo = GetPersonInfo(repository)
         )
 
     @Provides
@@ -85,7 +88,7 @@ object AppModule {
     fun provideGroupsUseCases(repository: ContactsRepository) = GroupsUseCases(
 //        addGroup = AddGroup(repository),
         getGroups = GetGroups(repository),
-//        getGroupById = GetGroupById(repository),
+        getGroupById = GetGroupById(repository),
 //        deleteGroup = DeleteGroup(repository),
 //        updateGroup = UpdateGroup(repository)
     )

@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Contacts Events</string>
+    <string name="app_name" translatable="false">Contacts Events</string>
+
+    <string name="group_my_contacts">My Contacts</string>
+    <string name="group_starred_in_android">Starred in Android</string>
+    <string name="group_friends">Friends</string>
+    <string name="group_family">Family</string>
+    <string name="group_coworkers">Coworkers</string>
+    <string name="sDelimetr" translatable="false">", "</string>
+    <string name="sGroups">"Groups: "</string>
 </resources>

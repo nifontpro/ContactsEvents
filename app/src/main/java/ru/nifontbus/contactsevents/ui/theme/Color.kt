@@ -46,8 +46,10 @@ val HalfLightGreen3 = Color(0x7011d79b)
 val BlueViolet1 = Color(0xffaeb4fd)
 val BlueViolet2 = Color(0xff9fa5fe)
 val BlueViolet3 = Color(0xff8f98fd)
-//val HalfGray = Color(0x50555555)
-val HalfGray = Color(0x50757575)
+val HalfGray = Color(0xB0E0E0E0)
+val HalfGrayDark = Color(0x50757575)
+//const val HalfGray = R.color.halfGray
+val Half3Gray = Color(0x20507550)
 val BadgeBackground = Color(0xFF0099FF)
 
 val IconGreen = Color(0xFF88AA88)

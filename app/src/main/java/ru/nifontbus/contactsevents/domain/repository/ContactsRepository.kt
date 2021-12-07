@@ -11,9 +11,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.nifontbus.contactsevents.domain.data.ContactsGroup
 import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Person
+import ru.nifontbus.contactsevents.domain.data.PersonsGroup
+import ru.nifontbus.contactsevents.domain.data.person_info.Phone
+import ru.nifontbus.contactsevents.domain.data.person_info.PersonInfo
 
 
 class ContactsRepository(private val context: Context) {
@@ -21,7 +23,7 @@ class ContactsRepository(private val context: Context) {
     private val _persons = MutableStateFlow<List<Person>>(emptyList())
     val persons = _persons.asStateFlow()
 
-    private val _groups = MutableStateFlow<List<ContactsGroup>>(emptyList())
+    private val _groups = MutableStateFlow<List<PersonsGroup>>(emptyList())
     val groups = _groups.asStateFlow()
 
     private val _events = MutableStateFlow<List<Event>>(emptyList())
@@ -101,7 +103,7 @@ class ContactsRepository(private val context: Context) {
                 val groupId = it.getLong(groupIdRef)
                 resultList.add(groupId)
             }
-            cursor.close()
+            it.close()
         }
         return resultList
     }
@@ -119,23 +121,23 @@ class ContactsRepository(private val context: Context) {
         val cursor = context.contentResolver.query(
             uri, projection, null, null, sortOrder
         )
-        Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
+//        Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
         cursor?.let {
 
             val idIdx = it.getColumnIndex(ContactsContract.Groups._ID)
             val titleIdx = it.getColumnIndex(ContactsContract.Groups.TITLE)
             val accountIdx = it.getColumnIndex(ContactsContract.Groups.ACCOUNT_NAME)
 
-            val groupsList = mutableListOf<ContactsGroup>()
+            val groupsList = mutableListOf<PersonsGroup>()
 
             while (it.moveToNext()) {
                 val id = it.getLong(idIdx)
                 val title = it.getString(titleIdx) ?: "?"
                 val account = it.getString(accountIdx) ?: ""
-                val newGroup = ContactsGroup(title, account, id)
+                val newGroup = PersonsGroup(title, account, id)
                 groupsList.add(newGroup)
             }
-            cursor.close()
+            it.close()
             _groups.value = groupsList
         }
     }
@@ -168,41 +170,94 @@ class ContactsRepository(private val context: Context) {
     private fun eventsUpdate() = CoroutineScope(Dispatchers.Default).launch {
         val cursor = getEventsCursor()
         cursor?.let {
-            val idIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event._ID)
-            val labelIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL)
+            val idIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event._ID)
+            val labelIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL)
             val contactIdIdx =
-                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.CONTACT_ID)
-            val dateIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE)
-            val typeIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE)
+                it.getColumnIndex(ContactsContract.CommonDataKinds.Event.CONTACT_ID)
+            val dateIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE)
+            val typeIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE)
 
-            while (cursor.moveToNext()) {
-                val id = cursor.getLong(idIdx)
-                val contactId = cursor.getLong(contactIdIdx)
-                val label = cursor.getString(labelIdx) ?: ""
-                val date = cursor.getString(dateIdx)
-                val type = cursor.getInt(typeIdx)
+            while (it.moveToNext()) {
+                val id = it.getLong(idIdx)
+                val contactId = it.getLong(contactIdIdx)
+                val label = it.getString(labelIdx) ?: ""
+                val date = it.getString(dateIdx)
+                val type = it.getInt(typeIdx)
                 _events.value = events.value +
                         listOf(Event(label, date, type, contactId, id))
             }
-            cursor.close()
+            it.close()
         }
     }
 
- /*   private fun getAggregationContacts(id: Int) {
-        val uri = ContactsContract.Contacts.CONTENT_URI.buildUpon()
-            .appendEncodedPath(id.toString())
-            .appendPath(ContactsContract.Contacts.AggregationSuggestions.CONTENT_DIRECTORY)
-            .appendQueryParameter("limit", "3")
-            .build()
+    /*   private fun getAggregationContacts(id: Int) {
+           val uri = ContactsContract.Contacts.CONTENT_URI.buildUpon()
+               .appendEncodedPath(id.toString())
+               .appendPath(ContactsContract.Contacts.AggregationSuggestions.CONTENT_DIRECTORY)
+               .appendQueryParameter("limit", "3")
+               .build()
+           val cursor = context.contentResolver.query(
+               uri,
+               arrayOf(
+                   ContactsContract.Contacts.DISPLAY_NAME,
+                   ContactsContract.Contacts._ID,
+                   ContactsContract.Contacts.LOOKUP_KEY
+               ),
+               null, null, null
+           );
+           Log.d("my", DatabaseUtils.dumpCursorToString(cursor))
+       }*/
+
+    fun getPersonInfo(contactId: Long): PersonInfo {
+        val uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactId.toString())
         val cursor = context.contentResolver.query(
-            uri,
-            arrayOf(
-                ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.LOOKUP_KEY
-            ),
-            null, null, null
-        );
-        Log.d("my", DatabaseUtils.dumpCursorToString(cursor))
-    }*/
+            uri, null, null, null, null
+        )
+        Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
+
+/*        val groupUri = Uri.withAppendedPath(uri, ContactsContract.CommonDataKinds.GroupMembership.CONTACT_ID)
+        val cursorInfo = contentResolver.query(groupUri, null, null, null, null)
+        Log.e("my", DatabaseUtils.dumpCursorToString(cursorInfo))*/
+
+        // All info:
+        val infoUri = Uri.withAppendedPath(uri, ContactsContract.Contacts.Entity.CONTENT_DIRECTORY)
+        val cursorInfo = context.contentResolver.query(
+            infoUri, null, null, null, null
+        )
+
+        Log.e("my", DatabaseUtils.dumpCursorToString(cursorInfo))
+
+        val phones = mutableListOf<Phone>()
+//        val emails = mutableListOf<Phone>()
+
+        cursorInfo?.let {
+            val mimeTypeIdx = it.getColumnIndex(ContactsContract.Data.MIMETYPE)
+            val data1Idx = it.getColumnIndex(ContactsContract.Data.DATA1)
+            val data2Idx = it.getColumnIndex(ContactsContract.Data.DATA2)
+
+            while (it.moveToNext()) {
+                val mimeType = it.getString(mimeTypeIdx) ?: ""
+                val data1 = it.getString(data1Idx) ?: "?"
+                val data2 = it.getString(data2Idx) ?: "0"
+
+                when (mimeType) {
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
+                        phones.add(Phone(data1, data2.toIntDefault(0)))
+                    }
+/*                    ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE -> {
+                        emails.add(Phone(data1, data2.toIntDefault(0)))
+                    }*/
+                }
+            }
+            it.close()
+        }
+        return PersonInfo(phones)
+    }
 }
+
+fun String.toIntDefault(default: Int) =
+    try {
+        this.toInt()
+    } catch (e: Exception) {
+        default
+    }

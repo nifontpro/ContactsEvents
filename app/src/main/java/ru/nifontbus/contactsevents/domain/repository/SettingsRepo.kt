@@ -6,11 +6,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.nifontbus.contactsevents.domain.data.ContactsGroup
+import ru.nifontbus.contactsevents.domain.data.PersonsGroup
 
 class SettingsRepo(context: Context) {
 
-    private val _currentGroup: MutableStateFlow<ContactsGroup?> = MutableStateFlow(null)
+    private val _currentGroup: MutableStateFlow<PersonsGroup?> = MutableStateFlow(null)
     val currentGroup = _currentGroup.asStateFlow()
 
     private val sharedPreference =
@@ -20,12 +20,12 @@ class SettingsRepo(context: Context) {
         loadCurrentGroupId()
     }
 
-    fun setCurrentGroup(group: ContactsGroup?) {
+    fun setCurrentGroup(group: PersonsGroup?) {
         _currentGroup.value = group
         saveCurrentGroup(group)
     }
 
-    private fun saveCurrentGroup(group: ContactsGroup?) =
+    private fun saveCurrentGroup(group: PersonsGroup?) =
         CoroutineScope(Dispatchers.Main).launch {
             val editor = sharedPreference.edit()
             editor.putLong(GROUP_ID, group?.id ?: -1L)
@@ -37,7 +37,7 @@ class SettingsRepo(context: Context) {
         val id: Long = sharedPreference.getLong(GROUP_ID, -1L)
         val name: String? = sharedPreference.getString(GROUP_NAME, null)
         if (id != -1L && name != null) {
-            _currentGroup.value = ContactsGroup(title = name, id = id)
+            _currentGroup.value = PersonsGroup(title = name, id = id)
         } else {
             _currentGroup.value = null
         }

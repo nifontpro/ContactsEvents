@@ -1,7 +1,5 @@
 package ru.nifontbus.contactsevents.presentation.persons
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,21 +16,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.utils.Search
 import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
+import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.ui.theme.*
 
-@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalMaterialApi
 @Composable
 fun PersonsScreen(
@@ -58,13 +52,16 @@ fun PersonsScreen(
                 }
             }
         },*/
-        topBar = { SearchView(state = viewModel.searchState) { viewModel.refresh() } },
+        topBar = { SearchView(state = viewModel.searchState) },
         scaffoldState = scaffoldState,
         backgroundColor = MaterialTheme.colors.background,
         modifier = Modifier
             .padding(bottom = bottomPadding)
     ) {
 
+        LaunchedEffect(key1 = viewModel.searchState.value) {
+            viewModel.updatePerson()
+        }
         if (persons.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize()) {
                 Text(
@@ -102,11 +99,11 @@ fun PersonsScreen(
                     modifier = Modifier
                         .padding(vertical = 5.dp)
                         .clip(RoundedCornerShape(3.dp))
-                        .background(HalfGray)
+                        .background(MaterialTheme.colors.surface)
                         .clickable {
-//                            extNavController.navigate(
-//                                Screen.NavPersonInfoScreen.createRoute(person.id)
-//                            )
+                            extNavController.navigate(
+                                Screen.NavPersonInfoScreen.createRoute(person.id)
+                            )
                         },
                 ) {
                     Column(modifier = Modifier.fillMaxWidth()) {
@@ -145,16 +142,15 @@ fun PersonsScreen(
 }
 
 @Composable
-fun SearchView(state: MutableState<String>, onUpdate: () -> Unit) {
+fun SearchView(state: MutableState<String>) {
     TextField(
         value = state.value,
         onValueChange = { value ->
             state.value = value
-            onUpdate()
         },
         modifier = Modifier
             .fillMaxWidth(),
-        textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
+//        textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
         leadingIcon = {
             Icon(
                 Icons.Default.Search,
@@ -170,7 +166,6 @@ fun SearchView(state: MutableState<String>, onUpdate: () -> Unit) {
                     onClick = {
                         // Remove text from TextField when you press the 'X' icon
                         state.value = ""
-                        onUpdate()
                     }
                 ) {
                     Icon(

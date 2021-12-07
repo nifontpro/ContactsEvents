@@ -6,6 +6,6 @@ data class EventsUseCases @ExperimentalCoroutinesApi constructor(
 //    val addEvent: AddEvent,
     val getEvents: GetEvents,
     val getSortedEvents: GetSortedEvents,
-//    val getEventsByPerson: GetEventsByPerson,
+    val getEventsByPerson: GetEventsByPerson,
 //    val deleteEvent: DeleteEvent
 )

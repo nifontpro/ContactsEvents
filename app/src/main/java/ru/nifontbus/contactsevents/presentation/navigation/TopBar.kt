@@ -31,14 +31,13 @@ fun TopBar(navController: NavController, header: String) {
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBackIos, contentDescription = "Back",
-                tint = TextWhite
+                tint = MaterialTheme.colors.onBackground
             )
         }
 
         Text(
             text = header,
-            color = TextWhite,
-            style = MaterialTheme.typography.h1
+            style = MaterialTheme.typography.h4
         )
     }
 }
@@ -66,7 +65,6 @@ fun TopBarOther(
 
         Text(
             text = header,
-            color = TextWhite,
             style = MaterialTheme.typography.h1
         )
 
@@ -75,7 +73,7 @@ fun TopBarOther(
         ) {
             Icon(
                 imageVector = imageOther, contentDescription = "Other",
-                tint = TextWhite
+                tint = MaterialTheme.colors.onBackground
             )
         }
     }

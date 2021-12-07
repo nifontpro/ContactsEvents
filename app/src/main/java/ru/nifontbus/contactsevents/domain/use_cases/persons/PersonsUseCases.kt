@@ -9,5 +9,6 @@ data class PersonsUseCases(
     val getPersonsFilteredFromGroup: GetPersonsFilteredFromGroup,
 //    val getPersonAge: GetPersonAge,
 //    val updatePerson: UpdatePerson,
-//    val deletePersonWithEvents: DeletePersonWithEvents
+//    val deletePersonWithEvents: DeletePersonWithEvents,
+    val getPersonInfo : GetPersonInfo
 )

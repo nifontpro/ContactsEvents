@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -85,7 +86,7 @@ fun GroupScreen(
                     ) {
                         Column {
                             Text(
-                                "[${group.title}]",
+                                "[${group.localTitle(LocalContext.current)}]",
                                 modifier = Modifier.padding(10.dp),
                                 style = MaterialTheme.typography.h5,
                                 color = MaterialTheme.colors.onBackground

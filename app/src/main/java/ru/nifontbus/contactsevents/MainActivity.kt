@@ -10,9 +10,11 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import ru.nifontbus.contactsevents.presentation.events.EventsScreen
@@ -21,6 +23,7 @@ import ru.nifontbus.contactsevents.presentation.navigation.BottomBar
 import ru.nifontbus.contactsevents.presentation.navigation.GetPermission
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.persons.PersonsScreen
+import ru.nifontbus.contactsevents.presentation.persons.info.PersonInfoScreen
 import ru.nifontbus.contactsevents.ui.theme.ContactsEventsTheme
 
 @ExperimentalMaterialApi
@@ -37,11 +40,32 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.background) {
                     GetPermission()
                     val extNavController = rememberNavController()
-                    MainScreen(extNavController)
+                    NavHost(
+                        navController = extNavController,
+                        startDestination = Screen.MainScreen.route
+                    ) {
+                        composable(Screen.MainScreen.route) {
+                            MainScreen(extNavController)
+                        }
+                        composable(
+                            Screen.NavPersonInfoScreen.route,
+                            arguments = idArgument(),
+                        ) {
+                            PersonInfoScreen(extNavController)
+                        }
+                    }
                 }
             }
         }
     }
+
+    private fun idArgument() = listOf(
+        navArgument("id") {
+            type = NavType.LongType
+            defaultValue = -1
+            nullable = false
+        }
+    )
 }
 
 @ExperimentalComposeUiApi

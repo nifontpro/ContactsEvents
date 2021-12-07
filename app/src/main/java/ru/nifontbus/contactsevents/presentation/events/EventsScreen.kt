@@ -12,11 +12,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.ui.theme.DeepBlue
 import ru.nifontbus.contactsevents.ui.theme.HalfGray
 import ru.nifontbus.contactsevents.ui.theme.LightRed
@@ -65,7 +67,7 @@ fun EventsScreen(
                     modifier = Modifier
                         .padding(vertical = 5.dp)
                         .clip(RoundedCornerShape(5.dp))
-                        .background(HalfGray)
+                        .background(MaterialTheme.colors.surface)
                         .clickable {
 //                            extNavController
                         },

@@ -13,7 +13,7 @@ sealed class Screen(val route: String) {
     // External
     object NavNewPersonScreen: Screen("new_person_screen")
     object NavPersonInfoScreen: Screen("person_info_screen?id={id}") {
-        fun createRoute(id: String) = "person_info_screen?id=$id"
+        fun createRoute(id: Long) = "person_info_screen?id=$id"
     }
     // 3rd for person:
     object NavPersonInfoMainScreen: Screen("person_info_main_screen")

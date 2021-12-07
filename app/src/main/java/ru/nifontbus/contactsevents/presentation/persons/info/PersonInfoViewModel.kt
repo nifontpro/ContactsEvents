@@ -6,12 +6,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Person
+import ru.nifontbus.contactsevents.domain.data.Resource
 import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
@@ -25,9 +24,11 @@ class PersonInfoViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    // PersonInfoScreen:
     private val _person = mutableStateOf(Person())
     val person: State<Person> = _person
+
+/*    private val _personEvents = mutableStateOf<List<Event>>(emptyList())
+    val personEvents: State<List<Event>> = _personEvents*/
 
     val personEvents by lazy {
         eventsUseCases.getEventsByPerson(person.value.id)
@@ -49,18 +50,43 @@ class PersonInfoViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             savedStateHandle.get<Long>("id")?.let { it ->
-                personsUseCases.getPersonById(it).collect {
-                    it?.let { findPerson ->
-                        _person.value = findPerson
-                    }
+                personsUseCases.getPersonById(it)?.let { findPerson ->
+                    _person.value = findPerson
                 }
             }
         }
+//        eventsUpdate()
     }
+
+/*    private fun eventsUpdate() = viewModelScope.launch {
+        eventsUseCases.getEventsByPerson(person.value.id).collect {
+            _personEvents.value = it
+        }
+    }*/
 
     fun getGroupById(id: Long) = groupsUseCases.getGroupById(id)
 
     fun getPersonInfo(id: Long) = personsUseCases.getPersonInfo(id)
+
+    fun addEvent(event: Event) = eventsUseCases.addEvent(event)
+
+    fun deleteEvent(event: Event) = viewModelScope.launch {
+        when (val result = eventsUseCases.deleteEvent(event)) {
+            is Resource.Success -> {
+                sendMessage(result.message)
+            }
+            is Resource.Error -> {
+                sendMessage(result.message)
+//                eventsUpdate()
+            }
+        }
+    }
+
+    private suspend fun sendMessage(msg: String) {
+        _action.emit(msg)
+    }
+
+}
 
 /*    fun deleteEvent(id: String) = viewModelScope.launch {
         when (val result = eventsUseCases.deleteEvent(id)) {
@@ -117,8 +143,3 @@ class PersonInfoViewModel @Inject constructor(
                     (family.value == person.value.family)
                     )
 */
-
- /*   private suspend fun sendMessage(msg: String) {
-        _action.emit(msg)
-    }*/
-}

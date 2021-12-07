@@ -11,10 +11,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.nifontbus.contactsevents.domain.repository.ContactsRepository
 import ru.nifontbus.contactsevents.domain.repository.SettingsRepo
-import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
-import ru.nifontbus.contactsevents.domain.use_cases.events.GetEvents
-import ru.nifontbus.contactsevents.domain.use_cases.events.GetEventsByPerson
-import ru.nifontbus.contactsevents.domain.use_cases.events.GetSortedEvents
+import ru.nifontbus.contactsevents.domain.use_cases.events.*
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GetGroupById
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GetGroups
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
@@ -48,11 +45,11 @@ object AppModule {
     @Singleton
     fun provideEventUseCases(repository: ContactsRepository): EventsUseCases {
         return EventsUseCases(
-//            addEvent = AddEvent(repository),
+            addEvent = AddEvent(repository),
             getEvents = GetEvents(repository),
             getSortedEvents = GetSortedEvents(repository),
             getEventsByPerson = GetEventsByPerson(repository),
-//            deleteEvent = DeleteEvent(repository)
+            deleteEvent = DeleteEvent(repository)
         )
     }
 
@@ -74,6 +71,7 @@ object AppModule {
 //            addPerson = AddPerson(repository),
             getPersons = GetPersons(repository),
             getPersonById = GetPersonById(repository),
+            getPersonByIdFlow = GetPersonByIdFlow(repository),
 //            deletePerson = DeletePerson(repository),
             getPersonsFromGroup = GetPersonsFromGroup(repository),
             getPersonsFilteredFromGroup = GetPersonsFilteredFromGroup(repository),

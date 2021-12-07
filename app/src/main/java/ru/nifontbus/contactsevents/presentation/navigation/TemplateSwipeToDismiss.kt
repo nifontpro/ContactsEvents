@@ -10,9 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -30,11 +28,13 @@ fun TemplateSwipeToDismiss(
     dismissContent: @Composable RowScope.() -> Unit,
     enabled: Boolean = true,
 ) {
+
     val dismissState = rememberDismissState()
 
     if (dismissState.isDismissed(DismissDirection.EndToStart)) {
         LaunchedEffect(dismissState) {
             onDelete()
+            dismissState.reset()
         }
     }
 

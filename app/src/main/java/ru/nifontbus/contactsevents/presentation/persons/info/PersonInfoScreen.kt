@@ -182,6 +182,7 @@ fun PersonInfoMainScreen(
                                         person.id
                                     )
                                 )*/
+                                viewModel.addEvent(Event(personId = person.id))
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -215,18 +216,10 @@ fun PersonInfoMainScreen(
                             key = { _, item -> item.id }
                         ) { _, event ->
 
-                            val dismissState = rememberDismissState()
-
-                            if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                                LaunchedEffect(dismissState) {
-//                                    viewModel.deleteEvent(event.id)
-                                }
-                            }
-
-                            TemplateSwipeToDismiss(
+                             TemplateSwipeToDismiss(
                                 modifier = Modifier.padding(vertical = 4.dp),
                                 {
-//                                    viewModel.deleteTemplate(template)
+                                    viewModel.deleteEvent(event)
                                 },
                                 {
                                     EventInfoCard(event)
@@ -257,7 +250,7 @@ private fun EventInfoCard(event: Event) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                event.date,
+                "${event.date} id: ${event.id}",
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
                     .padding(top = 10.dp),

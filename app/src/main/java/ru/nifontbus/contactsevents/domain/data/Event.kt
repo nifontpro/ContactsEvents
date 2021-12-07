@@ -7,7 +7,7 @@ data class Event(
     val label: String = "",
     val date: String = "",
     val type: Int = -1,
-    val personId: Long,
+    val personId: Long = -1,
     val id: Long = -1
 ) {
 

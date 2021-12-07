@@ -2,7 +2,6 @@ package ru.nifontbus.contactsevents.presentation.events
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
@@ -20,7 +19,7 @@ class EventsViewModel @Inject constructor(
 //    val events = eventsUseCases.getEvents()
     val events = eventsUseCases.getSortedEvents()
 
-    fun getPersonById(id: Long): Flow<Person?> = personsUseCases.getPersonById(id)
+    fun getPersonById(id: Long): Flow<Person?> = personsUseCases.getPersonByIdFlow(id)
 
 //    fun getGroupsById(id: String) = groupsUseCases.getGroupById(id)
 }

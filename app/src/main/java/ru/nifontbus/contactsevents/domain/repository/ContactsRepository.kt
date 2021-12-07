@@ -1,5 +1,7 @@
 package ru.nifontbus.contactsevents.domain.repository
 
+import android.content.ContentProviderOperation
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.DatabaseUtils
@@ -14,8 +16,11 @@ import kotlinx.coroutines.launch
 import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.data.PersonsGroup
-import ru.nifontbus.contactsevents.domain.data.person_info.Phone
+import ru.nifontbus.contactsevents.domain.data.Resource
 import ru.nifontbus.contactsevents.domain.data.person_info.PersonInfo
+import ru.nifontbus.contactsevents.domain.data.person_info.Phone
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 class ContactsRepository(private val context: Context) {
@@ -177,6 +182,8 @@ class ContactsRepository(private val context: Context) {
             val dateIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE)
             val typeIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE)
 
+            _events.value = emptyList()
+
             while (it.moveToNext()) {
                 val id = it.getLong(idIdx)
                 val contactId = it.getLong(contactIdIdx)
@@ -253,7 +260,93 @@ class ContactsRepository(private val context: Context) {
         }
         return PersonInfo(phones)
     }
-}
+
+    fun addEvent(event: Event) {
+        val values = ContentValues()
+        values.put(
+            ContactsContract.Data.MIMETYPE,
+            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
+        )
+        values.put(ContactsContract.Data.RAW_CONTACT_ID, event.personId)
+        values.put(
+            ContactsContract.CommonDataKinds.Event.TYPE,
+            ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY
+        )
+        values.put(ContactsContract.CommonDataKinds.Event.RAW_CONTACT_ID, event.personId)
+        values.put(ContactsContract.CommonDataKinds.Event.LABEL, "")
+        values.put(
+            ContactsContract.CommonDataKinds.Event.START_DATE,
+            "2010-01-28"
+        ) // hard-coded date of birth
+
+        var created: Uri? = null
+        try {
+            created = context.contentResolver.insert(ContactsContract.Data.CONTENT_URI, values)
+        } catch (e: java.lang.Exception) {
+            Log.e("my", "Error inserting the event!")
+        }
+        if (created == null) {
+            Log.e("my", "Failed inserting the event!")
+        } else {
+            eventsUpdate()
+            Log.e("my", "Successfully inserted the event!")
+        }
+    }
+// Операции с данными:
+// https://developer.android.com/reference/android/provider/ContactsContract.Data.html?authuser=1
+
+    suspend fun deleteEvent(event: Event): Resource<Unit> {
+
+        val ops = ArrayList<ContentProviderOperation>()
+
+        ops.add(
+            ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+                .withSelection(
+                    ContactsContract.Data._ID + "=? AND " +
+                            ContactsContract.Data.MIMETYPE + "=?", // Необязательно, но для надежности
+                    arrayOf(
+                        event.id.toString(),
+                        ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
+                    )
+                )
+                .build()
+        )
+
+        return suspendCoroutine {
+
+            it.resume(
+                try {
+//                    throw Exception("Hi There!")
+                    context.contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
+                    eventsUpdate()
+                    Resource.Success("Event delete successful")
+                } catch (e: Exception) {
+                    Resource.Error(e.localizedMessage ?: "Error delete event!")
+                }
+            )
+        }
+    }
+
+    private fun getEventsCursorById(id: Long): Cursor? {
+        val uri: Uri = ContactsContract.Data.CONTENT_URI
+
+        val projection = arrayOf(
+            ContactsContract.Data.DATA_SET,
+            ContactsContract.Data._ID,
+            ContactsContract.Data.MIMETYPE,
+        )
+
+        val where = ContactsContract.Data._ID + "=?" + "=?" +
+                " AND " + ContactsContract.Data.MIMETYPE
+        val selectionArgs = arrayOf(
+            id.toString(),
+            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
+        )
+        return context.contentResolver.query(uri, projection, where, selectionArgs, null)
+    }
+
+} // eoc
+
 
 fun String.toIntDefault(default: Int) =
     try {
@@ -261,3 +354,6 @@ fun String.toIntDefault(default: Int) =
     } catch (e: Exception) {
         default
     }
+
+// +event:
+// https://question-it.com/questions/5800521/dobavit-sobytie-dlja-kontakta-v-tablitsu-kontaktov-android

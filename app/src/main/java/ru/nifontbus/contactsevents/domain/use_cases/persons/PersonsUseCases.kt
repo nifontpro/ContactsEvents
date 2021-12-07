@@ -4,6 +4,7 @@ data class PersonsUseCases(
 //    val addPerson: AddPerson,
     val getPersons: GetPersons,
     val getPersonById: GetPersonById,
+    val getPersonByIdFlow: GetPersonByIdFlow,
 //    val deletePerson: DeletePerson,
     val getPersonsFromGroup: GetPersonsFromGroup,
     val getPersonsFilteredFromGroup: GetPersonsFilteredFromGroup,

@@ -62,9 +62,10 @@ class GetSortedEvents(
                     if (day40date > LocalDate.now()) {
                         mutableEvents.add(
                             Event(
-                                "40 day of death /${event.date}/",
+                                "40 day of ${event.date}",
                                 day40date.asString(),
-                                personId = event.personId,
+                                EventType.CUSTOM,
+                                event.personId,
                             )
                         )
                     }

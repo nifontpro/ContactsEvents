@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.collect
+import ru.nifontbus.contactsevents.domain.data.EventType
 import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.domain.utils.toLocalDate
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
@@ -46,7 +47,11 @@ fun NewEventScreen(
     val person = viewModel.person.value
 
     LaunchedEffect(sharedTemplateState) {
-        viewModel.setEventName(sharedTemplateState.value.name)
+        if (sharedTemplateState.value.type != EventType.CUSTOM) {
+            viewModel.setEventName(sharedTemplateState.value.label)
+        } else {
+            viewModel.setEventName("")
+        }
         viewModel.eventType = sharedTemplateState.value.type
     }
 
@@ -122,8 +127,8 @@ fun NewEventScreen(
                                 viewModel.setEventName(it)
                             },
                             modifier = edMod,
-                            maxLines = 1,
-                            placeholder = { Text("Event name") },
+                            singleLine = true,
+                            placeholder = { Text("Event label") },
                             trailingIcon = {
                                 IconButton(onClick = {
                                     extNavController.navigate(Screen.NavTemplatesScreen.route)

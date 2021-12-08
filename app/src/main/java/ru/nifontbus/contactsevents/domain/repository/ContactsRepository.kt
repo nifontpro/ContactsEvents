@@ -4,6 +4,7 @@ import android.content.ContentProviderOperation
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.database.DatabaseUtils
 import android.net.Uri
 import android.provider.ContactsContract
 import android.util.Log
@@ -12,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.*
 import ru.nifontbus.contactsevents.domain.data.person_info.PersonInfo
 import ru.nifontbus.contactsevents.domain.data.person_info.Phone
@@ -176,9 +178,15 @@ class ContactsRepository(private val context: Context) {
             while (it.moveToNext()) {
                 val id = it.getLong(idIdx)
                 val contactId = it.getLong(contactIdIdx)
-                val label = it.getString(labelIdx) ?: ""
+                var label = it.getString(labelIdx) ?: ""
                 val date = it.getString(dateIdx)
-                val type = it.getInt(typeIdx)
+                var type = it.getInt(typeIdx)
+
+                if (type == EventType.CUSTOM && label == context.getString(R.string.sDayOfRepose)) {
+                    type = EventType.NEW_LIFE_DAY
+                    label = ""
+                }
+
                 _events.value = events.value +
                         listOf(Event(label, date, type, contactId, id))
             }
@@ -192,7 +200,7 @@ class ContactsRepository(private val context: Context) {
         val cursorInfo = context.contentResolver.query(
             infoUri, null, null, null, null
         )
-//        Log.e("my", DatabaseUtils.dumpCursorToString(cursorInfo))
+        Log.e("my", DatabaseUtils.dumpCursorToString(cursorInfo))
         val phones = mutableListOf<Phone>()
 
         cursorInfo?.let {
@@ -222,9 +230,22 @@ class ContactsRepository(private val context: Context) {
             ContactsContract.Data.MIMETYPE,
             ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
         )
-        values.put(ContactsContract.CommonDataKinds.Event.TYPE, event.type)
         values.put(ContactsContract.CommonDataKinds.Event.RAW_CONTACT_ID, event.personId)
-        values.put(ContactsContract.CommonDataKinds.Event.LABEL, event.label)
+
+        if (event.type == EventType.CUSTOM) {
+            values.put(ContactsContract.CommonDataKinds.Event.LABEL, event.label)
+        }
+
+        if (event.type == EventType.NEW_LIFE_DAY) {
+            values.put(
+                ContactsContract.CommonDataKinds.Event.LABEL,
+                context.getString(R.string.sDayOfRepose)
+            )
+            values.put(ContactsContract.CommonDataKinds.Event.TYPE, EventType.CUSTOM)
+        } else {
+            values.put(ContactsContract.CommonDataKinds.Event.TYPE, event.type)
+        }
+
         values.put(ContactsContract.CommonDataKinds.Event.START_DATE, event.date)
 
         return suspendCoroutine {
@@ -282,11 +303,11 @@ class ContactsRepository(private val context: Context) {
 
     fun getTemplates(): List<Template> {
         return listOf(
+            Template(0, EventType.CUSTOM),
             Template(1, EventType.BIRTHDAY),
-            Template(2, EventType.CUSTOM),
-            Template(3, EventType.OTHER),
-            Template(4, EventType.ANNIVERSARY),
-            Template(5, EventType.NEW_LIFE_DAY),
+            Template(2, EventType.OTHER),
+            Template(3, EventType.ANNIVERSARY),
+            Template(4, EventType.NEW_LIFE_DAY),
         )
     }
 

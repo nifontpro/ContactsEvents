@@ -7,7 +7,7 @@ import ru.nifontbus.contactsevents.R
 data class Event(
     val label: String = "",
     val date: String = "",
-    val type: Int = -1,
+    val type: Int = EventType.CUSTOM,
     val personId: Long = -1,
     val id: Long = -1
 ) {

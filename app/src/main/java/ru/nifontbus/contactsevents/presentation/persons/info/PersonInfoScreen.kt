@@ -239,16 +239,14 @@ private fun EventInfoCard(event: Event) {
             .padding(vertical = 5.dp)
             .clip(RoundedCornerShape(3.dp))
             .background(MaterialTheme.colors.surface)
-            .clickable {
-
-            },
+            .clickable { },
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                "${event.date} id: ${event.id}",
+                "${event.date} id: ${event.id} type: ${event.type}",
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
                     .padding(top = 10.dp),

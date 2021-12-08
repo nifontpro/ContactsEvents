@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
+import ru.nifontbus.contactsevents.domain.data.EventType
 import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.presentation.events.EventsScreen
 import ru.nifontbus.contactsevents.presentation.events.new_event.NewEventScreen
@@ -61,7 +62,8 @@ class MainActivity : ComponentActivity() {
                             PersonInfoScreen(extNavController)
                         }
 
-                        val sharedTemplateState = mutableStateOf(Template())
+                        val sharedTemplateState =
+                            mutableStateOf(Template(type = EventType.CUSTOM))
 
                         composable(
                             Screen.NavNewEventScreen.route,

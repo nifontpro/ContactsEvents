@@ -15,6 +15,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -43,7 +44,7 @@ fun TemplatesScreen(
 
     Scaffold(
         topBar = {
-            TopBar(extNavController, "Templates of events")
+            TopBar(extNavController, "Type of events")
         },
         /*floatingActionButton = {
             FloatingActionButton(
@@ -56,6 +57,7 @@ fun TemplatesScreen(
         scaffoldState = scaffoldState,
         backgroundColor = MaterialTheme.colors.background
     ) {
+        val context = LocalContext.current
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -74,7 +76,11 @@ fun TemplatesScreen(
                     },
                     {
                         TemplateCard(template) {
-                            sharedTemplateState.value = template
+                            sharedTemplateState.value =
+                                Template(
+                                    type = template.type,
+                                    label = template.getDescription(context)
+                                )
                             extNavController.popBackStack()
                         }
                     },
@@ -104,7 +110,7 @@ private fun TemplateCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    template.name,
+                    template.getDescription(LocalContext.current),
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 20.dp),
                     style = MaterialTheme.typography.h5,
                 )

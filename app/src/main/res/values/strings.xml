@@ -8,5 +8,6 @@
     <string name="group_coworkers">Coworkers</string>
     <string name="sDelimetr" translatable="false">", "</string>
     <string name="sGroups">"Groups: "</string>
-    <string name="sNewLifeDay">New Life Day</string>
+    <string name="sNewLifeDay">Day of Repose</string>
+    <string name="sDayOfRepose" translatable="false">Day of Repose</string>
 </resources>

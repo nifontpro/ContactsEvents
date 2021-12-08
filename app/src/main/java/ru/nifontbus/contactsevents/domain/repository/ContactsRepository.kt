@@ -12,10 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.nifontbus.contactsevents.domain.data.Event
-import ru.nifontbus.contactsevents.domain.data.Person
-import ru.nifontbus.contactsevents.domain.data.PersonsGroup
-import ru.nifontbus.contactsevents.domain.data.Resource
+import ru.nifontbus.contactsevents.domain.data.*
 import ru.nifontbus.contactsevents.domain.data.person_info.PersonInfo
 import ru.nifontbus.contactsevents.domain.data.person_info.Phone
 import kotlin.coroutines.resume
@@ -281,6 +278,16 @@ class ContactsRepository(private val context: Context) {
                 }
             )
         }
+    }
+
+    fun getTemplates(): List<Template> {
+        return listOf(
+            Template(1, EventType.BIRTHDAY),
+            Template(2, EventType.CUSTOM),
+            Template(3, EventType.OTHER),
+            Template(4, EventType.ANNIVERSARY),
+            Template(5, EventType.NEW_LIFE_DAY),
+        )
     }
 
 /*    private fun getEventsCursorById(id: Long): Cursor? {

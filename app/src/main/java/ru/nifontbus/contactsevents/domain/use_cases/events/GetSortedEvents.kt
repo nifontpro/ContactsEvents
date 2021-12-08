@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import ru.nifontbus.contactsevents.domain.data.Const
+import ru.nifontbus.contactsevents.domain.data.EventType
 import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.repository.ContactsRepository
 import ru.nifontbus.contactsevents.domain.utils.asString
@@ -56,7 +56,7 @@ class GetSortedEvents(
     private fun add40Day(events: List<Event>): List<Event> {
         val mutableEvents = events.toMutableList()
         events.forEach { event ->
-            if (event.type == Const.TYPE_DAY_OF_DEATH) {
+            if (event.type == EventType.NEW_LIFE_DAY) {
                 try {
                     val day40date = event.date.toLocalDate().plusDays(39)
                     if (day40date > LocalDate.now()) {

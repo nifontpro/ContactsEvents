@@ -19,7 +19,8 @@ sealed class Screen(val route: String) {
         fun createRoute(id: Long) = "new_event_screen?id=$id"
     }
 
-    // 3rd for person:
+    object NavTemplatesScreen: Screen("templates_screen")
+
     object NavPersonInfoMainScreen: Screen("person_info_main_screen")
     object NavPersonEditScreen: Screen("person_edit_screen")
 
@@ -29,10 +30,7 @@ sealed class Screen(val route: String) {
     }
 
     object NavLoginScreen: Screen("login_screen")
-
-    // 3rd Nav for template:
     object NavNewEventMainScreen: Screen("new_event_main_screen")
-    object NavSelectTemplateScreen: Screen("select_template_screen")
     object NavNewTemplateScreen: Screen("new_template_screen")
 
 }

@@ -30,10 +30,10 @@ class NewEventViewModel @Inject constructor(
 
     private val _eventName = mutableStateOf("")
     val eventName: State<String> = _eventName
-    private var eventType: Int = ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM
+
+    var eventType = ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM
 
     val date = mutableStateOf("")
-//    val date: State<String> = _date
 
     private val _action = MutableSharedFlow<String>()
     val action: SharedFlow<String> = _action.asSharedFlow()

@@ -58,8 +58,6 @@ class PersonInfoViewModel @Inject constructor(
 
     fun getPersonInfo(id: Long) = personsUseCases.getPersonInfo(id)
 
-    fun addEvent(event: Event) {} /*eventsUseCases.addEvent(event)*/
-
     fun deleteEvent(event: Event) = viewModelScope.launch {
         when (val result = eventsUseCases.deleteEvent(event)) {
             is Resource.Success -> {

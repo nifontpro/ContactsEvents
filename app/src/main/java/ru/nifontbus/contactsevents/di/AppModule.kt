@@ -19,6 +19,8 @@ import ru.nifontbus.contactsevents.domain.use_cases.persons.*
 import ru.nifontbus.contactsevents.domain.use_cases.settings.GetCurrentGroup
 import ru.nifontbus.contactsevents.domain.use_cases.settings.SetCurrentGroup
 import ru.nifontbus.contactsevents.domain.use_cases.settings.SettingsUseCases
+import ru.nifontbus.contactsevents.domain.use_cases.template.GetTemplates
+import ru.nifontbus.contactsevents.domain.use_cases.template.TemplatesUseCases
 import javax.inject.Singleton
 
 // https://howtodoandroid.com/android-hilt-dependency-injection/
@@ -53,15 +55,15 @@ object AppModule {
         )
     }
 
-/*    @Provides
+    @Provides
     @Singleton
-    fun provideTemplatesUseCases(repository: FirebaseRepo): TemplatesUseCases {
+    fun provideTemplatesUseCases(repository: ContactsRepository): TemplatesUseCases {
         return TemplatesUseCases(
-            addTemplate = AddTemplate(repository),
+//            addTemplate = AddTemplate(repository),
             getTemplates = GetTemplates(repository),
-            deleteTemplate = DeleteTemplate(repository)
+//            deleteTemplate = DeleteTemplate(repository)
         )
-    }*/
+    }
 
 
     @Provides

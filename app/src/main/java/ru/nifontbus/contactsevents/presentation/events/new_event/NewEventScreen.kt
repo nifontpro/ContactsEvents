@@ -25,20 +25,30 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.collect
+import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.domain.utils.toLocalDate
+import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.TopBar
-import ru.nifontbus.contactsevents.ui.theme.*
+import ru.nifontbus.contactsevents.ui.theme.IconGreen
+import ru.nifontbus.contactsevents.ui.theme.LightGreen2
+import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
+import ru.nifontbus.contactsevents.ui.theme.TextWhite
 import java.time.LocalDate
 
 @ExperimentalComposeUiApi
 @Composable
 fun NewEventScreen(
-    extNavController: NavHostController
+    extNavController: NavHostController,
+    sharedTemplateState: MutableState<Template>,
 ) {
-
     val viewModel: NewEventViewModel = hiltViewModel()
     val scaffoldState = rememberScaffoldState()
     val person = viewModel.person.value
+
+    LaunchedEffect(sharedTemplateState) {
+        viewModel.setEventName(sharedTemplateState.value.name)
+        viewModel.eventType = sharedTemplateState.value.type
+    }
 
     LaunchedEffect(scaffoldState) {
         viewModel.action.collect { message ->
@@ -67,7 +77,6 @@ fun NewEventScreen(
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(horizontal = 10.dp)
-//                    .padding(top = 20.dp)
                     .fillMaxWidth()
                     .background(Color.Transparent)
             ) {
@@ -117,7 +126,7 @@ fun NewEventScreen(
                             placeholder = { Text("Event name") },
                             trailingIcon = {
                                 IconButton(onClick = {
-//                                    navController.navigate(Screen.NavSelectTemplateScreen.route)
+                                    extNavController.navigate(Screen.NavTemplatesScreen.route)
                                 }) {
                                     Icon(imageVector = Icons.Default.ReadMore, null)
                                 }

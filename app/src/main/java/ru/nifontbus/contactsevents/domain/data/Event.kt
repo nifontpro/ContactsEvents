@@ -2,6 +2,7 @@ package ru.nifontbus.contactsevents.domain.data
 
 import android.content.Context
 import android.provider.ContactsContract
+import ru.nifontbus.contactsevents.R
 
 data class Event(
     val label: String = "",
@@ -12,9 +13,9 @@ data class Event(
 ) {
 
     fun getDescription(context: Context) =
-        if (type == ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM) {
-            label
-        } else {
-            context.getString(ContactsContract.CommonDataKinds.Event.getTypeResource(type))
+        when (type) {
+            EventType.CUSTOM -> label
+            EventType.NEW_LIFE_DAY -> context.getString(R.string.sNewLifeDay)
+            else -> context.getString(ContactsContract.CommonDataKinds.Event.getTypeResource(type))
         }
 }

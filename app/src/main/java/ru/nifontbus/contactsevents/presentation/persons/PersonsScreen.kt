@@ -1,5 +1,6 @@
 package ru.nifontbus.contactsevents.presentation.persons
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -27,6 +28,7 @@ import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.ui.theme.*
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
 fun PersonsScreen(
@@ -36,6 +38,7 @@ fun PersonsScreen(
     val viewModel: PersonsViewModel = hiltViewModel()
     val scaffoldState = rememberScaffoldState()
     val persons = viewModel.persons.value
+    val grouped = persons.groupBy { it.displayName[0] }
 
     BottomNavItem.PersonItem.badgeCount.value = persons.size
 
@@ -94,46 +97,58 @@ fun PersonsScreen(
 
         ) {
 
-            items(persons) { person ->
-                Box(
-                    modifier = Modifier
-                        .padding(vertical = 5.dp)
-                        .clip(RoundedCornerShape(3.dp))
-                        .background(MaterialTheme.colors.surface)
-                        .clickable {
-                            extNavController.navigate(
-                                Screen.NavPersonInfoScreen.createRoute(person.id)
+            grouped.forEach { (initial, contactsForInitial) ->
+                stickyHeader {
+                    Text(
+                        "$initial ",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colors.secondary)
+                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                    )
+                }
+
+                items(contactsForInitial) { person ->
+                    Box(
+                        modifier = Modifier
+                            .padding(vertical = 5.dp)
+                            .clip(RoundedCornerShape(3.dp))
+                            .background(MaterialTheme.colors.surface)
+                            .clickable {
+                                extNavController.navigate(
+                                    Screen.NavPersonInfoScreen.createRoute(person.id)
+                                )
+                            },
+                    ) {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = Search.colorSubstring(
+                                    person.displayName, viewModel.searchState.value,
+                                    MaterialTheme.colors.onBackground, Color.Red
+                                ),
+                                modifier = Modifier.padding(
+                                    horizontal = 10.dp,
+                                    vertical = 10.dp
+                                ),
+                                style = MaterialTheme.typography.h5,
                             )
-                        },
-                ) {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = Search.colorSubstring(
-                                person.displayName, viewModel.searchState.value,
-                                MaterialTheme.colors.onBackground, Color.Red
-                            ),
-                            modifier = Modifier.padding(
-                                horizontal = 10.dp,
-                                vertical = 10.dp
-                            ),
-                            style = MaterialTheme.typography.h5,
-                        )
-                        Text(
-                            "id: ${person.id}",
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp)
-                                .padding(bottom = 10.dp),
-                            style = MaterialTheme.typography.h6,
-                            color = LightRed,
-                        )
-                        Text(
-                            "Groups id`s: ${person.groups}",
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp)
-                                .padding(bottom = 10.dp),
-                            style = MaterialTheme.typography.h6,
-                            color = PrimaryDarkColor,
-                        )
+                            Text(
+                                "id: ${person.id}",
+                                modifier = Modifier
+                                    .padding(horizontal = 10.dp)
+                                    .padding(bottom = 10.dp),
+                                style = MaterialTheme.typography.h6,
+                                color = LightRed,
+                            )
+                            Text(
+                                "Groups id`s: ${person.groups}",
+                                modifier = Modifier
+                                    .padding(horizontal = 10.dp)
+                                    .padding(bottom = 10.dp),
+                                style = MaterialTheme.typography.h6,
+                                color = PrimaryDarkColor,
+                            )
+                        }
                     }
                 }
             }

@@ -4,7 +4,6 @@ import android.content.ContentProviderOperation
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.database.DatabaseUtils
 import android.net.Uri
 import android.provider.ContactsContract
 import android.util.Log
@@ -40,9 +39,6 @@ class ContactsRepository(private val context: Context) {
         eventsUpdate()
     }
 
-    // +contacts
-    // https://stackru.com/questions/32761829/vstavka-novogo-kontakta-programmno-cherez-moe-prilozhenie-bez-ispolzovaniya-intent
-
     private fun personsUpdate() = CoroutineScope(Dispatchers.Default).launch {
         val uri = ContactsContract.Contacts.CONTENT_URI
 
@@ -51,15 +47,12 @@ class ContactsRepository(private val context: Context) {
             ContactsContract.Contacts.DISPLAY_NAME,
             ContactsContract.Contacts.HAS_PHONE_NUMBER,
         )
-/*        val where = ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?"
-        val selectionArgs = arrayOf("А%")*/
+
         val sortOrder = ContactsContract.Contacts.DISPLAY_NAME
 
         val cursor = context.contentResolver.query(
             uri, projection, null, null, sortOrder
         )
-
-//        Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
 
         cursor?.let {
 //            val keyRef = it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY)
@@ -114,7 +107,6 @@ class ContactsRepository(private val context: Context) {
     }
 
     private fun groupsUpdate() = CoroutineScope(Dispatchers.Default).launch {
-
         val uri: Uri = ContactsContract.Groups.CONTENT_URI
         val projection = arrayOf(
             ContactsContract.Groups.TITLE,
@@ -126,7 +118,7 @@ class ContactsRepository(private val context: Context) {
         val cursor = context.contentResolver.query(
             uri, projection, null, null, sortOrder
         )
-//        Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
+
         cursor?.let {
 
             val idIdx = it.getColumnIndex(ContactsContract.Groups._ID)
@@ -197,45 +189,14 @@ class ContactsRepository(private val context: Context) {
         }
     }
 
-    /*   private fun getAggregationContacts(id: Int) {
-           val uri = ContactsContract.Contacts.CONTENT_URI.buildUpon()
-               .appendEncodedPath(id.toString())
-               .appendPath(ContactsContract.Contacts.AggregationSuggestions.CONTENT_DIRECTORY)
-               .appendQueryParameter("limit", "3")
-               .build()
-           val cursor = context.contentResolver.query(
-               uri,
-               arrayOf(
-                   ContactsContract.Contacts.DISPLAY_NAME,
-                   ContactsContract.Contacts._ID,
-                   ContactsContract.Contacts.LOOKUP_KEY
-               ),
-               null, null, null
-           );
-           Log.d("my", DatabaseUtils.dumpCursorToString(cursor))
-       }*/
-
     fun getPersonInfo(contactId: Long): PersonInfo {
         val uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactId.toString())
-        val cursor = context.contentResolver.query(
-            uri, null, null, null, null
-        )
-        Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
-
-/*        val groupUri = Uri.withAppendedPath(uri, ContactsContract.CommonDataKinds.GroupMembership.CONTACT_ID)
-        val cursorInfo = contentResolver.query(groupUri, null, null, null, null)
-        Log.e("my", DatabaseUtils.dumpCursorToString(cursorInfo))*/
-
-        // All info:
         val infoUri = Uri.withAppendedPath(uri, ContactsContract.Contacts.Entity.CONTENT_DIRECTORY)
         val cursorInfo = context.contentResolver.query(
             infoUri, null, null, null, null
         )
-
-        Log.e("my", DatabaseUtils.dumpCursorToString(cursorInfo))
-
+//        Log.e("my", DatabaseUtils.dumpCursorToString(cursorInfo))
         val phones = mutableListOf<Phone>()
-//        val emails = mutableListOf<Phone>()
 
         cursorInfo?.let {
             val mimeTypeIdx = it.getColumnIndex(ContactsContract.Data.MIMETYPE)
@@ -251,9 +212,6 @@ class ContactsRepository(private val context: Context) {
                     ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
                         phones.add(Phone(data1, data2.toIntDefault(0)))
                     }
-/*                    ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE -> {
-                        emails.add(Phone(data1, data2.toIntDefault(0)))
-                    }*/
                 }
             }
             it.close()
@@ -261,39 +219,38 @@ class ContactsRepository(private val context: Context) {
         return PersonInfo(phones)
     }
 
-    fun addEvent(event: Event) {
+    suspend fun addEvent(event: Event): Resource<Unit> {
         val values = ContentValues()
         values.put(
             ContactsContract.Data.MIMETYPE,
             ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
         )
-        values.put(ContactsContract.Data.RAW_CONTACT_ID, event.personId)
-        values.put(
-            ContactsContract.CommonDataKinds.Event.TYPE,
-            ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY
-        )
+        values.put(ContactsContract.CommonDataKinds.Event.TYPE, event.type)
         values.put(ContactsContract.CommonDataKinds.Event.RAW_CONTACT_ID, event.personId)
-        values.put(ContactsContract.CommonDataKinds.Event.LABEL, "")
-        values.put(
-            ContactsContract.CommonDataKinds.Event.START_DATE,
-            "2010-01-28"
-        ) // hard-coded date of birth
+        values.put(ContactsContract.CommonDataKinds.Event.LABEL, event.label)
+        values.put(ContactsContract.CommonDataKinds.Event.START_DATE, event.date)
 
-        var created: Uri? = null
-        try {
-            created = context.contentResolver.insert(ContactsContract.Data.CONTENT_URI, values)
-        } catch (e: java.lang.Exception) {
-            Log.e("my", "Error inserting the event!")
-        }
-        if (created == null) {
-            Log.e("my", "Failed inserting the event!")
-        } else {
-            eventsUpdate()
-            Log.e("my", "Successfully inserted the event!")
+        return suspendCoroutine {
+            val exc = "Failed inserting the event!"
+            it.resume(
+                try {
+                    val idStr =
+                        context.contentResolver.insert(
+                            ContactsContract.Data.CONTENT_URI, values
+                        )?.lastPathSegment ?: throw Exception(exc)
+
+                    val id = idStr.toLong()
+                    Log.e("my", "Event add: $event, id = $id")
+                    val newEvent = event.copy(id = id)
+                    _events.value = events.value + newEvent
+
+                    Resource.Success("Event inserting successful")
+                } catch (e: Exception) {
+                    Resource.Error(e.localizedMessage ?: exc)
+                }
+            )
         }
     }
-// Операции с данными:
-// https://developer.android.com/reference/android/provider/ContactsContract.Data.html?authuser=1
 
     suspend fun deleteEvent(event: Event): Resource<Unit> {
 
@@ -316,9 +273,8 @@ class ContactsRepository(private val context: Context) {
 
             it.resume(
                 try {
-//                    throw Exception("Hi There!")
                     context.contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
-                    eventsUpdate()
+                    _events.value = events.value - event
                     Resource.Success("Event delete successful")
                 } catch (e: Exception) {
                     Resource.Error(e.localizedMessage ?: "Error delete event!")
@@ -327,7 +283,7 @@ class ContactsRepository(private val context: Context) {
         }
     }
 
-    private fun getEventsCursorById(id: Long): Cursor? {
+/*    private fun getEventsCursorById(id: Long): Cursor? {
         val uri: Uri = ContactsContract.Data.CONTENT_URI
 
         val projection = arrayOf(
@@ -343,10 +299,9 @@ class ContactsRepository(private val context: Context) {
             ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
         )
         return context.contentResolver.query(uri, projection, where, selectionArgs, null)
-    }
+    }*/
 
 } // eoc
-
 
 fun String.toIntDefault(default: Int) =
     try {
@@ -357,3 +312,27 @@ fun String.toIntDefault(default: Int) =
 
 // +event:
 // https://question-it.com/questions/5800521/dobavit-sobytie-dlja-kontakta-v-tablitsu-kontaktov-android
+
+// Операции с данными:
+// https://developer.android.com/reference/android/provider/ContactsContract.Data.html?authuser=1
+
+// +contacts
+// https://stackru.com/questions/32761829/vstavka-novogo-kontakta-programmno-cherez-moe-prilozhenie-bez-ispolzovaniya-intent
+
+/*   private fun getAggregationContacts(id: Int) {
+       val uri = ContactsContract.Contacts.CONTENT_URI.buildUpon()
+           .appendEncodedPath(id.toString())
+           .appendPath(ContactsContract.Contacts.AggregationSuggestions.CONTENT_DIRECTORY)
+           .appendQueryParameter("limit", "3")
+           .build()
+       val cursor = context.contentResolver.query(
+           uri,
+           arrayOf(
+               ContactsContract.Contacts.DISPLAY_NAME,
+               ContactsContract.Contacts._ID,
+               ContactsContract.Contacts.LOOKUP_KEY
+           ),
+           null, null, null
+       );
+       Log.d("my", DatabaseUtils.dumpCursorToString(cursor))
+   }*/

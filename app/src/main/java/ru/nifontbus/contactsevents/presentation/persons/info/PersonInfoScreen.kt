@@ -26,6 +26,7 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.collect
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Event
+import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.TemplateSwipeToDismiss
 import ru.nifontbus.contactsevents.presentation.navigation.TopBar
 import ru.nifontbus.contactsevents.ui.theme.Half3Gray
@@ -177,12 +178,9 @@ fun PersonInfoMainScreen(
 
                         Button(
                             onClick = {
-                                /*extNavController.navigate(
-                                    Screen.NavNewEventScreen.createRoute(
-                                        person.id
-                                    )
-                                )*/
-                                viewModel.addEvent(Event(personId = person.id))
+                                extNavController.navigate(
+                                    Screen.NavNewEventScreen.createRoute(person.id)
+                                )
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -216,7 +214,7 @@ fun PersonInfoMainScreen(
                             key = { _, item -> item.id }
                         ) { _, event ->
 
-                             TemplateSwipeToDismiss(
+                            TemplateSwipeToDismiss(
                                 modifier = Modifier.padding(vertical = 4.dp),
                                 {
                                     viewModel.deleteEvent(event)

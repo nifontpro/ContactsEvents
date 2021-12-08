@@ -27,9 +27,6 @@ class PersonInfoViewModel @Inject constructor(
     private val _person = mutableStateOf(Person())
     val person: State<Person> = _person
 
-/*    private val _personEvents = mutableStateOf<List<Event>>(emptyList())
-    val personEvents: State<List<Event>> = _personEvents*/
-
     val personEvents by lazy {
         eventsUseCases.getEventsByPerson(person.value.id)
     }
@@ -55,20 +52,13 @@ class PersonInfoViewModel @Inject constructor(
                 }
             }
         }
-//        eventsUpdate()
     }
-
-/*    private fun eventsUpdate() = viewModelScope.launch {
-        eventsUseCases.getEventsByPerson(person.value.id).collect {
-            _personEvents.value = it
-        }
-    }*/
 
     fun getGroupById(id: Long) = groupsUseCases.getGroupById(id)
 
     fun getPersonInfo(id: Long) = personsUseCases.getPersonInfo(id)
 
-    fun addEvent(event: Event) = eventsUseCases.addEvent(event)
+    fun addEvent(event: Event) {} /*eventsUseCases.addEvent(event)*/
 
     fun deleteEvent(event: Event) = viewModelScope.launch {
         when (val result = eventsUseCases.deleteEvent(event)) {
@@ -77,7 +67,6 @@ class PersonInfoViewModel @Inject constructor(
             }
             is Resource.Error -> {
                 sendMessage(result.message)
-//                eventsUpdate()
             }
         }
     }
@@ -85,7 +74,6 @@ class PersonInfoViewModel @Inject constructor(
     private suspend fun sendMessage(msg: String) {
         _action.emit(msg)
     }
-
 }
 
 /*    fun deleteEvent(id: String) = viewModelScope.launch {

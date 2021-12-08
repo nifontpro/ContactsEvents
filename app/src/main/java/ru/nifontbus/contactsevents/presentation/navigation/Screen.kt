@@ -15,13 +15,13 @@ sealed class Screen(val route: String) {
     object NavPersonInfoScreen: Screen("person_info_screen?id={id}") {
         fun createRoute(id: Long) = "person_info_screen?id=$id"
     }
+    object NavNewEventScreen: Screen("new_event_screen?id={id}") {
+        fun createRoute(id: Long) = "new_event_screen?id=$id"
+    }
+
     // 3rd for person:
     object NavPersonInfoMainScreen: Screen("person_info_main_screen")
     object NavPersonEditScreen: Screen("person_edit_screen")
-
-    object NavNewEventScreen: Screen("add_event_screen?id={id}") {
-        fun createRoute(id: String) = "add_event_screen?id=$id"
-    }
 
     object NavNewGroupScreen: Screen("new_group_screen")
     object NavGroupEditScreen: Screen("group_edit_screen?id={id}") {

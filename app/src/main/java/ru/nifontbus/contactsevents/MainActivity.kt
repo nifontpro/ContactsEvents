@@ -3,6 +3,7 @@ package ru.nifontbus.contactsevents
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -18,6 +19,7 @@ import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import ru.nifontbus.contactsevents.presentation.events.EventsScreen
+import ru.nifontbus.contactsevents.presentation.events.new_event.NewEventScreen
 import ru.nifontbus.contactsevents.presentation.groups.GroupScreen
 import ru.nifontbus.contactsevents.presentation.navigation.BottomBar
 import ru.nifontbus.contactsevents.presentation.navigation.GetPermission
@@ -26,6 +28,7 @@ import ru.nifontbus.contactsevents.presentation.persons.PersonsScreen
 import ru.nifontbus.contactsevents.presentation.persons.info.PersonInfoScreen
 import ru.nifontbus.contactsevents.ui.theme.ContactsEventsTheme
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @ExperimentalPermissionsApi
@@ -47,11 +50,19 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.MainScreen.route) {
                             MainScreen(extNavController)
                         }
+
                         composable(
                             Screen.NavPersonInfoScreen.route,
                             arguments = idArgument(),
                         ) {
                             PersonInfoScreen(extNavController)
+                        }
+
+                        composable(
+                            Screen.NavNewEventScreen.route,
+                            arguments = idArgument(),
+                        ) {
+                            NewEventScreen(extNavController)
                         }
                     }
                 }
@@ -68,6 +79,7 @@ class MainActivity : ComponentActivity() {
     )
 }
 
+@ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable

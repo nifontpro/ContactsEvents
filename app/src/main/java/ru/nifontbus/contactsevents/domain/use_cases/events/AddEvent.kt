@@ -6,7 +6,5 @@ import ru.nifontbus.contactsevents.domain.repository.ContactsRepository
 class AddEvent(
     private val repository: ContactsRepository
 ) {
-    operator fun invoke(event: Event) {
-        repository.addEvent(event)
-    }
+    suspend operator fun invoke(event: Event) = repository.addEvent(event)
 }

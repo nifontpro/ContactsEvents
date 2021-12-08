@@ -13,7 +13,6 @@ class GetEventsByPerson(
 ) {
     operator fun invoke(personId: Long): Flow<List<Event>> = flow {
         repository.events.collect { events ->
-            Log.e("my", "!!! Collect Events !!!")
             emit(events.filter { event -> event.personId == personId }.sortedBy { it.label })
         }
     }

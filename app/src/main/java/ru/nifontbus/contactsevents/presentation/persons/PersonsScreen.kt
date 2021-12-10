@@ -18,6 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -123,7 +127,8 @@ fun PersonsScreen(
                         Column(modifier = Modifier.fillMaxWidth()) {
                             Text(
                                 text = Search.colorSubstring(
-                                    person.displayName, viewModel.searchState.value,
+                                    person.displayName,
+                                    viewModel.searchState.value,
                                     MaterialTheme.colors.onBackground, Color.Red
                                 ),
                                 modifier = Modifier.padding(

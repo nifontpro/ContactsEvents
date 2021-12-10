@@ -307,7 +307,9 @@ class ContactsRepository(private val context: Context) {
             Template(1, EventType.BIRTHDAY),
             Template(2, EventType.OTHER),
             Template(3, EventType.ANNIVERSARY),
-            Template(4, EventType.NEW_LIFE_DAY),
+            Template(4, EventType.CUSTOM, context.getString(R.string.sAngelDay)),
+            Template(5, EventType.CUSTOM, context.getString(R.string.sWeddingDay)),
+            Template(6, EventType.NEW_LIFE_DAY),
         )
     }
 

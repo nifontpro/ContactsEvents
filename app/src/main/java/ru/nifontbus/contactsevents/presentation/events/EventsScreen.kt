@@ -1,7 +1,5 @@
 package ru.nifontbus.contactsevents.presentation.events
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,16 +7,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import ru.nifontbus.contactsevents.ui.theme.LightRed
-import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
+import ru.nifontbus.contactsevents.domain.data.Event
 
 @ExperimentalMaterialApi
 
@@ -59,70 +59,80 @@ fun EventsScreen(
         ) {
 
             items(events) { event ->
-                Box(
-                    modifier = Modifier
-                        .padding(vertical = 5.dp)
-                        .clip(RoundedCornerShape(5.dp))
-                        .background(MaterialTheme.colors.surface)
-                        .clickable {
-//                            extNavController
-                        },
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column {
-                            val modText = Modifier.padding(horizontal = 10.dp, vertical = 3.dp)
-//                            val year = if (event.fullYear > 0) "[${event.fullYear}]" else ""
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 10.dp, vertical = 3.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    event.date,
-                                    style = MaterialTheme.typography.h5,
-                                    color = LightRed,
-                                )
-                                /*Text(
-                                    year,
-                                    style = MaterialTheme.typography.h6,
-                                    color = YearColor,
-                                )*/
-                            }
+                EventCard(event, viewModel)
+            }
+        }
+    }
+}
 
-                            Text(
-                                event.getDescription(LocalContext.current),
-                                modifier = modText,
-                                style = MaterialTheme.typography.h6,
-                                color = PrimaryDarkColor,
-                            )
+@Composable
+private fun EventCard(
+    event: Event,
+    viewModel: EventsViewModel
+) {
+    Surface(
+        elevation = 1.dp,
+        shape = RoundedCornerShape(3.dp),
+        modifier = Modifier.padding(vertical = 3.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            val daysLeft = event.daysLeft()
+            val person = viewModel.getPersonById(event.personId).collectAsState(null).value
+            val modText = Modifier.padding(horizontal = 10.dp)
+            Column {
 
-                            val person = viewModel.getPersonById(event.personId).collectAsState(
-                                initial = null
-                            ).value
-                            person?.let {
-                                Text(
-                                    text = person.displayName,
-                                    modifier = modText,
-                                    style = MaterialTheme.typography.h5,
-                                    color = MaterialTheme.colors.onBackground,
-                                )
-                                /*val groupName = viewModel.getGroupsById(person.groupId)?.name
+                person?.let {
+                    Text(
+                        text = it.displayName,
+                        modifier = modText,
+                        style = MaterialTheme.typography.h6,
+                    )
+                    /*val groupName = viewModel.getGroupsById(person.groupId)?.name
                                 Text(
                                     "[$groupName]",
                                     modifier = modText,
                                     style = MaterialTheme.typography.h5,
                                     color = OrangeYellow3,
                                 )*/
+                    Divider()
+                }
+
+                val dateText = buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontStyle = FontStyle.Normal)) {
+                        append(event.date)
+                    }
+                    event.getFullYear()?.let {
+                        if (it > 0) {
+                            withStyle(
+                                style = SpanStyle(
+                                    fontStyle = FontStyle.Italic,
+                                    fontWeight = FontWeight.W300
+                                )
+                            ) {
+                                append(", прошло лет: $it")
                             }
                         }
                     }
                 }
-            }
-        }
+                Text(
+                    dateText,
+                    modifier = modText,
+                    style = MaterialTheme.typography.h6,
+                )
+
+                val description = event.getDescription(LocalContext.current) +
+                        if (daysLeft > 0) {
+                            ", осталось дней: $daysLeft"
+                        } else ""
+                Text(
+                    description,
+                    modifier = modText,
+                    color = MaterialTheme.colors.primaryVariant,
+                )
+            } // Column
+        } // Row
     }
 }

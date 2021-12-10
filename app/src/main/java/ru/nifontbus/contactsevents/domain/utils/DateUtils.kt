@@ -40,16 +40,6 @@ fun String.toMonthAndDay(): String {
     }
 }
 
-fun String.getFullYear(): Int {
-    return try {
-        val birthDate = this.toLocalDate()
-        val year = ChronoUnit.YEARS.between(birthDate, LocalDate.now())
-        year.toInt()
-    } catch (e: Exception) {
-        -1
-    }
-}
-
 // https://stackoverflow.com/questions/65388653/convert-string-into-localdate-kotlin
 // https://www.rrtutors.com/tutorials/How-to-show-date-picker-with-Jetpack-compose
 // https://howtoprogram.xyz/2017/02/11/convert-milliseconds-localdatetime-java/

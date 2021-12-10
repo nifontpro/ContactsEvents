@@ -10,4 +10,6 @@
     <string name="sGroups">"Groups: "</string>
     <string name="sNewLifeDay">Day of Repose</string>
     <string name="sDayOfRepose" translatable="false">Day of Repose</string>
+    <string name="sAngelDay">Name days</string>
+    <string name="sWeddingDay">Wedding Day</string>
 </resources>

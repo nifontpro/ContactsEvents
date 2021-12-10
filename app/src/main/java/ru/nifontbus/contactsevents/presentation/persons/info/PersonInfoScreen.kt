@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.SettingsAccessibility
 import androidx.compose.runtime.Composable
@@ -35,38 +36,8 @@ import ru.nifontbus.contactsevents.ui.theme.TextWhite
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @Composable
-fun PersonInfoScreen(extNavController: NavHostController) {
-
-//    val navController = rememberNavController()
-
-/*    NavHost(
-        navController = navController,
-        startDestination = Screen.NavPersonInfoMainScreen.route,
-        modifier = Modifier.padding(0.dp)
-    ) {
-        composable(Screen.NavPersonInfoMainScreen.route) {
-            PersonInfoMainScreen(extNavController, navController, viewModel)
-        }
-
-        composable(Screen.NavPersonEditScreen.route) {
-            PersonEditScreen(navController, viewModel) {
-                navController.popBackStack()
-                extNavController.popBackStack()
-            }
-        }
-    }*/
-
-    PersonInfoMainScreen(extNavController)
-
-}
-
-@ExperimentalMaterialApi
-@ExperimentalComposeUiApi
-@Composable
-fun PersonInfoMainScreen(
+fun PersonInfoScreen(
     extNavController: NavHostController,
-//    navController: NavHostController,
-//    viewModel: PersonInfoViewModel
 ) {
     val viewModel: PersonInfoViewModel = hiltViewModel()
     val person = viewModel.person.value
@@ -79,7 +50,8 @@ fun PersonInfoMainScreen(
         }
     }
 
-    Scaffold(scaffoldState = scaffoldState,
+    Scaffold(
+        scaffoldState = scaffoldState,
         backgroundColor = MaterialTheme.colors.background,
         topBar = {
             /*TopBarOther("Person info", Icons.Default.Tune,
@@ -90,7 +62,21 @@ fun PersonInfoMainScreen(
                 })*/
 
             TopBar(extNavController, "Person info")
-        }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    extNavController.navigate(Screen.NavNewEventScreen.createRoute(person.id))
+                },
+                backgroundColor = MaterialTheme.colors.primary
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add event",
+                    tint = TextWhite
+                )
+            }
+        },
     ) {
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -174,20 +160,6 @@ fun PersonInfoMainScreen(
 
                                 }
                             }
-                        }
-
-                        Button(
-                            onClick = {
-                                extNavController.navigate(
-                                    Screen.NavNewEventScreen.createRoute(person.id)
-                                )
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 5.dp)
-                                .height(55.dp),
-                        ) {
-                            Text("Create new event", color = TextWhite)
                         }
                     }
                 } // Box1

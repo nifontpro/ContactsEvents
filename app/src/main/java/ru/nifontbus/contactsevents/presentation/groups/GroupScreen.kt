@@ -1,7 +1,5 @@
 package ru.nifontbus.contactsevents.presentation.groups
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,7 +13,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
@@ -23,8 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.collect
+import ru.nifontbus.contactsevents.domain.data.PersonsGroup
 import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
-import ru.nifontbus.contactsevents.ui.theme.*
+import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
 
 @ExperimentalMaterialApi
 @Composable
@@ -67,56 +65,58 @@ fun GroupScreen(
         ) {
 
             items(groups) { group ->
+                GroupCard(group, viewModel, currentGroup)
+            }
+        }
+    }
+}
 
-                Box(
-                    modifier = Modifier
-                        .padding(vertical = 5.dp)
-                        .clip(RoundedCornerShape(3.dp))
-                        .background(HalfGray)
-                        .clickable {
-                            /*extNavController.navigate(
-                                Screen.NavGroupEditScreen.createRoute(group.id)
-                            )*/
-                        }
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text(
-                                "[${group.localTitle(LocalContext.current)}]",
-                                modifier = Modifier.padding(10.dp),
-                                style = MaterialTheme.typography.h5,
-                                color = MaterialTheme.colors.onBackground
-                            )
-                            Text(
-                                group.account,
-                                modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
-                                style = MaterialTheme.typography.h6,
-                                color = PrimaryDarkColor
-                            )
-                        }
-                        IconButton(
-                            onClick = { viewModel.setCurrentGroup(group) },
-                        ) {
-                            Icon(
-                                imageVector = if (group.id == currentGroup?.id) {
-                                    Icons.Default.DoneOutline
-                                } else {
-                                    Icons.Default.RadioButtonUnchecked
-                                },
-                                contentDescription = "Current group",
-                                tint = if (group.id == currentGroup?.id) {
-                                    PrimaryDarkColor
-                                } else {
-                                    Color.Gray
-                                }
-                            )
-                        }
+@Composable
+private fun GroupCard(
+    group: PersonsGroup,
+    viewModel: GroupViewModel,
+    currentGroup: PersonsGroup?
+) {
+    Surface(
+        elevation = 1.dp,
+        shape = RoundedCornerShape(3.dp),
+        modifier = Modifier.padding(vertical = 3.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    "[${group.localTitle(LocalContext.current)}]",
+                    modifier = Modifier.padding(10.dp),
+                    style = MaterialTheme.typography.h5,
+                    color = MaterialTheme.colors.onBackground
+                )
+                Text(
+                    group.account,
+                    modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
+                    style = MaterialTheme.typography.h6,
+                    color = PrimaryDarkColor
+                )
+            }
+            IconButton(
+                onClick = { viewModel.setCurrentGroup(group) },
+            ) {
+                Icon(
+                    imageVector = if (group.id == currentGroup?.id) {
+                        Icons.Default.DoneOutline
+                    } else {
+                        Icons.Default.RadioButtonUnchecked
+                    },
+                    contentDescription = "Current group",
+                    tint = if (group.id == currentGroup?.id) {
+                        PrimaryDarkColor
+                    } else {
+                        Color.Gray
                     }
-                }
+                )
             }
         }
     }

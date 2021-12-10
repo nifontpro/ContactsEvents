@@ -1,20 +1,18 @@
 package ru.nifontbus.contactsevents.presentation.events.new_event.templates
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.LockClock
+import androidx.compose.material.icons.outlined.Android
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,7 +22,6 @@ import ru.nifontbus.contactsevents.domain.data.EventType
 import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.presentation.navigation.TemplateSwipeToDismiss
 import ru.nifontbus.contactsevents.presentation.navigation.TopBar
-import ru.nifontbus.contactsevents.ui.theme.LightRedHalf
 
 @ExperimentalMaterialApi
 @Composable
@@ -79,7 +76,7 @@ fun TemplatesScreen(
                             sharedTemplateState.value =
                                 Template(
                                     type = template.type,
-                                    label = template.getDescription(context)
+                                    label = template.getDescriptionForSelect(context)
                                 )
                             extNavController.popBackStack()
                         }
@@ -91,36 +88,43 @@ fun TemplatesScreen(
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun TemplateCard(
     template: Template,
     onSelect: () -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .padding(vertical = 5.dp)
-            .clip(RoundedCornerShape(3.dp))
-            .background(MaterialTheme.colors.surface)
-            .clickable { onSelect() }
+    Surface(
+        onClick = onSelect,
+        elevation = 1.dp,
+        shape = RoundedCornerShape(3.dp),
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    template.getDescription(LocalContext.current),
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 20.dp),
-                    style = MaterialTheme.typography.h5,
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                template.getDescription(LocalContext.current),
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
+                style = MaterialTheme.typography.h5,
+            )
+            if (template.type == EventType.CUSTOM) {
+                Icon(
+                    imageVector = Icons.Outlined.Edit,
+                    contentDescription = "",
+                    modifier = Modifier.padding(10.dp),
+                    tint = MaterialTheme.colors.primaryVariant
                 )
-                if (template.type != EventType.CUSTOM) {
-                    Icon(
-                        imageVector = Icons.Outlined.LockClock, contentDescription = "Lock",
-                        modifier = Modifier.padding(10.dp),
-                        tint = LightRedHalf
-                    )
-                }
+            }
+            if (template.type == EventType.BIRTHDAY || template.type == EventType.ANNIVERSARY ||
+                template.type == EventType.OTHER) {
+                Icon(
+                    imageVector = Icons.Outlined.Android,
+                    contentDescription = "",
+                    modifier = Modifier.padding(10.dp),
+                    tint = MaterialTheme.colors.primaryVariant
+                )
             }
         }
     }

@@ -47,11 +47,7 @@ fun NewEventScreen(
     val person = viewModel.person.value
 
     LaunchedEffect(sharedTemplateState) {
-        if (sharedTemplateState.value.type != EventType.CUSTOM) {
-            viewModel.setEventName(sharedTemplateState.value.label)
-        } else {
-            viewModel.setEventName("")
-        }
+        viewModel.setEventName(sharedTemplateState.value.label)
         viewModel.eventType = sharedTemplateState.value.type
     }
 
@@ -128,7 +124,7 @@ fun NewEventScreen(
                             },
                             modifier = edMod,
                             singleLine = true,
-                            placeholder = { Text("Event label") },
+                            placeholder = { Text("Enter event") },
                             trailingIcon = {
                                 IconButton(onClick = {
                                     extNavController.navigate(Screen.NavTemplatesScreen.route)

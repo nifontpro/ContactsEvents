@@ -8,4 +8,6 @@
 
     <string name="sGroups">"Группы: "</string>
     <string name="sNewLifeDay">День преставления</string>
+    <string name="sAngelDay">Именины</string>
+    <string name="sWeddingDay">День свадьбы</string>
 </resources>

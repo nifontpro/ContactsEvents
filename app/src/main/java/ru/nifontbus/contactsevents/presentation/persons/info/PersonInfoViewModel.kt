@@ -2,6 +2,7 @@ package ru.nifontbus.contactsevents.presentation.persons.info
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,6 +28,8 @@ class PersonInfoViewModel @Inject constructor(
     private val _person = mutableStateOf(Person())
     val person: State<Person> = _person
 
+    var displayPhoto: ImageBitmap? = null
+
     val personEvents by lazy {
         eventsUseCases.getEventsByPerson(person.value.id)
     }
@@ -51,12 +54,16 @@ class PersonInfoViewModel @Inject constructor(
                     _person.value = findPerson
                 }
             }
+
+            displayPhoto = personsUseCases.getDisplayPhoto(person.value.id)
         }
     }
 
     fun getGroupById(id: Long) = groupsUseCases.getGroupById(id)
-
     fun getPersonInfo(id: Long) = personsUseCases.getPersonInfo(id)
+    fun getPhotoById(id: Long) = personsUseCases.getPhotoById(id)
+    fun getDisplayPhoto(id: Long) = personsUseCases.getDisplayPhoto(id)
+    fun getPhotoByUri(photoUri: String) = personsUseCases.getPhotoByUri(photoUri)
 
     fun deleteEvent(event: Event) = viewModelScope.launch {
         when (val result = eventsUseCases.deleteEvent(event)) {

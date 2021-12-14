@@ -1,13 +1,17 @@
 package ru.nifontbus.contactsevents.domain.repository
 
 import android.content.ContentProviderOperation
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.database.DatabaseUtils
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.ContactsContract
+import android.provider.ContactsContract.Contacts.openContactPhotoInputStream
 import android.util.Log
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,6 +49,7 @@ class ContactsRepository(private val context: Context) {
             ContactsContract.Contacts._ID,
             ContactsContract.Contacts.DISPLAY_NAME,
             ContactsContract.Contacts.HAS_PHONE_NUMBER,
+            ContactsContract.Contacts.PHOTO_URI,
         )
 
         val sortOrder = ContactsContract.Contacts.DISPLAY_NAME
@@ -58,6 +63,7 @@ class ContactsRepository(private val context: Context) {
             val idRef = it.getColumnIndex(ContactsContract.Contacts._ID)
             val displayNameRef = it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
             val hasPhoneNumberRef = it.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)
+            val photoRef = it.getColumnIndex(ContactsContract.Contacts.PHOTO_URI)
 
             while (it.moveToNext()) {
 //                val key = it.getString(keyRef) // LookUp Key
@@ -65,9 +71,18 @@ class ContactsRepository(private val context: Context) {
                 val hasPhoneNumber = it.getInt(hasPhoneNumberRef) == 1
                 val displayName = it.getString(displayNameRef) ?: "?"
                 val groups = getGroupsByContact(id)
+                val photoUri = it.getString(photoRef)
 
                 _persons.value =
-                    persons.value + listOf(Person(displayName, groups, hasPhoneNumber, id))
+                    persons.value + listOf(
+                        Person(
+                            displayName = displayName,
+                            groups = groups,
+                            hasPhoneNumber = hasPhoneNumber,
+                            photoUri = photoUri,
+                            id = id
+                        )
+                    )
             }
             cursor.close()
         }
@@ -200,7 +215,7 @@ class ContactsRepository(private val context: Context) {
         val cursorInfo = context.contentResolver.query(
             infoUri, null, null, null, null
         )
-        Log.e("my", DatabaseUtils.dumpCursorToString(cursorInfo))
+//        Log.e("my", DatabaseUtils.dumpCursorToString(cursorInfo))
         val phones = mutableListOf<Phone>()
 
         cursorInfo?.let {
@@ -331,7 +346,80 @@ class ContactsRepository(private val context: Context) {
         return context.contentResolver.query(uri, projection, where, selectionArgs, null)
     }*/
 
-} // eoc
+    // +
+    fun getPhotoById(contactId: Long): ImageBitmap? {
+        val contactUri =
+            ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId)
+        val photoUri =
+            Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY)
+        val cursor: Cursor = context.contentResolver.query(
+            photoUri,
+            arrayOf(ContactsContract.Contacts.Photo.PHOTO),
+            null,
+            null,
+            null
+        )
+            ?: return null
+        try {
+            if (cursor.moveToFirst()) {
+                val data = cursor.getBlob(0)
+                Log.e("my", "Photo data: $data")
+                if (data != null) {
+                    return BitmapFactory.decodeByteArray(data, 0, data.size)
+                        .asImageBitmap()
+                }
+            }
+
+        } catch (e: Exception) {
+            Log.e("my", e.localizedMessage ?: "Error load small photo")
+        } finally {
+            cursor.close()
+        }
+        return null
+    }
+
+    fun getPhotoByUri(photoUri: String): ImageBitmap? {
+        val cursor: Cursor = context.contentResolver.query(
+            Uri.parse(photoUri),
+            arrayOf(ContactsContract.Contacts.Photo.PHOTO),
+            null,
+            null,
+            null
+        )
+            ?: return null
+        try {
+            if (cursor.moveToFirst()) {
+                val data = cursor.getBlob(0)
+                if (data != null) {
+                    return BitmapFactory.decodeByteArray(data, 0, data.size)
+                        .asImageBitmap()
+                }
+            }
+
+        } catch (e: Exception) {
+            Log.e("my", e.localizedMessage ?: "Error load small photo")
+        } finally {
+            cursor.close()
+        }
+        return null
+    }
+
+    fun getDisplayPhoto(contactId: Long): ImageBitmap? {
+        val contactUri =
+            ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId)
+        return try {
+            val stream = openContactPhotoInputStream(
+                context.contentResolver,
+                contactUri, true
+            )
+            if (stream != null) BitmapFactory.decodeStream(stream).asImageBitmap()
+            else null
+        } catch (e: Exception) {
+            Log.e("my", e.localizedMessage ?: "Error load photo")
+            null
+        }
+    }
+} // EOC
 
 fun String.toIntDefault(default: Int) =
     try {

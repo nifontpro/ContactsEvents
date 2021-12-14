@@ -1,5 +1,7 @@
 package ru.nifontbus.contactsevents.presentation.events
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -7,7 +9,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -57,7 +61,6 @@ fun EventsScreen(
                 .fillMaxSize()
                 .padding(10.dp)
         ) {
-
             items(events) { event ->
                 EventCard(event, viewModel)
             }
@@ -70,19 +73,31 @@ private fun EventCard(
     event: Event,
     viewModel: EventsViewModel
 ) {
-    Surface(
-        elevation = 1.dp,
-        shape = RoundedCornerShape(3.dp),
-        modifier = Modifier.padding(vertical = 3.dp)
+    Box(
+//        shape = RoundedCornerShape(3.dp),
+//        color = if (event.daysLeft() == 0L) MaterialTheme.colors.secondary
+//        else MaterialTheme.colors.surface,
+//        contentColor = MaterialTheme.colors.onBackground,
+        modifier = Modifier
+            .padding(vertical = 3.dp)
+            .background(
+                color = if (event.daysLeft() == 0L) MaterialTheme.colors.secondary
+                else MaterialTheme.colors.surface
+            ),
     ) {
+        val daysLeft = event.daysLeft()
+        val person = viewModel.getPersonById(event.personId).collectAsState(null).value
         Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            val daysLeft = event.daysLeft()
-            val person = viewModel.getPersonById(event.personId).collectAsState(null).value
+
             val modText = Modifier.padding(horizontal = 10.dp)
-            Column {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
+            ) {
 
                 person?.let {
                     Text(
@@ -90,14 +105,6 @@ private fun EventCard(
                         modifier = modText,
                         style = MaterialTheme.typography.h6,
                     )
-                    /*val groupName = viewModel.getGroupsById(person.groupId)?.name
-                                Text(
-                                    "[$groupName]",
-                                    modifier = modText,
-                                    style = MaterialTheme.typography.h5,
-                                    color = OrangeYellow3,
-                                )*/
-                    Divider()
                 }
 
                 val dateText = buildAnnotatedString {
@@ -126,13 +133,26 @@ private fun EventCard(
                 val description = event.getDescription(LocalContext.current) +
                         if (daysLeft > 0) {
                             ", осталось дней: $daysLeft"
-                        } else ""
+                        } else "!!!"
                 Text(
                     description,
                     modifier = modText,
                     color = MaterialTheme.colors.primaryVariant,
                 )
             } // Column
+            person?.let {
+                viewModel.getPhotoById(it.id)?.let { bmp ->
+                    Image(
+                        bitmap = bmp,
+                        contentDescription = "Photo",
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                            .size(50.dp)
+                            .clip(RoundedCornerShape(100))
+
+                    )
+                }
+            }
         } // Row
     }
 }

@@ -5,7 +5,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
-import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
 import javax.inject.Inject
 
@@ -13,13 +12,16 @@ import javax.inject.Inject
 class EventsViewModel @Inject constructor(
     eventsUseCases: EventsUseCases,
     private val personsUseCases: PersonsUseCases,
-    private val groupsUseCases: GroupsUseCases
+//    private val groupsUseCases: GroupsUseCases
 ) : ViewModel() {
 
 //    val events = eventsUseCases.getEvents()
     val events = eventsUseCases.getSortedEvents()
 
     fun getPersonById(id: Long): Flow<Person?> = personsUseCases.getPersonByIdFlow(id)
+    fun getPhotoByUri(photoUri: String) = personsUseCases.getPhotoByUri(photoUri)
+    fun getPhotoById(id: Long) =
+        if (id == -1L) null else personsUseCases.getPhotoById(id)
 
 //    fun getGroupsById(id: String) = groupsUseCases.getGroupById(id)
 }

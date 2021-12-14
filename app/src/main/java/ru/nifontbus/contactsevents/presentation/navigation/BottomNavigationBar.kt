@@ -51,7 +51,7 @@ fun BottomNavigationBar(
                 unselectedContentColor = Color.Gray,
                 icon = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        if (item.badgeCount.value > 0) {
+                        /*if (item.badgeCount.value > 0) {
                             BadgeBox(
                                 backgroundColor = BadgeBackground,
                                 badgeContent = {
@@ -71,7 +71,11 @@ fun BottomNavigationBar(
                                 imageVector = item.icon,
                                 contentDescription = item.name
                             )
-                        }
+                        }*/
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = item.name
+                        )
                         if (selected) {
                             Text(
                                 text = item.name,

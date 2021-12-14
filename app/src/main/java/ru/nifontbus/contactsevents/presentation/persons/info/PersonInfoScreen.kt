@@ -1,5 +1,6 @@
 package ru.nifontbus.contactsevents.presentation.persons.info
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,7 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.SettingsAccessibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,7 +30,6 @@ import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.TemplateSwipeToDismiss
 import ru.nifontbus.contactsevents.presentation.navigation.TopBar
-import ru.nifontbus.contactsevents.ui.theme.Half3Gray
 import ru.nifontbus.contactsevents.ui.theme.TextWhite
 
 @ExperimentalMaterialApi
@@ -81,7 +80,7 @@ fun PersonInfoScreen(
 
         Box(modifier = Modifier.fillMaxSize()) {
 
-            Icon(
+/*            Icon(
                 imageVector = Icons.Default.SettingsAccessibility,
                 contentDescription = "Background",
                 tint = Half3Gray,
@@ -89,7 +88,39 @@ fun PersonInfoScreen(
                     .size(500.dp)
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 50.dp)
-            )
+            )*/
+
+            /*viewModel.displayPhoto?.let { it ->
+                Image(
+                    bitmap = it,
+                    contentDescription = "Background",
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxSize()
+                )
+            }*/
+
+            person.photoUri?.let { photoUri ->
+                viewModel.getPhotoByUri(photoUri)?.let { it ->
+                    Image(
+                        bitmap = it,
+                        contentDescription = "Photo",
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxSize()
+                    )
+                }
+            }
+
+            /*viewModel.getPhotoById(person.id)?.let { it ->
+                Image(
+                    bitmap = it,
+                    contentDescription = "Photo",
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxSize()
+                )
+            }*/
 
             Column(
                 modifier = Modifier

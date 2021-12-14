@@ -80,6 +80,26 @@ fun GetPermission() {
                     }
                 }
             }
+            Manifest.permission.READ_EXTERNAL_STORAGE -> {
+                when {
+                    perm.hasPermission -> {
+                        Log.d("my", "Read storage permission accepted")
+                    }
+                    perm.shouldShowRationale -> {
+                        Log.d(
+                            "my", "Read storage permission is needed " +
+                                    "to access the write contacts"
+                        )
+                    }
+                    perm.isPermanentlyDenied() -> {
+                        Log.d(
+                            "my", "Read storage permission was permanently " +
+                                    "denied. You can enable it in the app" +
+                                    "settings."
+                        )
+                    }
+                }
+            }
         }
     }
 }

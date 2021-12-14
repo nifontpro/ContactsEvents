@@ -100,7 +100,6 @@ fun PersonsScreen(
 //            state = listState,
 
         ) {
-
             grouped.forEach { (initial, contactsForInitial) ->
                 stickyHeader {
                     Text(

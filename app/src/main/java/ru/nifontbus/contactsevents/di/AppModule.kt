@@ -80,7 +80,10 @@ object AppModule {
 //            getPersonAge = GetPersonAge(repository),
 //            updatePerson = UpdatePerson(repository),
 //            deletePersonWithEvents = DeletePersonWithEvents(repository)
-            getPersonInfo = GetPersonInfo(repository)
+            getPersonInfo = GetPersonInfo(repository),
+            getPhotoById = GetPhotoById(repository),
+            getPhotoByUri = GetPhotoByUri(repository),
+            getDisplayPhoto = GetDisplayPhoto(repository)
         )
 
     @Provides

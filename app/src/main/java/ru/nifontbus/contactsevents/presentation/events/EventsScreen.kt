@@ -149,7 +149,6 @@ private fun EventCard(
                             .padding(end = 10.dp)
                             .size(50.dp)
                             .clip(RoundedCornerShape(100))
-
                     )
                 }
             }

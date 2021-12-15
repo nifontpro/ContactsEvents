@@ -20,8 +20,7 @@ class EventsViewModel @Inject constructor(
 
     fun getPersonById(id: Long): Flow<Person?> = personsUseCases.getPersonByIdFlow(id)
     fun getPhotoByUri(photoUri: String) = personsUseCases.getPhotoByUri(photoUri)
-    fun getPhotoById(id: Long) =
-        if (id == -1L) null else personsUseCases.getPhotoById(id)
+    fun getPhotoById(id: Long) = personsUseCases.getPhotoById(id)
 
 //    fun getGroupsById(id: String) = groupsUseCases.getGroupById(id)
 }

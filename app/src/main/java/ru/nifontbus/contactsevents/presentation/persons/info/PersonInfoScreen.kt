@@ -90,26 +90,14 @@ fun PersonInfoScreen(
                     .padding(bottom = 50.dp)
             )*/
 
-            /*viewModel.displayPhoto?.let { it ->
+            viewModel.displayPhoto?.let { it ->
                 Image(
                     bitmap = it,
-                    contentDescription = "Background",
+                    contentDescription = "Photo",
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxSize()
                 )
-            }*/
-
-            person.photoUri?.let { photoUri ->
-                viewModel.getPhotoByUri(photoUri)?.let { it ->
-                    Image(
-                        bitmap = it,
-                        contentDescription = "Photo",
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxSize()
-                    )
-                }
             }
 
             /*viewModel.getPhotoById(person.id)?.let { it ->

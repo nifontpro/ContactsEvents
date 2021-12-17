@@ -1,6 +1,7 @@
 package ru.nifontbus.contactsevents.presentation.persons
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,18 +16,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.nifontbus.contactsevents.R
+import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.utils.Search
 import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
@@ -123,40 +122,69 @@ fun PersonsScreen(
                                 )
                             },
                     ) {
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            Text(
-                                text = Search.colorSubstring(
-                                    person.displayName,
-                                    viewModel.searchState.value,
-                                    MaterialTheme.colors.onBackground, Color.Red
-                                ),
-                                modifier = Modifier.padding(
-                                    horizontal = 10.dp,
-                                    vertical = 10.dp
-                                ),
-                                style = MaterialTheme.typography.h5,
-                            )
-                            Text(
-                                "id: ${person.id}",
-                                modifier = Modifier
-                                    .padding(horizontal = 10.dp)
-                                    .padding(bottom = 10.dp),
-                                style = MaterialTheme.typography.h6,
-                                color = LightRed,
-                            )
-                            Text(
-                                "Groups id`s: ${person.groups}",
-                                modifier = Modifier
-                                    .padding(horizontal = 10.dp)
-                                    .padding(bottom = 10.dp),
-                                style = MaterialTheme.typography.h6,
-                                color = PrimaryDarkColor,
-                            )
-                        }
+                        PersonCard(person, viewModel)
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun PersonCard(
+    person: Person,
+    viewModel: PersonsViewModel
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth().padding(10.dp)
+    ) {
+        Column(
+            modifier = Modifier.weight(6f),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = Search.colorSubstring(
+                    person.displayName,
+                    viewModel.searchState.value,
+                    MaterialTheme.colors.onBackground, Color.Red
+                ),
+                style = MaterialTheme.typography.h6,
+            )
+        } // Col
+
+        SmallRememberImage(
+            person,
+            Modifier
+                .weight(1f)
+                .size(50.dp)
+                .clip(RoundedCornerShape(10))
+        ) { viewModel.getPhotoById(person.id) }
+    } // Row
+}
+
+@Composable
+fun SmallRememberImage(
+    person: Person,
+    modifier: Modifier = Modifier,
+    getImage: () -> ImageBitmap?
+) {
+    var img by remember {
+        mutableStateOf<ImageBitmap?>(null)
+    }
+
+    LaunchedEffect(person.id) {
+        img = getImage()
+    }
+
+    img?.let {
+        Image(
+            bitmap = it,
+            contentDescription = "Photo",
+            modifier = modifier
+        )
     }
 }
 

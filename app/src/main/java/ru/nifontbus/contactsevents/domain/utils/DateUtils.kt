@@ -3,7 +3,7 @@ package ru.nifontbus.contactsevents.domain.utils
 import ru.nifontbus.contactsevents.domain.use_cases.events.MIN_DATE
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
+import java.time.format.FormatStyle
 import java.util.*
 
 fun String.toLocalDate(
@@ -22,6 +22,7 @@ fun LocalDate.asString(
     return formatter.format(this)
 }
 
+/*
 fun String.getStringDate(
     initialFormat: String,
     requiredFormat: String,
@@ -29,6 +30,7 @@ fun String.getStringDate(
 ): String {
     return this.toLocalDate(initialFormat, locale).asString(requiredFormat, locale)
 }
+*/
 
 fun String.toMonthAndDay(): String {
     return try {
@@ -38,6 +40,19 @@ fun String.toMonthAndDay(): String {
     } catch (e: Exception) {
         MIN_DATE
     }
+}
+
+fun String.getLocalizedDate(): String {
+    val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+    var short = false
+    val str = if (substring(0, 2) == "--" && length == 7) {
+        short = true
+        "0001${substring(1, 7)}"
+    } else this
+
+    val date = str.toLocalDate()
+    val dateStr = date.format(dateFormatter)
+    return if (!short) dateStr else dateStr.substring(0, 5)
 }
 
 // https://stackoverflow.com/questions/65388653/convert-string-into-localdate-kotlin

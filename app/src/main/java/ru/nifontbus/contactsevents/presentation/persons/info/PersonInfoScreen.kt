@@ -1,6 +1,5 @@
 package ru.nifontbus.contactsevents.presentation.persons.info
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.SettingsAccessibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,9 +27,12 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.collect
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Event
+import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.TemplateSwipeToDismiss
 import ru.nifontbus.contactsevents.presentation.navigation.TopBar
+import ru.nifontbus.contactsevents.presentation.persons.SmallRememberImage
+import ru.nifontbus.contactsevents.ui.theme.Half3Gray
 import ru.nifontbus.contactsevents.ui.theme.TextWhite
 
 @ExperimentalMaterialApi
@@ -78,9 +81,9 @@ fun PersonInfoScreen(
         },
     ) {
 
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp)) {
 
-/*            Icon(
+            Icon(
                 imageVector = Icons.Default.SettingsAccessibility,
                 contentDescription = "Background",
                 tint = Half3Gray,
@@ -88,17 +91,17 @@ fun PersonInfoScreen(
                     .size(500.dp)
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 50.dp)
-            )*/
+            )
 
-            viewModel.displayPhoto?.let { it ->
-                Image(
-                    bitmap = it,
-                    contentDescription = "Photo",
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxSize()
-                )
-            }
+            /*           viewModel.displayPhoto?.let { it ->
+                           Image(
+                               bitmap = it,
+                               contentDescription = "Photo",
+                               modifier = Modifier
+                                   .align(Alignment.BottomCenter)
+                                   .fillMaxSize()
+                           )
+                       }*/
 
             /*viewModel.getPhotoById(person.id)?.let { it ->
                 Image(
@@ -109,125 +112,138 @@ fun PersonInfoScreen(
                         .fillMaxSize()
                 )
             }*/
-
-            Column(
+            LazyColumn(
                 modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(horizontal = 10.dp)
-//                    .padding(top = 20.dp)
                     .fillMaxWidth()
-                    .background(Color.Transparent)
+                    .padding(bottom = 10.dp)
             ) {
 
-                TextPerson(person.displayName, MaterialTheme.colors.primaryVariant)
+                item {
+                    PersonInfoHeader(person, viewModel)
+                }
 
-                Box( // Внутренний полупрозрачный 1
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.surface)
-                ) {
+                itemsIndexed(
+                    items = personEvents,
+                    key = { _, item -> item.id }
+                ) { _, event ->
 
-                    Column(
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp)
-                    ) {
-
-                        var groupsString = ""
-                        val delimetr = stringResource(R.string.sDelimetr)
-                        person.groups.forEach { groupId ->
-                            viewModel.getGroupById(groupId)?.let {
-                                groupsString += it.localTitle(LocalContext.current) + delimetr
-                            }
-                        }
-                        groupsString = stringResource(R.string.sGroups) +
-                                groupsString.removeSuffix(delimetr)
-
-                        Text(
-                            groupsString,
-                            modifier = Modifier.padding(bottom = 10.dp),
-                            style = MaterialTheme.typography.h6
-                        )
-
-                        val personInfo = viewModel.getPersonInfo(person.id)
-                        if (personInfo.phones.isNotEmpty()) {
-                            Divider()
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Phone,
-                                    contentDescription = "phone",
-                                    tint = MaterialTheme.colors.primaryVariant,
-                                    modifier = Modifier.padding(end = 15.dp)
-                                )
-                                Column(modifier = Modifier.fillMaxWidth()) {
-                                    personInfo.phones.forEachIndexed { idx, phone ->
-                                        Column {
-                                            Text(phone.number, style = MaterialTheme.typography.h6)
-                                            Text(phone.stringType(LocalContext.current))
-                                            if (idx < personInfo.phones.lastIndex) {
-                                                Divider()
-                                            }
-                                        }
-                                    }
-
-                                }
-                            }
-                        }
-                    }
-                } // Box1
-                Text(
-                    "Events: ",
-                    modifier = Modifier.padding(10.dp),
-                    color = MaterialTheme.colors.primaryVariant,
-                    style = MaterialTheme.typography.h5
-                )
-                Box( // Внутренний полупрозрачный 2
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .fillMaxWidth()
-                ) {
-
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(bottom = 10.dp)
-                    ) {
-
-                        itemsIndexed(
-                            items = personEvents,
-                            key = { _, item -> item.id }
-                        ) { _, event ->
-
-                            TemplateSwipeToDismiss(
-                                modifier = Modifier.padding(vertical = 4.dp),
-                                {
-                                    viewModel.deleteEvent(event)
-                                },
-                                {
-                                    EventInfoCard(event)
-                                },
+                    TemplateSwipeToDismiss(
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        {
+                            viewModel.deleteEvent(event)
+                        },
+                        {
+                            EventInfoCard(event)
+                        },
 //                                enabled = template.type == 0,
-                            )
-                        }
-                    } // LazyColumn
-                } // Box2
-            } // Column
+                    )
+                }
+            } // LazyColumn
         }
     }
+}
+
+@Composable
+private fun PersonInfoHeader(
+    person: Person,
+    viewModel: PersonInfoViewModel
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Transparent)
+    ) {
+
+        TextPerson(person.displayName, MaterialTheme.colors.primaryVariant)
+        Box( // Внутренний полупрозрачный 1
+            modifier = Modifier
+                .clip(RoundedCornerShape(10.dp))
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.surface)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                var groupsString = ""
+                val delimetr = stringResource(R.string.sDelimetr)
+                person.groups.forEach { groupId ->
+                    //LE
+                    viewModel.getGroupById(groupId)?.let {
+                        groupsString += it.localTitle(LocalContext.current) + delimetr
+                    }
+                }
+                groupsString = stringResource(R.string.sGroups) +
+                        groupsString.removeSuffix(delimetr)
+
+                Row(
+//                            horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+
+                    SmallRememberImage(
+                        person,
+                        Modifier
+                            .padding(end = 10.dp, bottom = 10.dp)
+                            .size(50.dp)
+                            .clip(RoundedCornerShape(10))
+                    ) { viewModel.getPhotoById(person.id) }
+
+                    Text(
+                        groupsString,
+                        modifier = Modifier.padding(bottom = 10.dp),
+                        style = MaterialTheme.typography.h6
+                    )
+                } // Row
+
+                val personInfo = viewModel.getPersonInfo(person.id) //LE
+
+                if (personInfo.phones.isNotEmpty()) {
+                    Divider()
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Phone,
+                            contentDescription = "phone",
+                            tint = MaterialTheme.colors.primaryVariant,
+                            modifier = Modifier.padding(end = 15.dp)
+                        )
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            personInfo.phones.forEachIndexed { idx, phone ->
+                                Column {
+                                    Text(phone.number, style = MaterialTheme.typography.h6)
+                                    Text(phone.stringType(LocalContext.current))
+                                    if (idx < personInfo.phones.lastIndex) {
+                                        Divider()
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        } // Box
+        Text(
+            "Events: ",
+            modifier = Modifier.padding(vertical = 5.dp),
+            color = MaterialTheme.colors.primaryVariant,
+            style = MaterialTheme.typography.h5
+        )
+    } // Column Header
 }
 
 @Composable
 private fun EventInfoCard(event: Event) {
     Box(
         modifier = Modifier
-            .padding(vertical = 5.dp)
             .clip(RoundedCornerShape(3.dp))
             .background(MaterialTheme.colors.surface)
             .clickable { },

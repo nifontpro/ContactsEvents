@@ -33,4 +33,6 @@ class PersonsViewModel @Inject constructor(
             _persons.value = it
         }
     }
+
+    fun getPhotoById(id: Long) = personsUseCases.getPhotoById(id)
 }

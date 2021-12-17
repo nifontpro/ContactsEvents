@@ -5,5 +5,6 @@ data class EventsUseCases constructor(
     val getEvents: GetEvents,
     val getSortedEvents: GetSortedEvents,
     val getEventsByPerson: GetEventsByPerson,
+    val getSortedEventsByPerson: GetSortedEventsByPerson,
     val deleteEvent: DeleteEvent
 )

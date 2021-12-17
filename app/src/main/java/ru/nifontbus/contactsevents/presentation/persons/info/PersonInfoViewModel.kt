@@ -31,7 +31,7 @@ class PersonInfoViewModel @Inject constructor(
     var displayPhoto: ImageBitmap? = null
 
     val personEvents by lazy {
-        eventsUseCases.getEventsByPerson(person.value.id)
+        eventsUseCases.getSortedEventsByPerson(person.value.id)
     }
 
 /*    // PersonEditScreen:

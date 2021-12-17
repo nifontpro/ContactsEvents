@@ -6,10 +6,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -20,8 +22,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.utils.getLocalizedDate
@@ -65,22 +65,21 @@ fun EventsScreen(
                 .padding(10.dp)
         ) {
             items(events) { event ->
-                EventCard(event, viewModel)
+                val person = viewModel.getPersonByIdFlow(event.personId)
+                    .collectAsState(null).value
+                EventCard(event, person) { viewModel.getPhotoById(it) }
             }
         }
     }
 }
 
 @Composable
-private fun EventCard(
+fun EventCard(
     event: Event,
-    viewModel: EventsViewModel
+    person: Person?,
+    getImage: (id: Long) -> ImageBitmap?
 ) {
     Box(
-//        shape = RoundedCornerShape(3.dp),
-//        color = if (event.daysLeft() == 0L) MaterialTheme.colors.secondary
-//        else MaterialTheme.colors.surface,
-//        contentColor = MaterialTheme.colors.onBackground,
         modifier = Modifier
             .padding(vertical = 3.dp)
             .background(
@@ -89,8 +88,6 @@ private fun EventCard(
             ),
     ) {
         val daysLeft = event.daysLeft()
-        val person = viewModel.getPersonByIdFlow(event.personId).collectAsState(null).value
-
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -149,12 +146,13 @@ private fun EventCard(
             person?.let {
 
                 SmallRememberImage(
-                    person,
+                    it,
                     Modifier
                         .padding(end = 10.dp)
                         .size(50.dp)
-                        .clip(RoundedCornerShape(10))
-                ) { viewModel.getPhotoById(person.id) }
+                        .clip(RoundedCornerShape(10)),
+                    getImage = { getImage(it.id) }
+                )
             }
         } // Row
     }

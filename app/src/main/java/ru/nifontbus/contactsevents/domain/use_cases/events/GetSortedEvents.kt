@@ -32,26 +32,7 @@ class GetSortedEvents(
                 emit(eventsAfterNow.await() + eventsBeforeNow.await())
             }
         }
-    }.flowOn(Dispatchers.Default)
-
-    private fun eventsBeforeNow(events: List<Event>, now: String): List<Event> {
-        val listBefore = events.filter { event ->
-            val current = event.date.toMonthAndDay()
-            current < now && current > MIN_DATE
-        }.sortedBy { event ->
-            event.date.toMonthAndDay()
-        }
-        return listBefore
-    }
-
-    private fun eventsAfterNow(events: List<Event>, now: String): List<Event> {
-        val listAfter = events.filter { event ->
-            event.date.toMonthAndDay() >= now
-        }.sortedBy { event ->
-            event.date.toMonthAndDay()
-        }
-        return listAfter
-    }
+    }/*.flowOn(Dispatchers.Default)*/
 
     private fun add40Day(events: List<Event>): List<Event> {
         val mutableEvents = events.toMutableList()
@@ -74,5 +55,26 @@ class GetSortedEvents(
             }
         }
         return mutableEvents
+    }
+
+    companion object {
+        fun eventsBeforeNow(events: List<Event>, now: String): List<Event> {
+            val listBefore = events.filter { event ->
+                val current = event.date.toMonthAndDay()
+                current < now && current > MIN_DATE
+            }.sortedBy { event ->
+                event.date.toMonthAndDay()
+            }
+            return listBefore
+        }
+
+        fun eventsAfterNow(events: List<Event>, now: String): List<Event> {
+            val listAfter = events.filter { event ->
+                event.date.toMonthAndDay() >= now
+            }.sortedBy { event ->
+                event.date.toMonthAndDay()
+            }
+            return listAfter
+        }
     }
 }

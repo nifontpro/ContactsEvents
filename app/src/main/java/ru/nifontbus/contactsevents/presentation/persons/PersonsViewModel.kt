@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.settings.SettingsUseCases
+import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +32,7 @@ class PersonsViewModel @Inject constructor(
     fun updatePerson() = viewModelScope.launch {
         personsUseCases.getPersonsFilteredFromGroup(currentGroup, searchState.value).collect {
             _persons.value = it
+            BottomNavItem.PersonItem.badgeCount.value = it.size
         }
     }
 

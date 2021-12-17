@@ -43,8 +43,6 @@ fun PersonsScreen(
     val persons = viewModel.persons.value
     val grouped = persons.groupBy { it.displayName[0] }
 
-    BottomNavItem.PersonItem.badgeCount.value = persons.size
-
     Scaffold(
         /*floatingActionButton = {
             currentGroup?.let {

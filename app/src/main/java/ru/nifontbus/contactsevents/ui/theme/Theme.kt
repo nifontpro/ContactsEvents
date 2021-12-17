@@ -1,5 +1,6 @@
 package ru.nifontbus.contactsevents.ui.theme
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -38,7 +39,12 @@ fun ContactsEventsTheme(
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
-        LightColorPalette
+        if (Build.VERSION.SDK_INT >= 29) {
+            LightColorPalette
+        } else {
+            DarkColorPalette
+        }
+
     }
 
     MaterialTheme(

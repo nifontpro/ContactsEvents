@@ -18,7 +18,7 @@ class EventsViewModel @Inject constructor(
 //    val events = eventsUseCases.getEvents()
     val events = eventsUseCases.getSortedEvents()
 
-    fun getPersonById(id: Long): Flow<Person?> = personsUseCases.getPersonByIdFlow(id)
+    fun getPersonByIdFlow(id: Long): Flow<Person?> = personsUseCases.getPersonByIdFlow(id)
     fun getPhotoByUri(photoUri: String) = personsUseCases.getPhotoByUri(photoUri)
     fun getPhotoById(id: Long) = personsUseCases.getPhotoById(id)
 

@@ -21,6 +21,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -28,6 +33,8 @@ import kotlinx.coroutines.flow.collect
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Person
+import ru.nifontbus.contactsevents.domain.utils.getLocalizedDate
+import ru.nifontbus.contactsevents.presentation.events.EventsViewModel
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.TemplateSwipeToDismiss
 import ru.nifontbus.contactsevents.presentation.navigation.TopBar
@@ -81,7 +88,11 @@ fun PersonInfoScreen(
         },
     ) {
 
-        Box(modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 10.dp)
+        ) {
 
             Icon(
                 imageVector = Icons.Default.SettingsAccessibility,
@@ -133,7 +144,7 @@ fun PersonInfoScreen(
                             viewModel.deleteEvent(event)
                         },
                         {
-                            EventInfoCard(event)
+                            EventCard(event, viewModel)
                         },
 //                                enabled = template.type == 0,
                     )
@@ -266,6 +277,91 @@ private fun EventInfoCard(event: Event) {
                 color = MaterialTheme.colors.primaryVariant,
             )
         }
+    }
+}
+
+@Composable
+private fun EventCard(
+    event: Event,
+    viewModel: PersonInfoViewModel
+) {
+    Box(
+//        shape = RoundedCornerShape(3.dp),
+//        color = if (event.daysLeft() == 0L) MaterialTheme.colors.secondary
+//        else MaterialTheme.colors.surface,
+//        contentColor = MaterialTheme.colors.onBackground,
+        modifier = Modifier
+            .padding(vertical = 3.dp)
+            .background(
+                color = if (event.daysLeft() == 0L) MaterialTheme.colors.secondary
+                else MaterialTheme.colors.surface
+            ),
+    ) {
+        val daysLeft = event.daysLeft()
+        val person = viewModel.person.value
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+
+            val modText = Modifier.padding(horizontal = 10.dp)
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
+            ) {
+
+                Text(
+                    text = person.displayName,
+                    modifier = modText,
+                    style = MaterialTheme.typography.h6,
+                )
+
+                val dateText = buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontStyle = FontStyle.Normal)) {
+                        append(event.date.getLocalizedDate())
+                    }
+                    event.getFullYear()?.let {
+                        if (it > 0) {
+                            withStyle(
+                                style = SpanStyle(
+                                    fontStyle = FontStyle.Italic,
+                                    fontWeight = FontWeight.W300
+                                )
+                            ) {
+                                append(", прошло лет: $it")
+                            }
+                        }
+                    }
+                }
+                Text(
+                    dateText,
+                    modifier = modText,
+                    style = MaterialTheme.typography.h6,
+                )
+
+                val description = event.getDescription(LocalContext.current) +
+                        if (daysLeft > 0) {
+                            ", осталось дней: $daysLeft"
+                        } else "!!!"
+                Text(
+                    description,
+                    modifier = modText,
+                    color = if (daysLeft == 0L) MaterialTheme.colors.error
+                    else MaterialTheme.colors.primaryVariant,
+                    style = MaterialTheme.typography.body1
+                )
+            } // Column
+
+            SmallRememberImage(
+                person,
+                Modifier
+                    .padding(end = 10.dp)
+                    .size(50.dp)
+                    .clip(RoundedCornerShape(10))
+            ) { viewModel.getPhotoById(person.id) }
+        } // Row
     }
 }
 

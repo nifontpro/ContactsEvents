@@ -20,7 +20,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import ru.nifontbus.contactsevents.domain.data.Event
+import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.utils.getLocalizedDate
 import ru.nifontbus.contactsevents.presentation.persons.SmallRememberImage
 
@@ -86,7 +89,8 @@ private fun EventCard(
             ),
     ) {
         val daysLeft = event.daysLeft()
-        val person = viewModel.getPersonById(event.personId).collectAsState(null).value
+        val person = viewModel.getPersonByIdFlow(event.personId).collectAsState(null).value
+
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -138,7 +142,7 @@ private fun EventCard(
                     description,
                     modifier = modText,
                     color = if (daysLeft == 0L) MaterialTheme.colors.error
-                        else MaterialTheme.colors.primaryVariant,
+                    else MaterialTheme.colors.primaryVariant,
                     style = MaterialTheme.typography.body1
                 )
             } // Column

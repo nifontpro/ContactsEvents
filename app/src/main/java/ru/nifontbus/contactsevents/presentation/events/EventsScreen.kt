@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ import androidx.navigation.NavController
 import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.utils.getLocalizedDate
+import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
 import ru.nifontbus.contactsevents.presentation.persons.SmallRememberImage
 
 @ExperimentalMaterialApi
@@ -36,7 +38,8 @@ fun EventsScreen(
 ) {
 
     val viewModel: EventsViewModel = hiltViewModel()
-    val events = viewModel.events.collectAsState(emptyList()).value
+    val events = viewModel.events.collectAsState(emptyList())
+
     val scaffoldState = rememberScaffoldState()
 
 //    BottomNavItem.PersonItem.badgeCount.value = persons.size
@@ -64,7 +67,7 @@ fun EventsScreen(
                 .fillMaxSize()
                 .padding(10.dp)
         ) {
-            items(events) { event ->
+            items(events.value) { event ->
                 val person = viewModel.getPersonByIdFlow(event.personId)
                     .collectAsState(null).value
                 EventCard(event, person) { viewModel.getPhotoById(it) }
@@ -77,7 +80,7 @@ fun EventsScreen(
 fun EventCard(
     event: Event,
     person: Person?,
-    getImage: (id: Long) -> ImageBitmap?
+    getImage: suspend (id: Long) -> ImageBitmap?
 ) {
     Box(
         modifier = Modifier

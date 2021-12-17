@@ -36,5 +36,5 @@ class PersonsViewModel @Inject constructor(
         }
     }
 
-    fun getPhotoById(id: Long) = personsUseCases.getPhotoById(id)
+    suspend fun getPhotoById(id: Long) = personsUseCases.getPhotoById(id)
 }

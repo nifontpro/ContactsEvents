@@ -61,9 +61,8 @@ class PersonInfoViewModel @Inject constructor(
 
     fun getGroupById(id: Long) = groupsUseCases.getGroupById(id)
     fun getPersonInfo(id: Long) = personsUseCases.getPersonInfo(id)
-    fun getPhotoById(id: Long) = personsUseCases.getPhotoById(id)
+    suspend fun getPhotoById(id: Long) = personsUseCases.getPhotoById(id)
     fun getDisplayPhoto(id: Long) = personsUseCases.getDisplayPhoto(id)
-    fun getPhotoByUri(photoUri: String) = personsUseCases.getPhotoByUri(photoUri)
 
     fun deleteEvent(event: Event) = viewModelScope.launch {
         when (val result = eventsUseCases.deleteEvent(event)) {

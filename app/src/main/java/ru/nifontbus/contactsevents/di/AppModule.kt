@@ -83,7 +83,6 @@ object AppModule {
 //            deletePersonWithEvents = DeletePersonWithEvents(repository)
             getPersonInfo = GetPersonInfo(repository),
             getPhotoById = GetPhotoById(repository),
-            getPhotoByUri = GetPhotoByUri(repository),
             getDisplayPhoto = GetDisplayPhoto(repository)
         )
 

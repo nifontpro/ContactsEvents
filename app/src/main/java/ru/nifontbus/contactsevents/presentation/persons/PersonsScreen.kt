@@ -167,7 +167,7 @@ private fun PersonCard(
 fun SmallRememberImage(
     person: Person,
     modifier: Modifier = Modifier,
-    getImage: () -> ImageBitmap?
+    getImage: suspend () -> ImageBitmap?
 ) {
     var img by remember {
         mutableStateOf<ImageBitmap?>(null)

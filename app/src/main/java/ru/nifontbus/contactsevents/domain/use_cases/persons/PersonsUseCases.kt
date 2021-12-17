@@ -13,6 +13,5 @@ data class PersonsUseCases(
 //    val deletePersonWithEvents: DeletePersonWithEvents,
     val getPersonInfo : GetPersonInfo,
     val getPhotoById: GetPhotoById,
-    val getPhotoByUri: GetPhotoByUri,
     val getDisplayPhoto: GetDisplayPhoto,
 )

@@ -347,7 +347,7 @@ class ContactsRepository(private val context: Context) {
     }*/
 
     // +
-    fun getPhotoById(contactId: Long): ImageBitmap? {
+    suspend fun getPhotoById(contactId: Long): ImageBitmap? {
         val contactUri =
             ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId)
         val photoUri =
@@ -360,22 +360,24 @@ class ContactsRepository(private val context: Context) {
             null
         )
             ?: return null
-        try {
-            if (cursor.moveToFirst()) {
-                val data = cursor.getBlob(0)
-                Log.e("my", "Photo data: $data")
-                if (data != null) {
-                    return BitmapFactory.decodeByteArray(data, 0, data.size)
-                        .asImageBitmap()
-                }
-            }
 
-        } catch (e: Exception) {
-            Log.e("my", e.localizedMessage ?: "Error load small photo")
-        } finally {
-            cursor.close()
+        return suspendCoroutine {
+            it.resume(
+                try {
+                    if (cursor.moveToFirst()) {
+                        val data = cursor.getBlob(0)
+                        if (data != null) {
+                            BitmapFactory.decodeByteArray(data, 0, data.size).asImageBitmap()
+                        } else null
+                    } else null
+
+                } catch (e: Exception) {
+                    null
+                } finally {
+                    cursor.close()
+                }
+            )
         }
-        return null
     }
 
     fun getPhotoByUri(photoUri: String): ImageBitmap? {

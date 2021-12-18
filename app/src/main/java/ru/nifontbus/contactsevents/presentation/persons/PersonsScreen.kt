@@ -27,7 +27,6 @@ import androidx.navigation.NavController
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.utils.Search
-import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.ui.theme.*
 

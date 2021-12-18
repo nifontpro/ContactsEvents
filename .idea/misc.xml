@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Kotlin/ContactsEvents/app/src/main/res/drawable/folder_off.xml" value="0.26666666666666666" />
         <entry key="..\:/Kotlin/ContactsEvents/app/src/main/res/drawable/ic_launcher_background.xml" value="0.32083333333333336" />
+        <entry key="..\:/Kotlin/ContactsEvents/app/src/main/res/drawable/no_persons.xml" value="0.26666666666666666" />
       </map>
     </option>
   </component>

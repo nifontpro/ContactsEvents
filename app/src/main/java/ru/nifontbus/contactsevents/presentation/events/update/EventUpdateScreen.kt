@@ -1,4 +1,4 @@
-package ru.nifontbus.contactsevents.presentation.events.new_event
+package ru.nifontbus.contactsevents.presentation.events.update
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.background
@@ -37,11 +37,11 @@ import java.time.LocalDate
 
 @ExperimentalComposeUiApi
 @Composable
-fun NewEventScreen(
+fun EventUpdateScreen(
     extNavController: NavHostController,
     sharedTemplateState: MutableState<Template>,
 ) {
-    val viewModel: NewEventViewModel = hiltViewModel()
+    val viewModel: EventUpdateViewModel = hiltViewModel()
     val scaffoldState = rememberScaffoldState()
     val person = viewModel.person.value
 

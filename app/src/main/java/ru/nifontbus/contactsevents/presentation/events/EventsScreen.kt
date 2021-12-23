@@ -1,13 +1,13 @@
 package ru.nifontbus.contactsevents.presentation.events
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,8 +26,10 @@ import androidx.navigation.NavController
 import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.utils.getLocalizedDate
-import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
+import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.persons.SmallRememberImage
+import ru.nifontbus.contactsevents.ui.theme.cornerShapeIconPercent
+import ru.nifontbus.contactsevents.ui.theme.mediumPadding
 
 @ExperimentalMaterialApi
 
@@ -70,7 +72,17 @@ fun EventsScreen(
             items(events.value) { event ->
                 val person = viewModel.getPersonByIdFlow(event.personId)
                     .collectAsState(null).value
-                EventCard(event, person) { viewModel.getPhotoById(it) }
+                EventCard(
+                    event, person,
+                    onClick = {
+                        person?.let {
+                            extNavController.navigate(
+                                Screen.ExtPersonInfoScreen.createRoute(it.id)
+                            )
+                        }
+                    },
+                    getImage = viewModel::getPhotoById // { viewModel.getPhotoById(it) } - Eq
+                )
             }
         }
     }
@@ -80,10 +92,12 @@ fun EventsScreen(
 fun EventCard(
     event: Event,
     person: Person?,
+    onClick: () -> Unit = {},
     getImage: suspend (id: Long) -> ImageBitmap?
 ) {
     Box(
         modifier = Modifier
+            .clickable { onClick() }
             .padding(vertical = 3.dp)
             .background(
                 color = if (event.daysLeft() == 0L) MaterialTheme.colors.secondary
@@ -97,10 +111,11 @@ fun EventCard(
             modifier = Modifier.fillMaxWidth(),
         ) {
 
-            val modText = Modifier.padding(horizontal = 10.dp)
+            val modText = Modifier.padding(horizontal = mediumPadding)
             Column(
+                modifier = Modifier.weight(5f),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.Start,
             ) {
 
                 person?.let {
@@ -146,14 +161,16 @@ fun EventCard(
                     style = MaterialTheme.typography.body1
                 )
             } // Column
+
             person?.let {
 
                 SmallRememberImage(
                     it,
                     Modifier
                         .padding(end = 10.dp)
+                        .weight(1f)
                         .size(50.dp)
-                        .clip(RoundedCornerShape(10)),
+                        .clip(RoundedCornerShape(cornerShapeIconPercent)),
                     getImage = { getImage(it.id) }
                 )
             }

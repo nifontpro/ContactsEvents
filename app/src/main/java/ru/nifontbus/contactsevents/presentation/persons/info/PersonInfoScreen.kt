@@ -1,5 +1,6 @@
 package ru.nifontbus.contactsevents.presentation.persons.info
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,12 +19,19 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.collect
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.presentation.events.EventCard
@@ -31,8 +39,7 @@ import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.TemplateSwipeToDismiss
 import ru.nifontbus.contactsevents.presentation.navigation.TopBar
 import ru.nifontbus.contactsevents.presentation.persons.SmallRememberImage
-import ru.nifontbus.contactsevents.ui.theme.Half3Gray
-import ru.nifontbus.contactsevents.ui.theme.TextWhite
+import ru.nifontbus.contactsevents.ui.theme.*
 
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
@@ -67,7 +74,7 @@ fun PersonInfoScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    extNavController.navigate(Screen.NavNewEventScreen.createRoute(person.id))
+                    extNavController.navigate(Screen.ExtNewEventScreen.createRoute(person.id))
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -83,7 +90,7 @@ fun PersonInfoScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 10.dp)
+                .padding(horizontal = mediumPadding)
         ) {
 
             Icon(
@@ -96,52 +103,102 @@ fun PersonInfoScreen(
                     .padding(bottom = 50.dp)
             )
 
-            /*           viewModel.displayPhoto?.let { it ->
-                           Image(
-                               bitmap = it,
-                               contentDescription = "Photo",
-                               modifier = Modifier
-                                   .align(Alignment.BottomCenter)
-                                   .fillMaxSize()
-                           )
-                       }*/
+            val collapsingState = rememberCollapsingToolbarScaffoldState()
+            CollapsingToolbarScaffold(
+                modifier = Modifier.fillMaxSize(),
+                state = collapsingState,
+                scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+                toolbarModifier = Modifier
+                    .background(Color.Transparent)
+                    .padding(bottom = smallPadding),
+                toolbar = {
+//                    val offsetY = state.offsetY // y offset of the layout
+                    val progress = collapsingState.toolbarState.progress
+                    val configuration = LocalConfiguration.current
+                    val screenHeight = configuration.screenHeightDp.dp
 
-            /*viewModel.getPhotoById(person.id)?.let { it ->
-                Image(
-                    bitmap = it,
-                    contentDescription = "Photo",
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxSize()
-                )
-            }*/
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp)
-            ) {
+                    viewModel.displayPhoto?.let { it ->
+                        Image(
+                            bitmap = it,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .parallax(0.3f)
+                                .height(screenHeight / 3)
+                                .graphicsLayer { alpha = progress },
+                            contentScale = ContentScale.FillWidth,
+                            contentDescription = null
+                        )
+                    }
 
-                item {
-                    PersonInfoHeader(person, viewModel)
-                }
-
-                itemsIndexed(
-                    items = personEvents,
-                    key = { _, item -> item.id }
-                ) { _, event ->
-
-                    TemplateSwipeToDismiss(
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        {
-                            viewModel.deleteEvent(event)
-                        },
-                        {
-                            EventCard(event, person) { viewModel.getPhotoById(it) }
-                        },
-//                                enabled = template.type == 0,
+                    val minFontSize = personInfoToolBarMinFontSize
+                    val maxFontSize = personInfoToolBarMaxFontSize
+                    Text(
+                        person.displayName,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colors.surface)
+                            .padding(mediumPadding)
+                            .road(
+                                whenCollapsed = Alignment.BottomStart,
+                                whenExpanded = Alignment.BottomStart
+                            ),
+                        fontSize = (minFontSize + (maxFontSize - minFontSize) * progress).sp,
+                        maxLines = if (progress < 0.2) 1 else 3
                     )
-                }
-            } // LazyColumn
+
+                    SmallRememberImage(
+                        person,
+                        Modifier
+                            .padding(smallPadding)
+                            .size(personInfoSmallIconSize)
+                            .clip(RoundedCornerShape(10))
+                            .graphicsLayer {
+                                alpha = maxOf(0f, 1 - progress * 3)
+                            }
+                            .road(
+                                whenCollapsed = Alignment.BottomEnd,
+                                whenExpanded = Alignment.BottomEnd
+                            ),
+                        getImage = { viewModel.getPhotoById(person.id) }
+                    )
+                } // toolbar
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = mediumPadding)
+                ) {
+
+                    item {
+                        PersonInfoHeader(person, viewModel)
+                    }
+
+                    itemsIndexed(
+                        items = personEvents,
+                        key = { _, item -> item.id }
+                    ) { _, event ->
+
+                        TemplateSwipeToDismiss(
+                            modifier = Modifier.padding(bottom = smallPadding),
+                            {
+                                viewModel.deleteEvent(event)
+                            },
+                            {
+                                EventCard(event, person,
+                                    {
+                                        extNavController.navigate(
+                                            Screen.ExtEventUpdateScreen.createRoute(
+                                                person.id, event.id
+                                            )
+                                        )
+                                    })
+                                { null } // без картинки
+                            },
+//                                enabled = template.type == 0,
+                        )
+                    }
+                } // LazyColumn
+            }
         }
     }
 }
@@ -157,7 +214,6 @@ private fun PersonInfoHeader(
             .background(Color.Transparent)
     ) {
 
-        TextPerson(person.displayName, MaterialTheme.colors.primaryVariant)
         Box( // Внутренний полупрозрачный 1
             modifier = Modifier
                 .clip(RoundedCornerShape(10.dp))
@@ -169,7 +225,7 @@ private fun PersonInfoHeader(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp)
+                    .padding(mediumPadding)
             ) {
                 var groupsString = ""
                 val delimetr = stringResource(R.string.sDelimetr)
@@ -188,17 +244,9 @@ private fun PersonInfoHeader(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
 
-                    SmallRememberImage(
-                        person,
-                        Modifier
-                            .padding(end = 10.dp, bottom = 10.dp)
-                            .size(50.dp)
-                            .clip(RoundedCornerShape(10))
-                    ) { viewModel.getPhotoById(person.id) }
-
                     Text(
                         groupsString,
-                        modifier = Modifier.padding(bottom = 10.dp),
+                        modifier = Modifier.padding(bottom = mediumPadding),
                         style = MaterialTheme.typography.h6
                     )
                 } // Row
@@ -236,19 +284,9 @@ private fun PersonInfoHeader(
         } // Box
         Text(
             "Events: ",
-            modifier = Modifier.padding(vertical = 5.dp),
+            modifier = Modifier.padding(vertical = smallPadding),
             color = MaterialTheme.colors.primaryVariant,
             style = MaterialTheme.typography.h5
         )
     } // Column Header
-}
-
-@Composable
-fun TextPerson(text: String, color: Color = MaterialTheme.colors.onBackground) {
-    Text(
-        text,
-        modifier = Modifier.padding(bottom = 5.dp),
-        color = color,
-        style = MaterialTheme.typography.h5
-    )
 }

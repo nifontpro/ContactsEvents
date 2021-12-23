@@ -1,9 +1,6 @@
 package ru.nifontbus.contactsevents.presentation.persons
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -90,11 +87,7 @@ fun PersonsScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp)
-//                .simpleVerticalScrollbar(listState),
-
-//            state = listState,
-
+                .padding(mediumPadding)
         ) {
             grouped.forEach { (initial, contactsForInitial) ->
                 stickyHeader {
@@ -103,19 +96,19 @@ fun PersonsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colors.secondary)
-                            .padding(vertical = 5.dp, horizontal = 10.dp)
+                            .padding(vertical = smallPadding, horizontal = mediumPadding)
                     )
                 }
 
                 items(contactsForInitial) { person ->
                     Box(
                         modifier = Modifier
-                            .padding(vertical = 5.dp)
+                            .padding(vertical = smallPadding)
                             .clip(RoundedCornerShape(3.dp))
                             .background(MaterialTheme.colors.surface)
                             .clickable {
                                 extNavController.navigate(
-                                    Screen.NavPersonInfoScreen.createRoute(person.id)
+                                    Screen.ExtPersonInfoScreen.createRoute(person.id)
                                 )
                             },
                     ) {
@@ -135,10 +128,10 @@ private fun PersonCard(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().padding(10.dp)
+        modifier = Modifier.fillMaxWidth().padding(mediumPadding)
     ) {
         Column(
-            modifier = Modifier.weight(6f),
+            modifier = Modifier.weight(5f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.Start
         ) {
@@ -156,8 +149,8 @@ private fun PersonCard(
             person,
             Modifier
                 .weight(1f)
-                .size(50.dp)
-                .clip(RoundedCornerShape(10))
+                .size(smallIconSize)
+                .clip(RoundedCornerShape(cornerShapeIconPercent))
         ) { viewModel.getPhotoById(person.id) }
     } // Row
 }
@@ -200,7 +193,7 @@ fun SearchView(state: MutableState<String>) {
                 Icons.Default.Search,
                 contentDescription = "",
                 modifier = Modifier
-                    .padding(15.dp)
+                    .padding(bigPadding)
                     .size(24.dp)
             )
         },
@@ -216,7 +209,7 @@ fun SearchView(state: MutableState<String>) {
                         Icons.Default.Close,
                         contentDescription = "",
                         modifier = Modifier
-                            .padding(15.dp)
+                            .padding(bigPadding)
                             .size(24.dp)
                     )
                 }

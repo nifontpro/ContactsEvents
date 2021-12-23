@@ -24,6 +24,7 @@ import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.presentation.events.EventsScreen
 import ru.nifontbus.contactsevents.presentation.events.new_event.NewEventScreen
 import ru.nifontbus.contactsevents.presentation.events.new_event.templates.TemplatesScreen
+import ru.nifontbus.contactsevents.presentation.events.update.EventUpdateScreen
 import ru.nifontbus.contactsevents.presentation.groups.GroupScreen
 import ru.nifontbus.contactsevents.presentation.navigation.BottomBar
 import ru.nifontbus.contactsevents.presentation.navigation.GetPermission
@@ -56,8 +57,8 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(
-                            Screen.NavPersonInfoScreen.route,
-                            arguments = idArgument(),
+                            Screen.ExtPersonInfoScreen.route,
+                            arguments = listOf(navArgument("id")),
                         ) {
                             PersonInfoScreen(extNavController)
                         }
@@ -66,15 +67,24 @@ class MainActivity : ComponentActivity() {
                             mutableStateOf(Template(type = EventType.CUSTOM))
 
                         composable(
-                            Screen.NavNewEventScreen.route,
-                            arguments = idArgument(),
+                            Screen.ExtNewEventScreen.route,
+                            arguments = listOf(navArgument("id")),
                         ) {
                             NewEventScreen(extNavController, sharedTemplateState)
                         }
 
                         composable(
-                            Screen.NavTemplatesScreen.route,
-                            arguments = idArgument(),
+                            Screen.ExtEventUpdateScreen.route,
+                            arguments = listOf(
+                                navArgument("person_id"), navArgument("event_id")
+                            ),
+                        ) {
+                            EventUpdateScreen(extNavController, sharedTemplateState)
+                        }
+
+                        composable(
+                            Screen.ExtTemplatesScreen.route,
+                            arguments = listOf(navArgument("id")),
                         ) {
                             TemplatesScreen(extNavController, sharedTemplateState)
                         }
@@ -84,13 +94,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun idArgument() = listOf(
-        navArgument("id") {
-            type = NavType.LongType
-            defaultValue = -1
-            nullable = false
-        }
-    )
+    private fun navArgument(arg: String) = navArgument(arg) {
+        type = NavType.LongType
+        defaultValue = -1
+        nullable = false
+    }
 }
 
 @ExperimentalFoundationApi

@@ -9,7 +9,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -19,13 +18,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
-import ru.nifontbus.contactsevents.domain.data.EventType
 import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.presentation.events.EventsScreen
-import ru.nifontbus.contactsevents.presentation.events.new_event.NewEventScreen
-import ru.nifontbus.contactsevents.presentation.events.new_event.templates.TemplatesScreen
+import ru.nifontbus.contactsevents.presentation.events.templates.TemplatesScreen
 import ru.nifontbus.contactsevents.presentation.events.update.EventUpdateScreen
+import ru.nifontbus.contactsevents.presentation.events.update.NewEventScreen
 import ru.nifontbus.contactsevents.presentation.groups.GroupScreen
+import ru.nifontbus.contactsevents.presentation.navigation.Arg
 import ru.nifontbus.contactsevents.presentation.navigation.BottomBar
 import ru.nifontbus.contactsevents.presentation.navigation.GetPermission
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
@@ -44,7 +43,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ContactsEventsTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     GetPermission()
                     val extNavController = rememberNavController()
@@ -58,37 +56,35 @@ class MainActivity : ComponentActivity() {
 
                         composable(
                             Screen.ExtPersonInfoScreen.route,
-                            arguments = listOf(navArgument("id")),
+                            arguments = listOf(navArgument(Arg.personId)),
                         ) {
                             PersonInfoScreen(extNavController)
                         }
 
-                        val sharedTemplateState =
-                            mutableStateOf(Template(type = EventType.CUSTOM))
-
                         composable(
                             Screen.ExtNewEventScreen.route,
-                            arguments = listOf(navArgument("id")),
-                        ) {
-                            NewEventScreen(extNavController, sharedTemplateState)
+                            arguments = listOf(navArgument(Arg.personId)),
+                        ) { entry ->
+                            val returnTemplate =
+                                entry.arguments?.getParcelable<Template>(Arg.template)
+                            NewEventScreen(extNavController, returnTemplate)
                         }
 
                         composable(
                             Screen.ExtEventUpdateScreen.route,
                             arguments = listOf(
-                                navArgument("person_id"), navArgument("event_id")
+                                navArgument(Arg.personId), navArgument(Arg.eventId)
                             ),
                         ) { entry ->
-//                            val label = entry.arguments?.getString("label")
-                            val label = entry.arguments?.getParcelable<Template>("label")
-                            EventUpdateScreen(extNavController, sharedTemplateState, label)
+                            val returnTemplate =
+                                entry.arguments?.getParcelable<Template>(Arg.template)
+                            EventUpdateScreen(extNavController, returnTemplate)
                         }
 
                         composable(
                             Screen.ExtTemplatesScreen.route,
-                            arguments = listOf(navArgument("id")),
                         ) {
-                            TemplatesScreen(extNavController, sharedTemplateState)
+                            TemplatesScreen(extNavController)
                         }
                     }
                 }
@@ -108,7 +104,6 @@ class MainActivity : ComponentActivity() {
 @ExperimentalMaterialApi
 @Composable
 private fun MainScreen(extNavController: NavHostController) {
-    // A surface container using the 'background' color from the theme
     Surface(color = MaterialTheme.colors.background) {
         val navController = rememberNavController()
         Scaffold(

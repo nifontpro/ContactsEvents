@@ -53,7 +53,7 @@ class PersonInfoViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            savedStateHandle.get<Long>("id")?.let { it ->
+            savedStateHandle.get<Long>("person_id")?.let { it ->
                 personsUseCases.getPersonById(it)?.let { findPerson ->
                     _person.value = findPerson
                 }

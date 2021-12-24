@@ -33,8 +33,4 @@ data class Template(
             EventType.NEW_LIFE_DAY -> context.getString(R.string.sNewLifeDay)
             else -> context.getString(ContactsContract.CommonDataKinds.Event.getTypeResource(type))
         }
-
-    companion object {
-        const val UPDATE = -3L
-    }
 }

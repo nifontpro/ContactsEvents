@@ -11,19 +11,27 @@ sealed class Screen(val route: String) {
     object NavSettingScreen : Screen("setting_screen")
 
     // External
-    object ExtPersonInfoScreen : Screen("person_info_screen?id={id}") {
-        fun createRoute(id: Long) = "person_info_screen?id=$id"
+    object ExtPersonInfoScreen : Screen("person_info_screen?${Arg.personId}={${Arg.personId}}") {
+        fun createRoute(personId: Long) = "person_info_screen?${Arg.personId}=$personId"
     }
 
-    object ExtNewEventScreen : Screen("new_event_screen?id={id}") {
-        fun createRoute(id: Long) = "new_event_screen?id=$id"
+    object ExtNewEventScreen : Screen("new_event_screen?${Arg.personId}={${Arg.personId}}") {
+        fun createRoute(personId: Long) = "new_event_screen?${Arg.personId}=$personId"
     }
 
     object ExtEventUpdateScreen :
-        Screen("event_update_screen?person_id={person_id}?event_id={event_id}") {
+        Screen(
+            "event_update_screen?${Arg.personId}={${Arg.personId}}?${Arg.eventId}={${Arg.eventId}}"
+        ) {
         fun createRoute(personId: Long, eventId: Long) =
-            "event_update_screen?person_id=$personId?event_id=$eventId"
+            "event_update_screen?${Arg.personId}=$personId?${Arg.eventId}=$eventId"
     }
 
     object ExtTemplatesScreen : Screen("templates_screen")
+}
+
+object Arg {
+    const val personId = "person_id"
+    const val eventId = "event_id"
+    const val template = "template"
 }

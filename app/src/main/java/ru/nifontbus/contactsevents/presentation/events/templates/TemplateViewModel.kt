@@ -1,4 +1,4 @@
-package ru.nifontbus.contactsevents.presentation.events.new_event.templates
+package ru.nifontbus.contactsevents.presentation.events.templates
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

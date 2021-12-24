@@ -1,4 +1,4 @@
-package ru.nifontbus.contactsevents.presentation.events.new_event
+package ru.nifontbus.contactsevents.presentation.events.update
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.background
@@ -39,17 +39,16 @@ import java.time.LocalDate
 @Composable
 fun NewEventScreen(
     extNavController: NavHostController,
-    sharedTemplateState: MutableState<Template>,
+    returnTemplate: Template?,
 ) {
-    val viewModel: NewEventViewModel = hiltViewModel()
+    val viewModel: EventUpdateViewModel = hiltViewModel()
     val scaffoldState = rememberScaffoldState()
     val person = viewModel.person.value
 
-    LaunchedEffect(sharedTemplateState) {
-        if (sharedTemplateState.value.id == Template.UPDATE) {
-            viewModel.setEventName(sharedTemplateState.value.label)
-            viewModel.eventType = sharedTemplateState.value.type
-            sharedTemplateState.value = Template()
+    LaunchedEffect(returnTemplate) {
+        returnTemplate?.let {
+            viewModel.setEventLabel(returnTemplate.label)
+            viewModel.eventType.value = returnTemplate.type
         }
     }
 
@@ -119,10 +118,10 @@ fun NewEventScreen(
                         val keyboardController = LocalSoftwareKeyboardController.current
 
                         TextField(
-                            value = viewModel.eventName.value,
+                            value = viewModel.eventLabel.value,
                             enabled = viewModel.isEnabledEdit(),
                             onValueChange = {
-                                viewModel.setEventName(it)
+                                viewModel.setEventLabel(it)
                             },
                             modifier = edMod,
                             singleLine = true,
@@ -155,7 +154,6 @@ fun NewEventScreen(
         }
     }
 }
-
 
 @Composable
 fun SelectDate(stateDate: MutableState<String>) {

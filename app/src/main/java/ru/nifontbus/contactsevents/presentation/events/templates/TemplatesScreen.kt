@@ -1,4 +1,4 @@
-package ru.nifontbus.contactsevents.presentation.events.new_event.templates
+package ru.nifontbus.contactsevents.presentation.events.templates
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,7 +10,6 @@ import androidx.compose.material.icons.outlined.Android
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,6 +19,7 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.flow.collect
 import ru.nifontbus.contactsevents.domain.data.EventType
 import ru.nifontbus.contactsevents.domain.data.Template
+import ru.nifontbus.contactsevents.presentation.navigation.Arg
 import ru.nifontbus.contactsevents.presentation.navigation.TemplateSwipeToDismiss
 import ru.nifontbus.contactsevents.presentation.navigation.TopBar
 
@@ -27,7 +27,6 @@ import ru.nifontbus.contactsevents.presentation.navigation.TopBar
 @Composable
 fun TemplatesScreen(
     extNavController: NavController,
-    sharedTemplateState: MutableState<Template>
 ) {
     val viewModel: TemplateViewModel = hiltViewModel()
     val scaffoldState = rememberScaffoldState()
@@ -73,22 +72,13 @@ fun TemplatesScreen(
                     },
                     {
                         TemplateCard(template) {
-                            sharedTemplateState.value =
+                            extNavController.previousBackStackEntry?.arguments?.putParcelable(
+                                Arg.template,
                                 Template(
                                     type = template.type,
-                                    label = template.getDescriptionForSelect(context),
-                                    id = Template.UPDATE
+                                    label = template.getDescriptionForSelect(context)
                                 )
-                            /*extNavController.previousBackStackEntry?.arguments
-                                ?.putString("label", template.getDescriptionForSelect(context))*/
-
-                            extNavController.previousBackStackEntry?.arguments
-                                ?.putParcelable("label", Template(
-                                    type = template.type,
-                                    label = template.getDescriptionForSelect(context),
-                                    id = Template.UPDATE
-                                ))
-
+                            )
                             extNavController.popBackStack()
                         }
                     },

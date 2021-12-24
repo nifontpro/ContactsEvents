@@ -77,11 +77,6 @@ class EventUpdateViewModel @Inject constructor(
         date.value = newDate
     }*/
 
-/*    fun setSelectedTemplate(template: Template) {
-        eventType = template.type
-        _eventName.value = template.name
-    }*/
-
     fun isEnabledSave(): Boolean = eventLabel.value.isNotEmpty() && date.value.isNotEmpty()
     fun isEnabledEdit(): Boolean = eventType.value == EventType.CUSTOM
 }

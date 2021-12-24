@@ -1,7 +1,5 @@
 package ru.nifontbus.contactsevents.presentation.events.update
 
-import android.app.DatePickerDialog
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +9,6 @@ import androidx.compose.material.icons.filled.ReadMore
 import androidx.compose.material.icons.outlined.NotificationAdd
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -28,36 +25,28 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.collect
 import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Template
-import ru.nifontbus.contactsevents.domain.utils.toLocalDate
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.TopBar
 import ru.nifontbus.contactsevents.ui.theme.IconGreen
 import ru.nifontbus.contactsevents.ui.theme.LightGreen2
 import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
 import ru.nifontbus.contactsevents.ui.theme.TextWhite
-import java.time.LocalDate
 
 @ExperimentalComposeUiApi
 @Composable
 fun EventUpdateScreen(
     extNavController: NavHostController,
-    sharedTemplateState: MutableState<Template>,
-    returnTemplate: Template?,
+    returnTemplate: Template?
 ) {
     val viewModel: EventUpdateViewModel = hiltViewModel()
     val scaffoldState = rememberScaffoldState()
     val person = viewModel.person.value
 
-    LaunchedEffect(sharedTemplateState) {
-        if (sharedTemplateState.value.id == Template.UPDATE) {
-            viewModel.setEventLabel(sharedTemplateState.value.label)
-            viewModel.eventType.value = sharedTemplateState.value.type
-            sharedTemplateState.value = Template()
+    LaunchedEffect(returnTemplate) {
+        returnTemplate?.let {
+            viewModel.setEventLabel(returnTemplate.label)
+            viewModel.eventType.value = returnTemplate.type
         }
-    }
-
-    LaunchedEffect(key1 = returnTemplate) {
-        Log.e("my", "label: $returnTemplate")
     }
 
     val context = LocalContext.current
@@ -171,38 +160,5 @@ fun EventUpdateScreen(
                 }
             }
         }
-    }
-}
-
-
-@Composable
-fun SelectDate(stateDate: MutableState<String>) {
-
-    val context = LocalContext.current
-    val localDate = if (stateDate.value.isNotEmpty()) stateDate.value.toLocalDate()
-    else LocalDate.now()
-
-    val datePickerDialog = DatePickerDialog(
-        context,
-        { _, year, month, day ->
-            val date = LocalDate.of(year, month + 1, day)
-            stateDate.value = date.toString()
-        }, localDate.year, localDate.monthValue - 1, localDate.dayOfMonth
-    )
-
-    Button(
-        onClick = {
-            datePickerDialog.show()
-        }, modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp)
-            .height(55.dp)
-
-    ) {
-        Text(
-            text = if (stateDate.value.isNotEmpty()) "Date: ${stateDate.value}"
-            else "Select date",
-            color = TextWhite
-        )
     }
 }

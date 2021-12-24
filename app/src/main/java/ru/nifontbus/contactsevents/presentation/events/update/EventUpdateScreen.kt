@@ -1,6 +1,7 @@
 package ru.nifontbus.contactsevents.presentation.events.update
 
 import android.app.DatePickerDialog
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.collect
+import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.domain.utils.toLocalDate
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
@@ -40,14 +42,33 @@ import java.time.LocalDate
 fun EventUpdateScreen(
     extNavController: NavHostController,
     sharedTemplateState: MutableState<Template>,
+    returnTemplate: Template?,
 ) {
     val viewModel: EventUpdateViewModel = hiltViewModel()
     val scaffoldState = rememberScaffoldState()
     val person = viewModel.person.value
 
     LaunchedEffect(sharedTemplateState) {
-        viewModel.setEventName(sharedTemplateState.value.label)
-        viewModel.eventType = sharedTemplateState.value.type
+        if (sharedTemplateState.value.id == Template.UPDATE) {
+            viewModel.setEventLabel(sharedTemplateState.value.label)
+            viewModel.eventType.value = sharedTemplateState.value.type
+            sharedTemplateState.value = Template()
+        }
+    }
+
+    LaunchedEffect(key1 = returnTemplate) {
+        Log.e("my", "label: $returnTemplate")
+    }
+
+    val context = LocalContext.current
+    LaunchedEffect(viewModel.eventType.value) {
+        viewModel.setEventLabel(
+            Event.getTypeLabel(
+                type = viewModel.eventType.value,
+                label = viewModel.eventLabel.value,
+                context = context
+            )
+        )
     }
 
     LaunchedEffect(scaffoldState) {
@@ -58,7 +79,7 @@ fun EventUpdateScreen(
 
     Scaffold(scaffoldState = scaffoldState, backgroundColor = MaterialTheme.colors.background,
         topBar = {
-            TopBar(navController = extNavController, header = "New event")
+            TopBar(navController = extNavController, header = "Update event")
         }
     ) {
 
@@ -84,7 +105,7 @@ fun EventUpdateScreen(
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(color = PrimaryDarkColor)) {
-                            append("You can create new event for person ")
+                            append("You can update event for person ")
                         }
                         withStyle(style = SpanStyle(color = LightGreen2)) {
                             append(person.displayName)
@@ -116,10 +137,10 @@ fun EventUpdateScreen(
                         val keyboardController = LocalSoftwareKeyboardController.current
 
                         TextField(
-                            value = viewModel.eventName.value,
+                            value = viewModel.eventLabel.value,
                             enabled = viewModel.isEnabledEdit(),
                             onValueChange = {
-                                viewModel.setEventName(it)
+                                viewModel.setEventLabel(it)
                             },
                             modifier = edMod,
                             singleLine = true,
@@ -144,7 +165,7 @@ fun EventUpdateScreen(
                                 .height(55.dp),
                             enabled = viewModel.isEnabledSave()
                         ) {
-                            Text("Create event", color = TextWhite)
+                            Text("Update event", color = TextWhite)
                         }
                     }
                 }

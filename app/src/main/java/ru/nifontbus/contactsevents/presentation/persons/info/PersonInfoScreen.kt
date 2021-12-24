@@ -147,8 +147,8 @@ fun PersonInfoScreen(
                     )
 
                     SmallRememberImage(
-                        person,
-                        Modifier
+                        personId = person.id,
+                        modifier = Modifier
                             .padding(smallPadding)
                             .size(personInfoSmallIconSize)
                             .clip(RoundedCornerShape(10))
@@ -159,7 +159,7 @@ fun PersonInfoScreen(
                                 whenCollapsed = Alignment.BottomEnd,
                                 whenExpanded = Alignment.BottomEnd
                             ),
-                        getImage = { viewModel.getPhotoById(person.id) }
+                        getImage = viewModel::getPhotoById
                     )
                 } // toolbar
             ) {
@@ -185,14 +185,15 @@ fun PersonInfoScreen(
                             },
                             {
                                 EventCard(event, person,
-                                    {
+                                    onClick = {
                                         extNavController.navigate(
                                             Screen.ExtEventUpdateScreen.createRoute(
                                                 person.id, event.id
                                             )
                                         )
-                                    })
-                                { null } // без картинки
+                                    },
+                                    getImage = { null }  // без картинки
+                                )
                             },
 //                                enabled = template.type == 0,
                         )
@@ -251,8 +252,7 @@ private fun PersonInfoHeader(
                     )
                 } // Row
 
-                val personInfo = viewModel.getPersonInfo(person.id) //LE
-
+                val personInfo = viewModel.personInfo.value
                 if (personInfo.phones.isNotEmpty()) {
                     Divider()
                     Row(

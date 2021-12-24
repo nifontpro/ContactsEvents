@@ -209,7 +209,7 @@ class ContactsRepository(private val context: Context) {
         }
     }
 
-    fun getPersonInfo(contactId: Long): PersonInfo {
+    suspend fun getPersonInfo(contactId: Long): PersonInfo {
         val uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactId.toString())
         val infoUri = Uri.withAppendedPath(uri, ContactsContract.Contacts.Entity.CONTENT_DIRECTORY)
         val cursorInfo = context.contentResolver.query(
@@ -236,7 +236,9 @@ class ContactsRepository(private val context: Context) {
             }
             it.close()
         }
-        return PersonInfo(phones)
+        return suspendCoroutine {
+            it.resume(PersonInfo(phones))
+        }
     }
 
     suspend fun addEvent(event: Event): Resource<Unit> {
@@ -380,21 +382,25 @@ class ContactsRepository(private val context: Context) {
         }
     }
 
-    fun getDisplayPhoto(contactId: Long): ImageBitmap? {
+    suspend fun getDisplayPhoto(contactId: Long): ImageBitmap? {
         val contactUri =
             ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId)
-        return try {
-            val stream = openContactPhotoInputStream(
-                context.contentResolver,
-                contactUri, true
+        return suspendCoroutine {
+            it.resume(
+                try {
+                    val stream = openContactPhotoInputStream(
+                        context.contentResolver,
+                        contactUri, true
+                    )
+                    if (stream != null) BitmapFactory.decodeStream(stream).asImageBitmap()
+                    else null
+                } catch (e: Exception) {
+                    null
+                }
             )
-            if (stream != null) BitmapFactory.decodeStream(stream).asImageBitmap()
-            else null
-        } catch (e: Exception) {
-            Log.e("my", e.localizedMessage ?: "Error load photo")
-            null
         }
     }
+
 } // EOC
 
 fun String.toIntDefault(default: Int) =

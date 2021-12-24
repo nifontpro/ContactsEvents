@@ -46,8 +46,11 @@ fun NewEventScreen(
     val person = viewModel.person.value
 
     LaunchedEffect(sharedTemplateState) {
-        viewModel.setEventName(sharedTemplateState.value.label)
-        viewModel.eventType = sharedTemplateState.value.type
+        if (sharedTemplateState.value.id == Template.UPDATE) {
+            viewModel.setEventName(sharedTemplateState.value.label)
+            viewModel.eventType = sharedTemplateState.value.type
+            sharedTemplateState.value = Template()
+        }
     }
 
     LaunchedEffect(scaffoldState) {

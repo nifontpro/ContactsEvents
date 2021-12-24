@@ -1,6 +1,5 @@
 package ru.nifontbus.contactsevents.presentation.events.update
 
-import android.provider.ContactsContract
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -11,9 +10,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import ru.nifontbus.contactsevents.domain.data.Event
-import ru.nifontbus.contactsevents.domain.data.Person
-import ru.nifontbus.contactsevents.domain.data.Resource
+import ru.nifontbus.contactsevents.domain.data.*
 import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
 import javax.inject.Inject
@@ -28,10 +25,10 @@ class EventUpdateViewModel @Inject constructor(
     private val _person = mutableStateOf(Person())
     val person: State<Person> = _person
 
-    private val _eventName = mutableStateOf("")
-    val eventName: State<String> = _eventName
+    private val _eventLabel = mutableStateOf("")
+    val eventLabel: State<String> = _eventLabel
 
-    var eventType = ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM
+    val eventType = mutableStateOf(EventType.CUSTOM)
 
     val date = mutableStateOf("")
 
@@ -39,9 +36,17 @@ class EventUpdateViewModel @Inject constructor(
     val action: SharedFlow<String> = _action.asSharedFlow()
 
     init {
-        savedStateHandle.get<Long>("id")?.let { it ->
+        savedStateHandle.get<Long>("person_id")?.let { it ->
             personsUseCases.getPersonById(it)?.let { findPerson ->
                 _person.value = findPerson
+            }
+        }
+
+        savedStateHandle.get<Long>("event_id")?.let { it ->
+            eventsUseCases.getEventById(it)?.let { findEvent ->
+                _eventLabel.value = findEvent.label
+                eventType.value = findEvent.type
+                date.value = findEvent.date
             }
         }
     }
@@ -49,12 +54,11 @@ class EventUpdateViewModel @Inject constructor(
     fun addEvent() = viewModelScope.launch {
         when (val result =
             eventsUseCases.addEvent(
-                Event(eventName.value, date.value, eventType, person.value.id)
+                Event(eventLabel.value, date.value, eventType.value, person.value.id)
             )) {
             is Resource.Success -> {
-                _eventName.value = ""
-                eventType = ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM
-
+                _eventLabel.value = ""
+                eventType.value = EventType.CUSTOM
                 sendMessage(result.message)
             }
             is Resource.Error -> sendMessage(result.message)
@@ -65,8 +69,8 @@ class EventUpdateViewModel @Inject constructor(
         _action.emit(msg)
     }
 
-    fun setEventName(name: String) {
-        _eventName.value = name
+    fun setEventLabel(name: String) {
+        _eventLabel.value = name
     }
 
 /*    fun setCurrentDate(newDate: String) {
@@ -78,6 +82,6 @@ class EventUpdateViewModel @Inject constructor(
         _eventName.value = template.name
     }*/
 
-    fun isEnabledSave(): Boolean = eventName.value.isNotEmpty() && date.value.isNotEmpty()
-    fun isEnabledEdit(): Boolean = eventType == ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM
+    fun isEnabledSave(): Boolean = eventLabel.value.isNotEmpty() && date.value.isNotEmpty()
+    fun isEnabledEdit(): Boolean = eventType.value == EventType.CUSTOM
 }

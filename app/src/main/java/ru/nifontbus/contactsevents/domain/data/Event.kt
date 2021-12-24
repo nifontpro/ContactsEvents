@@ -17,6 +17,19 @@ data class Event(
     val id: Long = -1
 ) {
 
+    companion object {
+        fun getTypeLabel(type: Int, label: String, context: Context) =
+            when (type) {
+                EventType.CUSTOM -> label
+                EventType.NEW_LIFE_DAY -> context.getString(R.string.sNewLifeDay)
+                else -> context.getString(
+                    ContactsContract.CommonDataKinds.Event.getTypeResource(
+                        type
+                    )
+                )
+            }
+    }
+
     fun getDescription(context: Context) =
         when (type) {
             EventType.CUSTOM -> label

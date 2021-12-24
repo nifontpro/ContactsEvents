@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.data.Resource
+import ru.nifontbus.contactsevents.domain.data.person_info.PersonInfo
 import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
@@ -27,6 +28,9 @@ class PersonInfoViewModel @Inject constructor(
 
     private val _person = mutableStateOf(Person())
     val person: State<Person> = _person
+
+    private val _personInfo = mutableStateOf(PersonInfo())
+    val personInfo: State<PersonInfo> = _personInfo
 
     var displayPhoto: ImageBitmap? = null
 
@@ -53,16 +57,19 @@ class PersonInfoViewModel @Inject constructor(
                 personsUseCases.getPersonById(it)?.let { findPerson ->
                     _person.value = findPerson
                 }
+                _personInfo.value = getPersonInfo(it)
             }
-
-            displayPhoto = personsUseCases.getDisplayPhoto(person.value.id)
+            displayPhoto = getDisplayPhoto(person.value.id)
         }
     }
 
     fun getGroupById(id: Long) = groupsUseCases.getGroupById(id)
-    fun getPersonInfo(id: Long) = personsUseCases.getPersonInfo(id)
+
+    private suspend fun getPersonInfo(id: Long) = personsUseCases.getPersonInfo(id)
+
     suspend fun getPhotoById(id: Long) = personsUseCases.getPhotoById(id)
-    fun getDisplayPhoto(id: Long) = personsUseCases.getDisplayPhoto(id)
+
+    private suspend fun getDisplayPhoto(id: Long) = personsUseCases.getDisplayPhoto(id)
 
     fun deleteEvent(event: Event) = viewModelScope.launch {
         when (val result = eventsUseCases.deleteEvent(event)) {

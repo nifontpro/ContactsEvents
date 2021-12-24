@@ -76,8 +76,19 @@ fun TemplatesScreen(
                             sharedTemplateState.value =
                                 Template(
                                     type = template.type,
-                                    label = template.getDescriptionForSelect(context)
+                                    label = template.getDescriptionForSelect(context),
+                                    id = Template.UPDATE
                                 )
+                            /*extNavController.previousBackStackEntry?.arguments
+                                ?.putString("label", template.getDescriptionForSelect(context))*/
+
+                            extNavController.previousBackStackEntry?.arguments
+                                ?.putParcelable("label", Template(
+                                    type = template.type,
+                                    label = template.getDescriptionForSelect(context),
+                                    id = Template.UPDATE
+                                ))
+
                             extNavController.popBackStack()
                         }
                     },
@@ -118,7 +129,8 @@ private fun TemplateCard(
                 )
             }
             if (template.type == EventType.BIRTHDAY || template.type == EventType.ANNIVERSARY ||
-                template.type == EventType.OTHER) {
+                template.type == EventType.OTHER
+            ) {
                 Icon(
                     imageVector = Icons.Outlined.Android,
                     contentDescription = "",

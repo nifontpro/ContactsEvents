@@ -165,13 +165,13 @@ fun EventCard(
             person?.let {
 
                 SmallRememberImage(
-                    it,
-                    Modifier
+                    personId = it.id,
+                    modifier = Modifier
                         .padding(end = 10.dp)
                         .weight(1f)
                         .size(50.dp)
                         .clip(RoundedCornerShape(cornerShapeIconPercent)),
-                    getImage = { getImage(it.id) }
+                    getImage = getImage
                 )
             }
         } // Row

@@ -5,5 +5,5 @@ import ru.nifontbus.contactsevents.domain.repository.ContactsRepository
 class GetDisplayPhoto(
     private val repository: ContactsRepository
 ) {
-    operator fun invoke(id: Long) = repository.getDisplayPhoto(id)
+    suspend operator fun invoke(id: Long) = repository.getDisplayPhoto(id)
 }

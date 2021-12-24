@@ -146,27 +146,28 @@ private fun PersonCard(
         } // Col
 
         SmallRememberImage(
-            person,
-            Modifier
+            personId = person.id,
+            modifier = Modifier
                 .weight(1f)
                 .size(smallIconSize)
-                .clip(RoundedCornerShape(cornerShapeIconPercent))
-        ) { viewModel.getPhotoById(person.id) }
+                .clip(RoundedCornerShape(cornerShapeIconPercent)),
+            getImage = viewModel::getPhotoById
+        )
     } // Row
 }
 
 @Composable
 fun SmallRememberImage(
-    person: Person,
+    personId: Long,
     modifier: Modifier = Modifier,
-    getImage: suspend () -> ImageBitmap?
+    getImage: suspend (id: Long) -> ImageBitmap?
 ) {
     var img by remember {
         mutableStateOf<ImageBitmap?>(null)
     }
 
-    LaunchedEffect(person.id) {
-        img = getImage()
+    LaunchedEffect(personId) {
+        img = getImage(personId)
     }
 
     img?.let {

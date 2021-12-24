@@ -1,14 +1,17 @@
 package ru.nifontbus.contactsevents.domain.data
 
 import android.content.Context
+import android.os.Parcelable
 import android.provider.ContactsContract
+import kotlinx.parcelize.Parcelize
 import ru.nifontbus.contactsevents.R
 
+@Parcelize
 data class Template(
     val id: Long = -1,
     val type: Int = EventType.CUSTOM,
     val label: String = "",
-) {
+) : Parcelable {
 
     fun getDescription(context: Context) =
         when (type) {
@@ -30,4 +33,8 @@ data class Template(
             EventType.NEW_LIFE_DAY -> context.getString(R.string.sNewLifeDay)
             else -> context.getString(ContactsContract.CommonDataKinds.Event.getTypeResource(type))
         }
+
+    companion object {
+        const val UPDATE = -3L
+    }
 }

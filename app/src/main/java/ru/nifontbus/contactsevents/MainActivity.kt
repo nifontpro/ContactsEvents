@@ -78,8 +78,10 @@ class MainActivity : ComponentActivity() {
                             arguments = listOf(
                                 navArgument("person_id"), navArgument("event_id")
                             ),
-                        ) {
-                            EventUpdateScreen(extNavController, sharedTemplateState)
+                        ) { entry ->
+//                            val label = entry.arguments?.getString("label")
+                            val label = entry.arguments?.getParcelable<Template>("label")
+                            EventUpdateScreen(extNavController, sharedTemplateState, label)
                         }
 
                         composable(

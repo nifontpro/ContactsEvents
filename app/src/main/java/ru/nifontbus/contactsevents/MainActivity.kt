@@ -26,7 +26,7 @@ import ru.nifontbus.contactsevents.presentation.events.update.NewEventScreen
 import ru.nifontbus.contactsevents.presentation.groups.GroupScreen
 import ru.nifontbus.contactsevents.presentation.navigation.Arg
 import ru.nifontbus.contactsevents.presentation.navigation.BottomBar
-import ru.nifontbus.contactsevents.presentation.navigation.GetPermission
+import ru.nifontbus.contactsevents.presentation.permission.GetPermission
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.persons.PersonsScreen
 import ru.nifontbus.contactsevents.presentation.persons.info.PersonInfoScreen

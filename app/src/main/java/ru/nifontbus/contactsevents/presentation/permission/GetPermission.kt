@@ -1,4 +1,4 @@
-package ru.nifontbus.contactsevents.presentation.navigation
+package ru.nifontbus.contactsevents.presentation.permission
 
 import android.Manifest
 import android.util.Log
@@ -15,6 +15,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 @ExperimentalPermissionsApi
 @Composable
 fun GetPermission() {
+
     val permissionsState = rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.READ_CONTACTS,
@@ -43,16 +44,16 @@ fun GetPermission() {
             Manifest.permission.READ_CONTACTS -> {
                 when {
                     perm.hasPermission -> {
-                        Log.d("my", "Read contacts permission accepted")
+                        Log.e("my", "Read contacts permission accepted")
                     }
                     perm.shouldShowRationale -> {
-                        Text(
-                            text = "Read contacts permission is needed " +
-                                    "to access the contacts"
+                        Log.e(
+                            "my", "Read contacts permission is needed " +
+                                    "to access the read contacts"
                         )
                     }
                     perm.isPermanentlyDenied() -> {
-                        Log.d(
+                        Log.e(
                             "my", "Read contacts permission was permanently " +
                                     "denied. You can enable it in the app" +
                                     "settings."
@@ -63,37 +64,17 @@ fun GetPermission() {
             Manifest.permission.WRITE_CONTACTS -> {
                 when {
                     perm.hasPermission -> {
-                        Log.d("my", "Write contacts permission accepted")
+                        Log.e("my", "Write contacts permission accepted")
                     }
                     perm.shouldShowRationale -> {
-                        Log.d(
+                        Log.e(
                             "my", "Write contacts permission is needed " +
                                     "to access the write contacts"
                         )
                     }
                     perm.isPermanentlyDenied() -> {
-                        Log.d(
+                        Log.e(
                             "my", "Write contacts permission was permanently " +
-                                    "denied. You can enable it in the app" +
-                                    "settings."
-                        )
-                    }
-                }
-            }
-            Manifest.permission.READ_EXTERNAL_STORAGE -> {
-                when {
-                    perm.hasPermission -> {
-                        Log.d("my", "Read storage permission accepted")
-                    }
-                    perm.shouldShowRationale -> {
-                        Log.d(
-                            "my", "Read storage permission is needed " +
-                                    "to access the write contacts"
-                        )
-                    }
-                    perm.isPermanentlyDenied() -> {
-                        Log.d(
-                            "my", "Read storage permission was permanently " +
                                     "denied. You can enable it in the app" +
                                     "settings."
                         )

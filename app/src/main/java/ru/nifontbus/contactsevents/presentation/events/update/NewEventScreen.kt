@@ -1,5 +1,6 @@
 package ru.nifontbus.contactsevents.presentation.events.update
 
+import android.Manifest
 import android.app.DatePickerDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,6 +25,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionRequired
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.collect
 import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.domain.utils.toLocalDate
@@ -35,9 +39,21 @@ import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
 import ru.nifontbus.contactsevents.ui.theme.TextWhite
 import java.time.LocalDate
 
+@ExperimentalPermissionsApi
 @ExperimentalComposeUiApi
 @Composable
 fun NewEventScreen(
+    extNavController: NavHostController,
+    returnTemplate: Template?,
+) {
+    GetWriteContactsPermission {
+        NewEventScreenMain(extNavController, returnTemplate)
+    }
+}
+
+@ExperimentalComposeUiApi
+@Composable
+fun NewEventScreenMain(
     extNavController: NavHostController,
     returnTemplate: Template?,
 ) {
@@ -153,6 +169,39 @@ fun NewEventScreen(
             }
         }
     }
+}
+
+@ExperimentalPermissionsApi
+@Composable
+fun GetWriteContactsPermission(content: @Composable (() -> Unit)) {
+    val writeContact = rememberPermissionState(Manifest.permission.WRITE_CONTACTS)
+    PermissionRequired(
+        permissionState = writeContact,
+        permissionNotGrantedContent = {
+            LaunchedEffect(true) {
+                writeContact.launchPermissionRequest()
+            }
+        },
+        permissionNotAvailableContent = {
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                Text(
+                    "Write contacts permission denied. See this FAQ with information about why we " +
+                            "need this permission. Please, grant us access on the Settings screen."
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = {}) {
+                    Text("Open Settings")
+                }
+            }
+        },
+        content = content
+    )
 }
 
 @Composable

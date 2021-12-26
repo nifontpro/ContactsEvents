@@ -31,8 +31,6 @@ import ru.nifontbus.contactsevents.presentation.persons.SmallRememberImage
 import ru.nifontbus.contactsevents.ui.theme.cornerShapeIconPercent
 import ru.nifontbus.contactsevents.ui.theme.mediumPadding
 
-@ExperimentalMaterialApi
-
 @Composable
 fun EventsScreen(
     extNavController: NavController,

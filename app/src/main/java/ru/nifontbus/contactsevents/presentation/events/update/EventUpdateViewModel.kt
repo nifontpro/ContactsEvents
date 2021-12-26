@@ -25,6 +25,9 @@ class EventUpdateViewModel @Inject constructor(
     private val _person = mutableStateOf(Person())
     val person: State<Person> = _person
 
+    private val _oldEvent = mutableStateOf(Event())
+    private val oldEvent: State<Event> = _oldEvent
+
     private val _eventLabel = mutableStateOf("")
     val eventLabel: State<String> = _eventLabel
 
@@ -44,6 +47,7 @@ class EventUpdateViewModel @Inject constructor(
 
         savedStateHandle.get<Long>("event_id")?.let { it ->
             eventsUseCases.getEventById(it)?.let { findEvent ->
+                _oldEvent.value = findEvent
                 _eventLabel.value = findEvent.label
                 eventType.value = findEvent.type
                 date.value = findEvent.date
@@ -65,6 +69,20 @@ class EventUpdateViewModel @Inject constructor(
         }
     }
 
+    fun updateEvent() = viewModelScope.launch {
+        val newEvent =
+            Event(eventLabel.value, date.value, eventType.value, person.value.id, oldEvent.value.id)
+        when (val result =
+            eventsUseCases.updateEvent(newEvent, oldEvent.value)
+        ) {
+            is Resource.Success -> {
+                sendMessage(result.message)
+                _oldEvent.value = newEvent
+            }
+            is Resource.Error -> sendMessage(result.message)
+        }
+    }
+
     private suspend fun sendMessage(msg: String) {
         _action.emit(msg)
     }
@@ -78,5 +96,18 @@ class EventUpdateViewModel @Inject constructor(
     }*/
 
     fun isEnabledSave(): Boolean = eventLabel.value.isNotEmpty() && date.value.isNotEmpty()
+
     fun isEnabledEdit(): Boolean = eventType.value == EventType.CUSTOM
+
+    fun isEnabledUpdate(): Boolean = eventLabel.value.isNotEmpty() && date.value.isNotEmpty() &&
+
+            (oldEvent.value.type == EventType.CUSTOM &&
+                    !(oldEvent.value.label == eventLabel.value &&
+                    oldEvent.value.type == eventType.value &&
+                    oldEvent.value.date == date.value) ||
+
+                    oldEvent.value.type != EventType.CUSTOM &&
+                    !(oldEvent.value.type == eventType.value &&
+                            oldEvent.value.date == date.value)
+                    )
 }

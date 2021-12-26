@@ -53,7 +53,8 @@ object AppModule {
             getEventsByPerson = GetEventsByPerson(repository),
             getSortedEventsByPerson = GetSortedEventsByPerson(repository),
             deleteEvent = DeleteEvent(repository),
-            getEventById = GetEventById(repository)
+            getEventById = GetEventById(repository),
+            updateEvent = UpdateEvent(repository)
         )
     }
 

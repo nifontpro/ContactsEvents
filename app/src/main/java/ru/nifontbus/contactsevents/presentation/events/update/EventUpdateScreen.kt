@@ -22,6 +22,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.flow.collect
 import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Template
@@ -32,9 +33,21 @@ import ru.nifontbus.contactsevents.ui.theme.LightGreen2
 import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
 import ru.nifontbus.contactsevents.ui.theme.TextWhite
 
+@ExperimentalPermissionsApi
 @ExperimentalComposeUiApi
 @Composable
 fun EventUpdateScreen(
+    extNavController: NavHostController,
+    returnTemplate: Template?
+) {
+    GetWriteContactsPermission {
+        EventUpdateScreenMain(extNavController, returnTemplate)
+    }
+}
+
+@ExperimentalComposeUiApi
+@Composable
+fun EventUpdateScreenMain(
     extNavController: NavHostController,
     returnTemplate: Template?
 ) {
@@ -148,11 +161,11 @@ fun EventUpdateScreen(
                         Button(
                             onClick = {
                                 keyboardController?.hide()
-                                viewModel.addEvent()
+                                viewModel.updateEvent()
                             }, modifier = Modifier
                                 .fillMaxWidth()
                                 .height(55.dp),
-                            enabled = viewModel.isEnabledSave()
+                            enabled = viewModel.isEnabledUpdate()
                         ) {
                             Text("Update event", color = TextWhite)
                         }

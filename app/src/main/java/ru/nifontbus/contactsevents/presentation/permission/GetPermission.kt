@@ -2,7 +2,6 @@ package ru.nifontbus.contactsevents.presentation.permission
 
 import android.Manifest
 import android.util.Log
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -14,7 +13,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 @ExperimentalPermissionsApi
 @Composable
-fun GetPermission() {
+fun GetAllPermission() {
 
     val permissionsState = rememberMultiplePermissionsState(
         permissions = listOf(

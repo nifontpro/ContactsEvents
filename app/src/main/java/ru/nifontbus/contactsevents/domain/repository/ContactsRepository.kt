@@ -287,6 +287,68 @@ class ContactsRepository(private val context: Context) {
         }
     }
 
+    suspend fun updateEvent(newEvent: Event, oldEvent: Event): Resource<Unit> {
+        // Create query condition, query with the raw contact id.
+        val whereClauseBuf = StringBuffer()
+
+        whereClauseBuf.append(ContactsContract.Data._ID)
+        whereClauseBuf.append("=")
+        whereClauseBuf.append(oldEvent.id)
+        whereClauseBuf.append(" and ")
+
+        // Specify the update contact id.
+        whereClauseBuf.append(ContactsContract.Data.RAW_CONTACT_ID)
+        whereClauseBuf.append("=")
+        whereClauseBuf.append(oldEvent.personId)
+
+        // Specify the row data mimetype to phone mimetype( vnd.android.cursor.item/phone_v2 )
+        whereClauseBuf.append(" and ")
+        whereClauseBuf.append(ContactsContract.Data.MIMETYPE)
+        whereClauseBuf.append(" = '")
+        val mimetype = ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
+        whereClauseBuf.append(mimetype)
+        whereClauseBuf.append("'")
+
+        val values = ContentValues()
+        if (newEvent.type == EventType.CUSTOM) {
+            values.put(ContactsContract.CommonDataKinds.Event.LABEL, newEvent.label)
+        }
+
+        if (newEvent.type == EventType.NEW_LIFE_DAY) {
+            values.put(
+                ContactsContract.CommonDataKinds.Event.LABEL,
+                context.getString(R.string.sDayOfRepose)
+            )
+            values.put(ContactsContract.CommonDataKinds.Event.TYPE, EventType.CUSTOM)
+        } else {
+            values.put(ContactsContract.CommonDataKinds.Event.LABEL, "")
+            values.put(ContactsContract.CommonDataKinds.Event.TYPE, newEvent.type)
+        }
+
+        values.put(ContactsContract.CommonDataKinds.Event.START_DATE, newEvent.date)
+
+        return suspendCoroutine {
+            val exc = "Failed update the event!"
+            it.resume(
+                try {
+                    val dataUri = ContactsContract.Data.CONTENT_URI
+                    val updateCount =
+                        context.contentResolver.update(
+                            dataUri, values, whereClauseBuf.toString(), null
+                        )
+
+                    Log.e("my", "count = $updateCount")
+
+                    _events.value = events.value - oldEvent + newEvent
+
+                    Resource.Success("Event update successful")
+                } catch (e: Exception) {
+                    Resource.Error(e.localizedMessage ?: exc)
+                }
+            )
+        }
+    }
+
     suspend fun deleteEvent(event: Event): Resource<Unit> {
 
         val ops = ArrayList<ContentProviderOperation>()

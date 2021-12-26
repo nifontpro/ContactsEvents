@@ -28,7 +28,6 @@ import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.ui.theme.*
 
 @ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 fun PersonsScreen(
     extNavController: NavController,

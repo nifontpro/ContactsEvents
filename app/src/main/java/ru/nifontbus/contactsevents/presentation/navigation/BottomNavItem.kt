@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.ManageAccounts
 import androidx.compose.material.icons.outlined.RecentActors
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -32,12 +33,11 @@ sealed class BottomNavItem(
         name = "Groups",
         route = Screen.NavGroupScreen.route,
         icon = Icons.Outlined.RecentActors,
-//        badgeCount = mutableStateOf(10)
     )
 
     object SettingItem : BottomNavItem(
         name = "Account",
         route = Screen.NavSettingScreen.route,
-        icon = Icons.Outlined.ManageAccounts,
+        icon = Icons.Outlined.Settings,
     )
 }

@@ -111,7 +111,7 @@ fun EventCard(
 
             val modText = Modifier.padding(horizontal = mediumPadding)
             Column(
-                modifier = Modifier.weight(5f),
+                modifier = Modifier.weight(5.5f),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start,
             ) {
@@ -149,7 +149,7 @@ fun EventCard(
 
                 val description = event.getDescription(LocalContext.current) +
                         if (daysLeft > 0) {
-                            ", осталось дней: $daysLeft"
+                            ", осталось $daysLeft д."
                         } else "!!!"
                 Text(
                     description,
@@ -161,7 +161,6 @@ fun EventCard(
             } // Column
 
             person?.let {
-
                 SmallRememberImage(
                     personId = it.id,
                     modifier = Modifier

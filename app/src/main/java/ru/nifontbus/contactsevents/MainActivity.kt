@@ -32,6 +32,7 @@ import ru.nifontbus.contactsevents.presentation.navigation.BottomBar
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.persons.PersonsScreen
 import ru.nifontbus.contactsevents.presentation.persons.info.PersonInfoScreen
+import ru.nifontbus.contactsevents.presentation.settings.SettingScreen
 import ru.nifontbus.contactsevents.ui.theme.ContactsEventsTheme
 
 @ExperimentalFoundationApi
@@ -144,8 +145,8 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             Scaffold(
                 bottomBar = { BottomBar(navController) }
-            ) {
-                val bottomPadding = it.calculateBottomPadding()
+            ) { paddingValues ->
+                val bottomPadding = paddingValues.calculateBottomPadding()
                 NavHost(
                     navController = navController,
                     startDestination = Screen.NavEventScreen.route
@@ -161,7 +162,7 @@ class MainActivity : ComponentActivity() {
                         GroupScreen(extNavController, bottomPadding)
                     }
                     composable(Screen.NavSettingScreen.route) {
-//                    SettingScreen(extNavController, loginViewModel)
+                        SettingScreen(paddingValues)
                     }
                 }
             }

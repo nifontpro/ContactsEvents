@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ReadMore
+import androidx.compose.material.icons.outlined.EditNotifications
 import androidx.compose.material.icons.outlined.NotificationAdd
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -88,7 +89,7 @@ fun EventUpdateScreenMain(
         Box(modifier = Modifier.fillMaxSize()) {
 
             Icon(
-                imageVector = Icons.Outlined.NotificationAdd, contentDescription = null,
+                imageVector = Icons.Outlined.EditNotifications, contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(20.dp)

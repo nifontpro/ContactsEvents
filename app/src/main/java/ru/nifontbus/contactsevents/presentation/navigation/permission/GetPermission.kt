@@ -1,4 +1,4 @@
-package ru.nifontbus.contactsevents.presentation.permission
+package ru.nifontbus.contactsevents.presentation.navigation.permission
 
 import android.Manifest
 import android.util.Log

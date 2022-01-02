@@ -1,15 +1,14 @@
 package ru.nifontbus.contactsevents.domain.use_cases.events
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import ru.nifontbus.contactsevents.domain.data.EventType
 import ru.nifontbus.contactsevents.domain.data.Event
+import ru.nifontbus.contactsevents.domain.data.EventType
 import ru.nifontbus.contactsevents.domain.repository.ContactsRepository
+import ru.nifontbus.contactsevents.domain.repository.SettingsRepo
 import ru.nifontbus.contactsevents.domain.utils.asString
 import ru.nifontbus.contactsevents.domain.utils.toLocalDate
 import ru.nifontbus.contactsevents.domain.utils.toMonthAndDay
@@ -18,13 +17,16 @@ import java.time.LocalDate
 const val MIN_DATE = "01-01"
 
 class GetSortedEvents(
-    private val repository: ContactsRepository
+    private val repository: ContactsRepository,
+    private val settingsRepo: SettingsRepo
 ) {
 
     operator fun invoke(): Flow<List<Event>> = flow {
 
         repository.events.collect {
-            val events = add40Day(it)
+            val events = if (settingsRepo.reposeFeatures.value && settingsRepo.add40Day.value) {
+                add40Day(it)
+            } else it
             val now = LocalDate.now().asString().toMonthAndDay()
             coroutineScope {
                 val eventsBeforeNow = async { eventsBeforeNow(events, now) }

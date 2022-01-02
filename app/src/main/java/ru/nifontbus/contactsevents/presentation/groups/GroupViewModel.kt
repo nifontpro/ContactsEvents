@@ -1,6 +1,5 @@
 package ru.nifontbus.contactsevents.presentation.groups
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,7 +20,7 @@ class GroupViewModel @Inject constructor(
 
     val groups = groupsUseCases.getGroups()
 
-    var groupName = mutableStateOf("")
+//    var groupName = mutableStateOf("")
 
     private val _action = MutableSharedFlow<String>()
     val action: SharedFlow<String> = _action.asSharedFlow()
@@ -44,9 +43,9 @@ class GroupViewModel @Inject constructor(
         }
     }
 
-    fun isEnabledSave(): Boolean = groupName.value.isNotEmpty()
+/*    fun isEnabledSave(): Boolean = groupName.value.isNotEmpty()
 
     private suspend fun sendMessage(msg: String) {
         _action.emit(msg)
-    }
+    }*/
 }

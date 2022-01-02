@@ -16,9 +16,7 @@ import ru.nifontbus.contactsevents.domain.use_cases.groups.GetGroupById
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GetGroups
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.persons.*
-import ru.nifontbus.contactsevents.domain.use_cases.settings.GetCurrentGroup
-import ru.nifontbus.contactsevents.domain.use_cases.settings.SetCurrentGroup
-import ru.nifontbus.contactsevents.domain.use_cases.settings.SettingsUseCases
+import ru.nifontbus.contactsevents.domain.use_cases.settings.*
 import ru.nifontbus.contactsevents.domain.use_cases.template.GetTemplates
 import ru.nifontbus.contactsevents.domain.use_cases.template.TemplatesUseCases
 import javax.inject.Singleton
@@ -45,11 +43,14 @@ object AppModule {
     @ExperimentalCoroutinesApi
     @Provides
     @Singleton
-    fun provideEventUseCases(repository: ContactsRepository): EventsUseCases {
+    fun provideEventUseCases(
+        repository: ContactsRepository,
+        settingsRepo: SettingsRepo
+    ): EventsUseCases {
         return EventsUseCases(
             addEvent = AddEvent(repository),
             getEvents = GetEvents(repository),
-            getSortedEvents = GetSortedEvents(repository),
+            getSortedEvents = GetSortedEvents(repository, settingsRepo),
             getEventsByPerson = GetEventsByPerson(repository),
             getSortedEventsByPerson = GetSortedEventsByPerson(repository),
             deleteEvent = DeleteEvent(repository),
@@ -60,10 +61,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTemplatesUseCases(repository: ContactsRepository): TemplatesUseCases {
+    fun provideTemplatesUseCases(
+        repository: ContactsRepository,
+        settingsRepo: SettingsRepo
+    ): TemplatesUseCases {
         return TemplatesUseCases(
 //            addTemplate = AddTemplate(repository),
-            getTemplates = GetTemplates(repository),
+            getTemplates = GetTemplates(repository, settingsRepo),
 //            deleteTemplate = DeleteTemplate(repository)
         )
     }
@@ -103,5 +107,9 @@ object AppModule {
     fun provideSettingsUseCases(repository: SettingsRepo) = SettingsUseCases(
         setCurrentGroup = SetCurrentGroup(repository),
         getCurrentGroup = GetCurrentGroup(repository),
+        getReposeFeatures = GetReposeFeatures(repository),
+        getAdd40Day = GetAdd40Day(repository),
+        saveReposeFeatures = SaveReposeFeatures(repository),
+        saveAdd40Day = SaveAdd40Day(repository)
     )
 }

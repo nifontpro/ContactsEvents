@@ -371,16 +371,16 @@ class ContactsRepository(private val context: Context) {
         }
     }
 
-    fun getTemplates(): List<Template> {
-        return listOf(
-            Template(0, EventType.CUSTOM),
-            Template(1, EventType.BIRTHDAY),
-            Template(2, EventType.OTHER),
-            Template(3, EventType.ANNIVERSARY),
-            Template(4, EventType.CUSTOM, context.getString(R.string.sAngelDay)),
-            Template(5, EventType.CUSTOM, context.getString(R.string.sWeddingDay)),
-            Template(6, EventType.NEW_LIFE_DAY),
-        )
+    fun getTemplates(useReposeFeatures: Boolean): List<Template> {
+        val list = mutableListOf<Template>()
+        list.add(Template(0, EventType.CUSTOM))
+        list.add(Template(1, EventType.BIRTHDAY))
+        list.add(Template(2, EventType.OTHER))
+        list.add(Template(3, EventType.ANNIVERSARY))
+        list.add(Template(4, EventType.CUSTOM, context.getString(R.string.sAngelDay)))
+        list.add(Template(5, EventType.CUSTOM, context.getString(R.string.sWeddingDay)))
+        if (useReposeFeatures) list.add(Template(6, EventType.NEW_LIFE_DAY))
+        return list
     }
 
     suspend fun getPhotoById(contactId: Long): ImageBitmap? {

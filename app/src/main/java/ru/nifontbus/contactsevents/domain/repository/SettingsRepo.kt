@@ -13,11 +13,18 @@ class SettingsRepo(context: Context) {
     private val _currentGroup: MutableStateFlow<PersonsGroup?> = MutableStateFlow(null)
     val currentGroup = _currentGroup.asStateFlow()
 
+    private val _reposeFeatures: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val reposeFeatures = _reposeFeatures.asStateFlow()
+
+    private val _add40Day: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val add40Day = _add40Day.asStateFlow()
+
     private val sharedPreference =
         context.getSharedPreferences(SHARED_SETTING, Context.MODE_PRIVATE)
 
     init {
         loadCurrentGroupId()
+        loadSettings()
     }
 
     fun setCurrentGroup(group: PersonsGroup?) {
@@ -43,9 +50,33 @@ class SettingsRepo(context: Context) {
         }
     }
 
+    private fun loadSettings() {
+        _reposeFeatures.value = sharedPreference.getBoolean(IS_REPOSE_FUN, false)
+        _add40Day.value = sharedPreference.getBoolean(IS_40_DAY, false)
+    }
+
+    fun saveReposeState(value: Boolean) =
+        CoroutineScope(Dispatchers.Main).launch {
+            _reposeFeatures.value = value
+            val editor = sharedPreference.edit()
+            editor.putBoolean(IS_REPOSE_FUN, value)
+            editor.apply()
+        }
+
+    fun saveAdd40DayState(value: Boolean) =
+        CoroutineScope(Dispatchers.Main).launch {
+            _add40Day.value = value
+            val editor = sharedPreference.edit()
+            editor.putBoolean(IS_40_DAY, value)
+            editor.apply()
+        }
+
     companion object {
         const val SHARED_SETTING = "Current_setting"
         private const val GROUP_ID = "group_id"
         private const val GROUP_NAME = "group_name"
+
+        private const val IS_REPOSE_FUN = "repose_features"
+        private const val IS_40_DAY = "add_40_day"
     }
 }

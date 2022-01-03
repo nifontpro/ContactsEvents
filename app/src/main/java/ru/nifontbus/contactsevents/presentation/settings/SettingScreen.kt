@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -48,18 +49,18 @@ fun SettingScreen(paddingValues: PaddingValues) {
         ) {
 
             Text(
-                text = "Contact",
-                style = MaterialTheme.typography.h3,
+                text = stringResource(R.string.sContact),
+                style = MaterialTheme.typography.h4,
                 modifier = Modifier
                     .align(Alignment.Start)
-                    .padding(start = screenWidth / 5, top = 20.dp)
+                    .padding(start = screenWidth / 6, top = 20.dp)
             )
             Text(
-                text = "Events",
-                style = MaterialTheme.typography.h3,
+                text = stringResource(R.string.sEventsSetting),
+                style = MaterialTheme.typography.h4,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .padding(end = screenWidth / 5, top = mediumPadding, bottom = 20.dp)
+                    .padding(end = screenWidth / 6, top = mediumPadding, bottom = 20.dp)
             )
 
             Divider(modifier = Modifier.padding(horizontal = bigPadding))
@@ -105,7 +106,7 @@ private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                     onCheckedChange = { viewModel.setReposeFeatures(it) },
                 )
                 Text(
-                    "Функции усопших"
+                    stringResource(R.string.sReposeFeatures)
                 )
             }
 
@@ -122,7 +123,7 @@ private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                         onCheckedChange = { viewModel.setAdd40Day(it) }
                     )
                     Text(
-                        "Считать 40-й день",
+                        stringResource(R.string.s40Day),
 //                    color = MaterialTheme.colors.onPrimary
                     )
                 }

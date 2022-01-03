@@ -45,6 +45,10 @@
     <string name="sUpdateEvent">Update event</string>
     <string name="sYouCanUpdateEvent">"You can update event for contact "</string>
 
-
+    <!--    Settings screen-->
+    <string name="sContact">Contact</string>
+    <string name="sEventsSetting">Events</string>
+    <string name="sReposeFeatures">Repose events</string>
+    <string name="s40Day">Counting the 40th day</string>
 
 </resources>

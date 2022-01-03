@@ -43,4 +43,10 @@
     <string name="sUpdateEvent">Обновить событие</string>
     <string name="sYouCanUpdateEvent">"Вы можете обновить данные события для контакта "</string>
 
+    <!--    Settings screen-->
+    <string name="sContact">События</string>
+    <string name="sEventsSetting">Контактов</string>
+    <string name="sReposeFeatures">События усопших</string>
+    <string name="s40Day">Считать 40-й день</string>
+
 </resources>

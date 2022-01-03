@@ -13,6 +13,11 @@ import kotlinx.coroutines.launch
 import ru.nifontbus.contactsevents.domain.data.*
 import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
+import ru.nifontbus.contactsevents.domain.utils.isShortDate
+import ru.nifontbus.contactsevents.domain.utils.toMonthAndDay
+import ru.nifontbus.contactsevents.domain.utils.toShortDate
+import ru.nifontbus.contactsevents.presentation.navigation.Arg
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,22 +40,33 @@ class EventUpdateViewModel @Inject constructor(
 
     val date = mutableStateOf("")
 
+    val isNoYear = mutableStateOf(false)
+
     private val _action = MutableSharedFlow<String>()
     val action: SharedFlow<String> = _action.asSharedFlow()
 
     init {
-        savedStateHandle.get<Long>("person_id")?.let { it ->
+        savedStateHandle.get<Long>(Arg.personId)?.let { it ->
             personsUseCases.getPersonById(it)?.let { findPerson ->
                 _person.value = findPerson
             }
         }
 
-        savedStateHandle.get<Long>("event_id")?.let { it ->
+        savedStateHandle.get<Long>(Arg.eventId)?.let { it ->
             eventsUseCases.getEventById(it)?.let { findEvent ->
                 _oldEvent.value = findEvent
                 _eventLabel.value = findEvent.label
                 eventType.value = findEvent.type
-                date.value = findEvent.date
+
+                if (!findEvent.date.isShortDate()) {
+                    date.value = findEvent.date
+                    isNoYear.value = false
+                } else {
+                    val now = LocalDate.now()
+                    val year = now.year
+                    date.value = "$year-${findEvent.date.toMonthAndDay()}"
+                    isNoYear.value = true
+                }
             }
         }
     }
@@ -58,7 +74,7 @@ class EventUpdateViewModel @Inject constructor(
     fun addEvent() = viewModelScope.launch {
         when (val result =
             eventsUseCases.addEvent(
-                Event(eventLabel.value, date.value, eventType.value, person.value.id)
+                Event(eventLabel.value, getRealDate(), eventType.value, person.value.id)
             )) {
             is Resource.Success -> {
                 _eventLabel.value = ""
@@ -71,7 +87,7 @@ class EventUpdateViewModel @Inject constructor(
 
     fun updateEvent() = viewModelScope.launch {
         val newEvent =
-            Event(eventLabel.value, date.value, eventType.value, person.value.id, oldEvent.value.id)
+            Event(eventLabel.value, getRealDate(), eventType.value, person.value.id, oldEvent.value.id)
         when (val result =
             eventsUseCases.updateEvent(newEvent, oldEvent.value)
         ) {
@@ -83,6 +99,8 @@ class EventUpdateViewModel @Inject constructor(
         }
     }
 
+    private fun getRealDate() = if (isNoYear.value) date.value.toShortDate() else date.value
+
     private suspend fun sendMessage(msg: String) {
         _action.emit(msg)
     }
@@ -90,10 +108,6 @@ class EventUpdateViewModel @Inject constructor(
     fun setEventLabel(name: String) {
         _eventLabel.value = name
     }
-
-/*    fun setCurrentDate(newDate: String) {
-        date.value = newDate
-    }*/
 
     fun isEnabledSave(): Boolean = eventLabel.value.isNotEmpty() && date.value.isNotEmpty()
 
@@ -103,11 +117,11 @@ class EventUpdateViewModel @Inject constructor(
 
             (oldEvent.value.type == EventType.CUSTOM &&
                     !(oldEvent.value.label == eventLabel.value &&
-                    oldEvent.value.type == eventType.value &&
-                    oldEvent.value.date == date.value) ||
+                            oldEvent.value.type == eventType.value &&
+                            oldEvent.value.date == getRealDate()) ||
 
                     oldEvent.value.type != EventType.CUSTOM &&
                     !(oldEvent.value.type == eventType.value &&
-                            oldEvent.value.date == date.value)
+                            oldEvent.value.date == getRealDate())
                     )
 }

@@ -69,7 +69,7 @@ fun PersonInfoScreen(
                     navController.navigate(Screen.NavPersonEditScreen.route)
                 })*/
 
-            TopBar(extNavController, "Person info")
+            TopBar(extNavController, stringResource(R.string.sPersonInfo))
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -262,7 +262,7 @@ private fun PersonInfoHeader(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Phone,
-                            contentDescription = "phone",
+                            contentDescription = "Phone",
                             tint = MaterialTheme.colors.primaryVariant,
                             modifier = Modifier.padding(end = 15.dp)
                         )
@@ -283,7 +283,7 @@ private fun PersonInfoHeader(
             }
         } // Box
         Text(
-            "Events: ",
+            stringResource(R.string.sEvents),
             modifier = Modifier.padding(vertical = smallPadding),
             color = MaterialTheme.colors.primaryVariant,
             style = MaterialTheme.typography.h5

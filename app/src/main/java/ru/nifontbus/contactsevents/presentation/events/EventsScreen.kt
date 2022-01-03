@@ -1,5 +1,6 @@
 package ru.nifontbus.contactsevents.presentation.events
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -23,6 +25,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.utils.getLocalizedDate
@@ -136,7 +139,7 @@ fun EventCard(
                                     fontWeight = FontWeight.W300
                                 )
                             ) {
-                                append(", прошло лет: $it")
+                                append(stringResource(R.string.sYearLeft, it))
                             }
                         }
                     }
@@ -148,9 +151,7 @@ fun EventCard(
                 )
 
                 val description = event.getDescription(LocalContext.current) +
-                        if (daysLeft > 0) {
-                            ", осталось $daysLeft д."
-                        } else "!!!"
+                        if (daysLeft > 0) stringResource(R.string.sDaysLeft, daysLeft) else "!!!"
                 Text(
                     description,
                     modifier = modText,

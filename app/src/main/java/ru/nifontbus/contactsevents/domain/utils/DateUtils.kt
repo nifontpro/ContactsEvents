@@ -42,6 +42,12 @@ fun String.toMonthAndDay(): String {
     }
 }
 
+fun String.isShortDate() = length == 7
+
+fun String.toShortDate(): String {
+    return "--" + substring(5, 10)
+}
+
 fun String.getLocalizedDate(): String {
     val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
     var short = false
@@ -52,7 +58,11 @@ fun String.getLocalizedDate(): String {
 
     val date = str.toLocalDate()
     val dateStr = date.format(dateFormatter)
-    return if (!short) dateStr else dateStr.substring(0, 5)
+    val formatter = DateTimeFormatter.ofPattern("dd/MM", Locale.getDefault())
+    return if (!short) dateStr else {
+        val dateStrShort = date.format(formatter)
+        dateStrShort.substring(0, 5)
+    }
 }
 
 // https://stackoverflow.com/questions/65388653/convert-string-into-localdate-kotlin

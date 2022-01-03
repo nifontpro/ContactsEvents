@@ -10,4 +10,37 @@
     <string name="sNewLifeDay">День преставления</string>
     <string name="sAngelDay">Именины</string>
     <string name="sWeddingDay">День свадьбы</string>
+
+    <!--    Event screen-->
+    <string name="sYearLeft">, прошло лет: %d</string>
+    <string name="sDaysLeft">, осталось %d д.</string>
+
+    <!--    Person screen-->
+    <string name="sNoPersonInGroup">Нет контактов в группе</string>
+
+    <!--    Contact repository-->
+    <string name="sFailedCreateEvent">Ошибка создания события!</string>
+    <string name="sEventCreateSuccessful">Событие успешно создано</string>
+    <string name="sFailedUpdateEvent">Ошибка обновления события!</string>
+    <string name="sEventUpdateSuccessful">Событие успешно обновлено</string>
+    <string name="sEventDeleteSuccessful">Событие успешно удалено</string>
+    <string name="sErrorDeleteEvent">Ошибка удаления события!</string>
+
+    <!--    Person info-->
+    <string name="sPersonInfo">О контакте</string>
+    <string name="sEvents">События: </string>
+
+    <!--    New event screen-->
+    <string name="sNewEvent">Новое событие</string>
+    <string name="sYouCanCreateEvent">"Вы можете создать новое событие для контакта "</string>
+    <string name="sEventLabel">Название события</string>
+    <string name="sCreateEvent">Создать событие</string>
+    <string name="sWithoutYear">Не учывать год</string>
+    <string name="sDate">Дата:</string>
+    <string name="sSelectDate">Выберите дату</string>
+
+    <!--    Event Update Screen-->
+    <string name="sUpdateEvent">Обновить событие</string>
+    <string name="sYouCanUpdateEvent">"Вы можете обновить данные события для контакта "</string>
+
 </resources>

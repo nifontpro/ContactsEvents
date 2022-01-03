@@ -9,9 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ReadMore
 import androidx.compose.material.icons.outlined.NotificationAdd
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -19,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -29,8 +28,11 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.collect
+import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Template
+import ru.nifontbus.contactsevents.domain.utils.getLocalizedDate
 import ru.nifontbus.contactsevents.domain.utils.toLocalDate
+import ru.nifontbus.contactsevents.domain.utils.toShortDate
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.TopBar
 import ru.nifontbus.contactsevents.ui.theme.IconGreen
@@ -76,7 +78,7 @@ fun NewEventScreenMain(
 
     Scaffold(scaffoldState = scaffoldState, backgroundColor = MaterialTheme.colors.background,
         topBar = {
-            TopBar(navController = extNavController, header = "New event")
+            TopBar(navController = extNavController, header = stringResource(R.string.sNewEvent))
         }
     ) {
 
@@ -102,7 +104,7 @@ fun NewEventScreenMain(
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(color = PrimaryDarkColor)) {
-                            append("You can create new event for person ")
+                            append(stringResource(R.string.sYouCanCreateEvent))
                         }
                         withStyle(style = SpanStyle(color = LightGreen2)) {
                             append(person.displayName)
@@ -141,7 +143,7 @@ fun NewEventScreenMain(
                             },
                             modifier = edMod,
                             singleLine = true,
-                            placeholder = { Text("Enter event") },
+                            placeholder = { Text(stringResource(R.string.sEventLabel)) },
                             trailingIcon = {
                                 IconButton(onClick = {
                                     extNavController.navigate(Screen.ExtTemplatesScreen.route)
@@ -151,7 +153,7 @@ fun NewEventScreenMain(
                             },
                         )
 
-                        SelectDate(viewModel.date)
+                        SelectDate(viewModel.date, viewModel.isNoYear)
 
                         Button(
                             onClick = {
@@ -162,7 +164,7 @@ fun NewEventScreenMain(
                                 .height(55.dp),
                             enabled = viewModel.isEnabledSave()
                         ) {
-                            Text("Create event", color = TextWhite)
+                            Text(stringResource(R.string.sCreateEvent), color = TextWhite)
                         }
                     }
                 }
@@ -205,7 +207,10 @@ fun GetWriteContactsPermission(content: @Composable (() -> Unit)) {
 }
 
 @Composable
-fun SelectDate(stateDate: MutableState<String>) {
+fun SelectDate(
+    stateDate: MutableState<String>,
+    isNoYear: MutableState<Boolean> = remember { mutableStateOf(false) }
+) {
 
     val context = LocalContext.current
     val localDate = if (stateDate.value.isNotEmpty()) stateDate.value.toLocalDate()
@@ -219,19 +224,39 @@ fun SelectDate(stateDate: MutableState<String>) {
         }, localDate.year, localDate.monthValue - 1, localDate.dayOfMonth
     )
 
-    Button(
-        onClick = {
-            datePickerDialog.show()
-        }, modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp)
-            .height(55.dp)
+    Column {
+        Button(
+            onClick = {
+                datePickerDialog.show()
+            }, modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+                .height(55.dp)
 
-    ) {
-        Text(
-            text = if (stateDate.value.isNotEmpty()) "Date: ${stateDate.value}"
-            else "Select date",
-            color = TextWhite
-        )
+        ) {
+            val sDate = stringResource(R.string.sDate)
+            val txt = if (stateDate.value.isNotEmpty()) {
+                if (!isNoYear.value) "$sDate ${stateDate.value.getLocalizedDate()}"
+                else "$sDate ${stateDate.value.toShortDate().getLocalizedDate()}"
+            } else stringResource(R.string.sSelectDate)
+            Text(
+                text = txt,
+                color = TextWhite
+            )
+        }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = isNoYear.value,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                ),
+                onCheckedChange = { isNoYear.value = it },
+            )
+            Text(stringResource(R.string.sWithoutYear))
+        }
+
     }
 }

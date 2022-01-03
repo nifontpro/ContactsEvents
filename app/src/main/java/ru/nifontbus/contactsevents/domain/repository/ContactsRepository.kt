@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.Contacts.openContactPhotoInputStream
-import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import kotlinx.coroutines.CoroutineScope
@@ -245,7 +244,7 @@ class ContactsRepository(private val context: Context) {
         val values = getContentValuesForEvent(event)
 
         return suspendCoroutine {
-            val exc = "Failed inserting the event!"
+            val exc = context.getString(R.string.sFailedCreateEvent)
             it.resume(
                 try {
                     val idStr =
@@ -254,11 +253,10 @@ class ContactsRepository(private val context: Context) {
                         )?.lastPathSegment ?: throw Exception(exc)
 
                     val id = idStr.toLong()
-                    Log.e("my", "Event add: $event, id = $id")
                     val newEvent = event.copy(id = id)
                     _events.value = events.value + newEvent
 
-                    Resource.Success("Event inserting successful")
+                    Resource.Success(context.getString(R.string.sEventCreateSuccessful))
                 } catch (e: Exception) {
                     Resource.Error(e.localizedMessage ?: exc)
                 }
@@ -288,7 +286,7 @@ class ContactsRepository(private val context: Context) {
         val values = getContentValuesForEvent(newEvent, false)
 
         return suspendCoroutine {
-            val exc = "Failed update the event!"
+            val exc = context.getString(R.string.sFailedUpdateEvent)
             it.resume(
                 try {
                     context.contentResolver.update(
@@ -297,7 +295,7 @@ class ContactsRepository(private val context: Context) {
 
                     _events.value = events.value - oldEvent + newEvent
 
-                    Resource.Success("Event update successful")
+                    Resource.Success(context.getString(R.string.sEventUpdateSuccessful))
                 } catch (e: Exception) {
                     Resource.Error(e.localizedMessage ?: exc)
                 }
@@ -363,9 +361,11 @@ class ContactsRepository(private val context: Context) {
                 try {
                     context.contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
                     _events.value = events.value - event
-                    Resource.Success("Event delete successful")
+                    Resource.Success(context.getString(R.string.sEventDeleteSuccessful))
                 } catch (e: Exception) {
-                    Resource.Error(e.localizedMessage ?: "Error delete event!")
+                    Resource.Error(
+                        e.localizedMessage ?: context.getString(R.string.sErrorDeleteEvent)
+                    )
                 }
             )
         }

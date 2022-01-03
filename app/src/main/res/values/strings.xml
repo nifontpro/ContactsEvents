@@ -12,4 +12,39 @@
     <string name="sDayOfRepose" translatable="false">Day of Repose</string>
     <string name="sAngelDay">Name days</string>
     <string name="sWeddingDay">Wedding Day</string>
+
+    <!--    Event screen-->
+    <string name="sYearLeft">, left years: %d</string>
+    <string name="sDaysLeft">, left %d d.</string>
+
+    <!--    Person screen-->
+    <string name="sNoPersonInGroup">No contacts in group</string>
+
+    <!--    Contact repository-->
+    <string name="sFailedCreateEvent">Failed create event!</string>
+    <string name="sEventCreateSuccessful">Event create successful</string>
+    <string name="sFailedUpdateEvent">Failed update the event!</string>
+    <string name="sEventUpdateSuccessful">Event update successful</string>
+    <string name="sEventDeleteSuccessful">Event delete successful</string>
+    <string name="sErrorDeleteEvent">Error delete event!</string>
+
+    <!--    Person info-->
+    <string name="sPersonInfo">Contact info</string>
+    <string name="sEvents">Events: </string>
+
+    <!--    New event screen-->
+    <string name="sNewEvent">New event</string>
+    <string name="sYouCanCreateEvent">"You can create new event for contact "</string>
+    <string name="sEventLabel">Event label</string>
+    <string name="sCreateEvent">Create event</string>
+    <string name="sWithoutYear">Without a year</string>
+    <string name="sDate">Date:</string>
+    <string name="sSelectDate">Select date</string>
+
+    <!--    Event Update Screen-->
+    <string name="sUpdateEvent">Update event</string>
+    <string name="sYouCanUpdateEvent">"You can update event for contact "</string>
+
+
+
 </resources>

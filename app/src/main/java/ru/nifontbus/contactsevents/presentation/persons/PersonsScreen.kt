@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -64,7 +65,7 @@ fun PersonsScreen(
         if (persons.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize()) {
                 Text(
-                    "No persons in group",
+                    text = stringResource(R.string.sNoPersonInGroup),
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(20.dp),
@@ -73,7 +74,7 @@ fun PersonsScreen(
                 )
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.no_persons),
-                    contentDescription = "no persons",
+                    contentDescription = stringResource(R.string.sNoPersonInGroup),
                     modifier = Modifier
                         .align(Alignment.Center)
                         .size(300.dp),
@@ -127,7 +128,9 @@ private fun PersonCard(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().padding(mediumPadding)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(mediumPadding)
     ) {
         Column(
             modifier = Modifier.weight(5f),

@@ -7,7 +7,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ReadMore
 import androidx.compose.material.icons.outlined.EditNotifications
-import androidx.compose.material.icons.outlined.NotificationAdd
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -17,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.flow.collect
+import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
@@ -82,7 +83,7 @@ fun EventUpdateScreenMain(
 
     Scaffold(scaffoldState = scaffoldState, backgroundColor = MaterialTheme.colors.background,
         topBar = {
-            TopBar(navController = extNavController, header = "Update event")
+            TopBar(navController = extNavController, header = stringResource(R.string.sUpdateEvent))
         }
     ) {
 
@@ -108,7 +109,7 @@ fun EventUpdateScreenMain(
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(color = PrimaryDarkColor)) {
-                            append("You can update event for person ")
+                            append(stringResource(R.string.sYouCanUpdateEvent))
                         }
                         withStyle(style = SpanStyle(color = LightGreen2)) {
                             append(person.displayName)
@@ -147,7 +148,7 @@ fun EventUpdateScreenMain(
                             },
                             modifier = edMod,
                             singleLine = true,
-                            placeholder = { Text("Enter event") },
+                            placeholder = { Text(stringResource(R.string.sEventLabel)) },
                             trailingIcon = {
                                 IconButton(onClick = {
                                     extNavController.navigate(Screen.ExtTemplatesScreen.route)
@@ -157,7 +158,7 @@ fun EventUpdateScreenMain(
                             },
                         )
 
-                        SelectDate(viewModel.date)
+                        SelectDate(viewModel.date, viewModel.isNoYear)
 
                         Button(
                             onClick = {
@@ -168,7 +169,7 @@ fun EventUpdateScreenMain(
                                 .height(55.dp),
                             enabled = viewModel.isEnabledUpdate()
                         ) {
-                            Text("Update event", color = TextWhite)
+                            Text(stringResource(R.string.sUpdateEvent), color = TextWhite)
                         }
                     }
                 }

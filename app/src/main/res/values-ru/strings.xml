@@ -12,8 +12,8 @@
     <string name="sWeddingDay">День свадьбы</string>
 
     <!--    Event screen-->
-    <string name="sYearLeft">, прошло лет: %d</string>
-    <string name="sDaysLeft">, осталось %d д.</string>
+    <string name="sYearLeft">, лет: %d</string>
+    <string name="sDaysLeft">, %d д.</string>
 
     <!--    Person screen-->
     <string name="sNoPersonInGroup">Нет контактов в группе</string>
@@ -48,5 +48,14 @@
     <string name="sEventsSetting">Контактов</string>
     <string name="sReposeFeatures">События усопших</string>
     <string name="s40Day">Считать 40-й день</string>
+
+    <!--    Template screen-->
+    <string name="sTypeEvents">Шаблоны событий</string>
+
+    <!--    Permission-->
+    <string name="sReadDenied">Отказано в разрешении на чтение контактов. Это разрешение необходимо для полноценной работы приложения: чтения данных контактов, в том числе их событий. Пожалуйста, предоставьте нам доступ на экране настроек телефона.</string>
+    <string name="sWriteDenied">В разрешении на запись контактов отказано. Это разрешение необходимо для изменения данных контактов, в том числе их событий. Пожалуйста, предоставьте нам доступ на экране настроек телефона.</string>
+    <string name="sOpenSettings">Открыть настройки</string>
+    <string name="sRetry">Повторить</string>
 
 </resources>

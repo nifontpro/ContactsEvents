@@ -1,5 +1,10 @@
 package ru.nifontbus.contactsevents.presentation.persons.info
 
+import android.content.ComponentName
+import android.content.ContentUris
+import android.content.Context
+import android.content.Intent
+import android.provider.ContactsContract
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -29,11 +34,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.collect
-import me.onebone.toolbar.CollapsingToolbarScaffold
-import me.onebone.toolbar.ScrollStrategy
-import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
+import me.onebone.toolbar.*
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Person
+import ru.nifontbus.contactsevents.domain.utils.toPx
 import ru.nifontbus.contactsevents.presentation.events.EventCard
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.TemplateSwipeToDismiss
@@ -41,6 +45,7 @@ import ru.nifontbus.contactsevents.presentation.navigation.TopBar
 import ru.nifontbus.contactsevents.presentation.persons.SmallRememberImage
 import ru.nifontbus.contactsevents.ui.theme.*
 
+@ExperimentalToolbarApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @Composable
@@ -103,7 +108,15 @@ fun PersonInfoScreen(
                     .padding(bottom = 50.dp)
             )
 
-            val collapsingState = rememberCollapsingToolbarScaffoldState()
+            val configuration = LocalConfiguration.current
+            val screenHeight = configuration.screenHeightDp.dp
+
+            val collapsingState = rememberCollapsingToolbarScaffoldState(
+                toolbarState = CollapsingToolbarState(initial = screenHeight.toPx().toInt() / 3)
+            )
+
+//            https://stackoverflow.com/questions/57727876/android-contacts-high-res-displayphoto-not-showing-up
+
             CollapsingToolbarScaffold(
                 modifier = Modifier.fillMaxSize(),
                 state = collapsingState,
@@ -114,8 +127,6 @@ fun PersonInfoScreen(
                 toolbar = {
 //                    val offsetY = state.offsetY // y offset of the layout
                     val progress = collapsingState.toolbarState.progress
-                    val configuration = LocalConfiguration.current
-                    val screenHeight = configuration.screenHeightDp.dp
 
                     viewModel.displayPhoto?.let { it ->
                         Image(
@@ -123,8 +134,8 @@ fun PersonInfoScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .parallax(0.3f)
-                                .height(screenHeight / 3)
-                                .graphicsLayer { alpha = progress },
+//                                .height(screenHeight / 3)
+                                .graphicsLayer { alpha = progress * 1.3f },
                             contentScale = ContentScale.FillWidth,
                             contentDescription = null
                         )
@@ -184,7 +195,8 @@ fun PersonInfoScreen(
                                 viewModel.deleteEvent(event)
                             },
                             {
-                                EventCard(event, person,
+                                EventCard(
+                                    event, person,
                                     onClick = {
                                         extNavController.navigate(
                                             Screen.ExtEventUpdateScreen.createRoute(
@@ -192,7 +204,8 @@ fun PersonInfoScreen(
                                             )
                                         )
                                     },
-                                    getImage = { null }  // без картинки
+                                    getImage = { null }, // без картинки
+                                    isShowName = false
                                 )
                             },
 //                                enabled = template.type == 0,

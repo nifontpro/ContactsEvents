@@ -13,10 +13,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.collect
+import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.EventType
 import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.presentation.navigation.Arg
@@ -40,7 +42,7 @@ fun TemplatesScreen(
 
     Scaffold(
         topBar = {
-            TopBar(extNavController, "Type of events")
+            TopBar(extNavController, stringResource(R.string.sTypeEvents))
         },
         /*floatingActionButton = {
             FloatingActionButton(

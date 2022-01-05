@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -111,22 +112,22 @@ private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
             }
 
 //            if (viewModel.reposeFeatures.collectAsState().value) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Checkbox(
-                        checked = viewModel.add40Day.collectAsState().value,
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-                        ),
-                        enabled = viewModel.reposeFeatures.collectAsState().value,
-                        onCheckedChange = { viewModel.setAdd40Day(it) }
-                    )
-                    Text(
-                        stringResource(R.string.s40Day),
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = viewModel.add40Day.collectAsState().value,
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                    ),
+                    enabled = viewModel.reposeFeatures.collectAsState().value,
+                    onCheckedChange = { viewModel.setAdd40Day(it) }
+                )
+                Text(
+                    stringResource(R.string.s40Day),
 //                    color = MaterialTheme.colors.onPrimary
-                    )
-                }
+                )
+            }
 //            }
         } // Column
     }

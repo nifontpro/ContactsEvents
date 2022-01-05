@@ -1,19 +1,19 @@
 package ru.nifontbus.contactsevents
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,9 +21,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionRequired
-import com.google.accompanist.permissions.rememberPermissionState
 import dagger.hilt.android.AndroidEntryPoint
+import me.onebone.toolbar.ExperimentalToolbarApi
 import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.presentation.events.EventsScreen
 import ru.nifontbus.contactsevents.presentation.events.templates.TemplatesScreen
@@ -33,11 +32,13 @@ import ru.nifontbus.contactsevents.presentation.groups.GroupScreen
 import ru.nifontbus.contactsevents.presentation.navigation.Arg
 import ru.nifontbus.contactsevents.presentation.navigation.BottomBar
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
+import ru.nifontbus.contactsevents.presentation.navigation.permission.GetPermission
 import ru.nifontbus.contactsevents.presentation.persons.PersonsScreen
 import ru.nifontbus.contactsevents.presentation.persons.info.PersonInfoScreen
 import ru.nifontbus.contactsevents.presentation.settings.SettingScreen
 import ru.nifontbus.contactsevents.ui.theme.ContactsEventsTheme
 
+@ExperimentalToolbarApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
@@ -60,43 +61,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             ContactsEventsTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    GetReadContactsPermission()
-                }
-            }
-        }
-    }
-
-    @ExperimentalPermissionsApi
-    @Composable
-    private fun GetReadContactsPermission() {
-        val readContact = rememberPermissionState(android.Manifest.permission.READ_CONTACTS)
-        PermissionRequired(
-            permissionState = readContact,
-            permissionNotGrantedContent = {
-                LaunchedEffect(true) {
-                    readContact.launchPermissionRequest()
-                }
-            },
-            permissionNotAvailableContent = {
-                Column(
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                ) {
-                    Text(
-                        "Read contacts permission denied. See this FAQ with information about why we " +
-                                "need this permission. Please, grant us access on the Settings screen."
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Button(onClick = {}) {
-                        Text("Open Settings")
+                    GetPermission(
+                        Manifest.permission.READ_CONTACTS,
+                        stringResource(R.string.sReadDenied)
+                    ) {
+                        ConfigureExtNavigate()
                     }
                 }
             }
-        ) {
-            ConfigureExtNavigate()
         }
     }
 
@@ -172,7 +144,7 @@ class MainActivity : ComponentActivity() {
                         PersonsScreen(extNavController, bottomPadding)
                     }
                     composable(Screen.NavGroupScreen.route) {
-                        GroupScreen(extNavController, bottomPadding)
+                        GroupScreen(/*extNavController, */bottomPadding)
                     }
                     composable(Screen.NavSettingScreen.route) {
                         SettingScreen(paddingValues)

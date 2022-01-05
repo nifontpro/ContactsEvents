@@ -25,8 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionRequired
-import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.collect
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Template
@@ -35,6 +33,7 @@ import ru.nifontbus.contactsevents.domain.utils.toLocalDate
 import ru.nifontbus.contactsevents.domain.utils.toShortDate
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.TopBar
+import ru.nifontbus.contactsevents.presentation.navigation.permission.GetPermission
 import ru.nifontbus.contactsevents.ui.theme.IconGreen
 import ru.nifontbus.contactsevents.ui.theme.LightGreen2
 import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
@@ -48,7 +47,10 @@ fun NewEventScreen(
     extNavController: NavHostController,
     returnTemplate: Template?,
 ) {
-    GetWriteContactsPermission {
+    GetPermission(
+        Manifest.permission.WRITE_CONTACTS,
+        stringResource(R.string.sWriteDenied)
+    ) {
         NewEventScreenMain(extNavController, returnTemplate)
     }
 }
@@ -164,46 +166,17 @@ fun NewEventScreenMain(
                                 .height(55.dp),
                             enabled = viewModel.isEnabledSave()
                         ) {
-                            Text(stringResource(R.string.sCreateEvent), color = TextWhite)
+                            Text(
+                                stringResource(R.string.sCreateEvent),
+                                color = TextWhite,
+                                style = MaterialTheme.typography.body1,
+                            )
                         }
                     }
                 }
             }
         }
     }
-}
-
-@ExperimentalPermissionsApi
-@Composable
-fun GetWriteContactsPermission(content: @Composable (() -> Unit)) {
-    val writeContact = rememberPermissionState(Manifest.permission.WRITE_CONTACTS)
-    PermissionRequired(
-        permissionState = writeContact,
-        permissionNotGrantedContent = {
-            LaunchedEffect(true) {
-                writeContact.launchPermissionRequest()
-            }
-        },
-        permissionNotAvailableContent = {
-            Column(
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-            ) {
-                Text(
-                    "Write contacts permission denied. See this FAQ with information about why we " +
-                            "need this permission. Please, grant us access on the Settings screen."
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = {}) {
-                    Text("Open Settings")
-                }
-            }
-        },
-        content = content
-    )
 }
 
 @Composable
@@ -241,7 +214,8 @@ fun SelectDate(
             } else stringResource(R.string.sSelectDate)
             Text(
                 text = txt,
-                color = TextWhite
+                color = TextWhite,
+                style = MaterialTheme.typography.body1,
             )
         }
 

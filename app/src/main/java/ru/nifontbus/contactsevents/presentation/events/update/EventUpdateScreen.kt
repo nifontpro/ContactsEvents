@@ -1,5 +1,6 @@
 package ru.nifontbus.contactsevents.presentation.events.update
 
+import android.Manifest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,6 +31,7 @@ import ru.nifontbus.contactsevents.domain.data.Event
 import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.TopBar
+import ru.nifontbus.contactsevents.presentation.navigation.permission.GetPermission
 import ru.nifontbus.contactsevents.ui.theme.IconGreen
 import ru.nifontbus.contactsevents.ui.theme.LightGreen2
 import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
@@ -42,7 +44,10 @@ fun EventUpdateScreen(
     extNavController: NavHostController,
     returnTemplate: Template?
 ) {
-    GetWriteContactsPermission {
+    GetPermission(
+        Manifest.permission.WRITE_CONTACTS,
+        stringResource(R.string.sWriteDenied)
+    ) {
         EventUpdateScreenMain(extNavController, returnTemplate)
     }
 }
@@ -169,7 +174,11 @@ fun EventUpdateScreenMain(
                                 .height(55.dp),
                             enabled = viewModel.isEnabledUpdate()
                         ) {
-                            Text(stringResource(R.string.sUpdateEvent), color = TextWhite)
+                            Text(
+                                stringResource(R.string.sUpdateEvent),
+                                color = TextWhite,
+                                style = MaterialTheme.typography.body1,
+                            )
                         }
                     }
                 }

@@ -1,6 +1,5 @@
 package ru.nifontbus.contactsevents.presentation.events
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -94,7 +93,8 @@ fun EventCard(
     event: Event,
     person: Person?,
     onClick: () -> Unit = {},
-    getImage: suspend (id: Long) -> ImageBitmap?
+    getImage: suspend (id: Long) -> ImageBitmap?,
+    isShowName: Boolean = true
 ) {
     Box(
         modifier = Modifier
@@ -114,17 +114,20 @@ fun EventCard(
 
             val modText = Modifier.padding(horizontal = mediumPadding)
             Column(
-                modifier = Modifier.weight(5.5f),
+                modifier = Modifier.weight(5f),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start,
             ) {
 
-                person?.let {
-                    Text(
-                        text = it.displayName,
-                        modifier = modText,
-                        style = MaterialTheme.typography.h6,
-                    )
+                if (isShowName) {
+                    person?.let {
+                        Text(
+                            text = it.displayName,
+                            modifier = modText,
+                            style = MaterialTheme.typography.h6,
+                        )
+                        Divider(modifier = Modifier.padding(horizontal = mediumPadding))
+                    }
                 }
 
                 val dateText = buildAnnotatedString {
@@ -154,10 +157,10 @@ fun EventCard(
                         if (daysLeft > 0) stringResource(R.string.sDaysLeft, daysLeft) else "!!!"
                 Text(
                     description,
-                    modifier = modText,
+                    modifier = modText.padding(bottom = 5.dp),
                     color = if (daysLeft == 0L) MaterialTheme.colors.error
                     else MaterialTheme.colors.primaryVariant,
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.h6
                 )
             } // Column
 
@@ -167,7 +170,6 @@ fun EventCard(
                     modifier = Modifier
                         .padding(end = 10.dp)
                         .weight(1f)
-                        .size(50.dp)
                         .clip(RoundedCornerShape(cornerShapeIconPercent)),
                     getImage = getImage
                 )

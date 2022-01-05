@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import kotlinx.coroutines.flow.collect
 import ru.nifontbus.contactsevents.domain.data.PersonsGroup
 import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
@@ -27,7 +26,7 @@ import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
 @ExperimentalMaterialApi
 @Composable
 fun GroupScreen(
-    extNavController: NavController,
+//    extNavController: NavController,
     bottomPadding: Dp,
 ) {
     val viewModel: GroupViewModel = hiltViewModel()
@@ -78,8 +77,7 @@ private fun GroupCard(
     currentGroup: PersonsGroup?
 ) {
     Surface(
-        elevation = 1.dp,
-        shape = RoundedCornerShape(3.dp),
+        shape = RoundedCornerShape(4.dp),
         modifier = Modifier.padding(vertical = 3.dp)
     ) {
         Row(
@@ -90,13 +88,13 @@ private fun GroupCard(
             Column {
                 Text(
                     "[${group.localTitle(LocalContext.current)}]",
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(horizontal = 10.dp),
                     style = MaterialTheme.typography.h5,
                     color = MaterialTheme.colors.onBackground
                 )
                 Text(
                     group.account,
-                    modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
+                    modifier = Modifier.padding(horizontal = 10.dp),
                     style = MaterialTheme.typography.h6,
                     color = PrimaryDarkColor
                 )

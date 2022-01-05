@@ -37,7 +37,7 @@ fun TopBar(navController: NavController, header: String) {
 
         Text(
             text = header,
-            style = MaterialTheme.typography.h4
+            style = MaterialTheme.typography.h5
         )
     }
 }
@@ -65,7 +65,7 @@ fun TopBarOther(
 
         Text(
             text = header,
-            style = MaterialTheme.typography.h1
+            style = MaterialTheme.typography.h5
         )
 
         IconButton(

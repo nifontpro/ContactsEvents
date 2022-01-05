@@ -14,8 +14,8 @@
     <string name="sWeddingDay">Wedding Day</string>
 
     <!--    Event screen-->
-    <string name="sYearLeft">, left years: %d</string>
-    <string name="sDaysLeft">, left %d d.</string>
+    <string name="sYearLeft">, years: %d</string>
+    <string name="sDaysLeft">, %d d.</string>
 
     <!--    Person screen-->
     <string name="sNoPersonInGroup">No contacts in group</string>
@@ -51,4 +51,12 @@
     <string name="sReposeFeatures">Repose events</string>
     <string name="s40Day">Counting the 40th day</string>
 
+    <!--    Template screen-->
+    <string name="sTypeEvents">Type of events</string>
+
+    <!--    Permission-->
+    <string name="sReadDenied">Read contacts permission denied. This permission is necessary for the full operation of the application: reading contact data, including their events. Please, grant us access on the Settings screen.</string>
+    <string name="sWriteDenied">Write contacts permission denied. See this FAQ with information about why we need this permission. Please, grant us access on the Settings screen.</string>
+    <string name="sOpenSettings">Open Settings</string>
+    <string name="sRetry">Retry</string>
 </resources>

@@ -210,6 +210,12 @@ class ContactsRepository(private val context: Context) {
 
     suspend fun getPersonInfo(contactId: Long): PersonInfo {
         val uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactId.toString())
+/*
+        context.contentResolver.registerContentObserver(
+            uri,
+            true,
+            MyObserver(Handler(Looper.getMainLooper())))*/
+
         val infoUri = Uri.withAppendedPath(uri, ContactsContract.Contacts.Entity.CONTENT_DIRECTORY)
         val cursorInfo = context.contentResolver.query(
             infoUri, null, null, null, null
@@ -419,6 +425,7 @@ class ContactsRepository(private val context: Context) {
     suspend fun getDisplayPhoto(contactId: Long): ImageBitmap? {
         val contactUri =
             ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId)
+//        dispatchSyncHighResPhotoIntent(contactUri)
         return suspendCoroutine {
             it.resume(
                 try {
@@ -434,6 +441,27 @@ class ContactsRepository(private val context: Context) {
             )
         }
     }
+
+//    https://stackoverflow.com/questions/57727876/android-contacts-high-res-displayphoto-not-showing-up
+/*    private fun dispatchSyncHighResPhotoIntent(uri: Uri) {
+//        val uri = ContentUris.withAppendedId(ContactsContract.RawContacts.CONTENT_URI, rawContactId)
+        val intent = Intent()
+        intent.setDataAndType(uri, ContactsContract.Contacts.CONTENT_ITEM_TYPE)
+        intent.component = ComponentName(
+            "com.google.android.syncadapters.contacts",
+            "com.google.android.syncadapters.contacts.SyncHighResPhotoIntentService"
+        )
+        intent.action = "com.google.android.syncadapters.contacts.SYNC_HIGH_RES_PHOTO"
+        context.startService(intent)
+    }*/
+
+//    https://www.grokkingandroid.com/use-contentobserver-to-listen-to-changes/
+/*    inner class MyObserver(handler: Handler?) : ContentObserver(handler) {
+        override fun onChange(selfChange: Boolean, uri: Uri?) {
+            super.onChange(selfChange, uri)
+            Log.e("my", "---> Change $uri")
+        }
+    }*/
 
 } // EOC
 

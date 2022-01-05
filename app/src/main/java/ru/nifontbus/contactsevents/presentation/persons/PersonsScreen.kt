@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
@@ -176,7 +177,8 @@ fun SmallRememberImage(
         Image(
             bitmap = it,
             contentDescription = "Photo",
-            modifier = modifier
+            modifier = modifier,
+            contentScale = ContentScale.FillWidth
         )
     }
 }

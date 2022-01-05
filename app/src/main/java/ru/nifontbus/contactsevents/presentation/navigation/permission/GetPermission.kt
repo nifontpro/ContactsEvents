@@ -1,17 +1,100 @@
 package ru.nifontbus.contactsevents.presentation.navigation.permission
 
-import android.Manifest
-import android.util.Log
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.provider.Settings
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.rememberPermissionState
+import ru.nifontbus.contactsevents.R
+import ru.nifontbus.contactsevents.ui.theme.*
 
 @ExperimentalPermissionsApi
+@Composable
+fun GetPermission(
+    permission: String,
+    text: String,
+    content: @Composable (() -> Unit)
+) {
+    val permissionState = rememberPermissionState(permission)
+    if (permissionState.shouldShowRationale) {
+        PermissionMessageBox(text, stringResource(R.string.sRetry)) {
+            permissionState.launchPermissionRequest()
+        }
+    }
+    PermissionRequired(
+        permissionState = permissionState,
+        permissionNotGrantedContent = {
+            LaunchedEffect(true) {
+                permissionState.launchPermissionRequest()
+            }
+        },
+        permissionNotAvailableContent = {
+            val context = LocalContext.current
+            PermissionMessageBox(text, stringResource(R.string.sOpenSettings)) {
+                openPrivacySettings(context)
+            }
+        },
+        content = content
+    )
+}
+
+@ExperimentalPermissionsApi
+@Composable
+private fun PermissionMessageBox(
+    text: String,
+    buttonText: String,
+    event: () -> Unit = {}
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .fillMaxWidth()
+                .padding(bigPadding)
+                .clip(RoundedCornerShape(5))
+                .background(Half3Gray)
+
+        ) {
+            Text(
+                text,
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.padding(mediumPadding)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(onClick = event, modifier = Modifier.padding(bottom = mediumPadding)) {
+                Text(buttonText)
+            }
+        }
+    }
+}
+
+@SuppressLint("QueryPermissionsNeeded")
+fun openPrivacySettings(context: Context) {
+    val intent = Intent(Settings.ACTION_PRIVACY_SETTINGS)
+    if (intent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(intent)
+    }
+}
+
+/*@ExperimentalPermissionsApi
 @Composable
 fun GetAllPermission() {
 
@@ -88,3 +171,4 @@ fun GetAllPermission() {
 fun PermissionState.isPermanentlyDenied(): Boolean {
     return !shouldShowRationale && !hasPermission
 }
+*/

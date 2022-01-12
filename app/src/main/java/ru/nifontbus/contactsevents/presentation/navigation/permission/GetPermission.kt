@@ -20,10 +20,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
-import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
 import ru.nifontbus.contactsevents.R
-import ru.nifontbus.contactsevents.ui.theme.*
+import ru.nifontbus.contactsevents.ui.theme.Half3Gray
+import ru.nifontbus.contactsevents.ui.theme.bigPadding
+import ru.nifontbus.contactsevents.ui.theme.mediumPadding
 
 @ExperimentalPermissionsApi
 @Composable

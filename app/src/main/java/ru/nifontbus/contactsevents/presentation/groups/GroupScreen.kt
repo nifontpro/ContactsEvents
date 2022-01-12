@@ -21,7 +21,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.collect
 import ru.nifontbus.contactsevents.domain.data.PersonsGroup
 import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
+import ru.nifontbus.contactsevents.ui.theme.LocalSpacing
 import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
+import ru.nifontbus.contactsevents.ui.theme.spacing
 
 @ExperimentalMaterialApi
 @Composable

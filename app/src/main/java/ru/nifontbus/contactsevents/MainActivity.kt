@@ -22,7 +22,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
-import me.onebone.toolbar.ExperimentalToolbarApi
 import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.presentation.events.EventsScreen
 import ru.nifontbus.contactsevents.presentation.events.templates.TemplatesScreen
@@ -38,7 +37,6 @@ import ru.nifontbus.contactsevents.presentation.persons.info.PersonInfoScreen
 import ru.nifontbus.contactsevents.presentation.settings.SettingScreen
 import ru.nifontbus.contactsevents.ui.theme.ContactsEventsTheme
 
-@ExperimentalToolbarApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
@@ -53,7 +51,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         installSplashScreen().apply {
-            setKeepVisibleCondition {
+            setKeepOnScreenCondition {
                 viewModel.isLoading.value
             }
         }

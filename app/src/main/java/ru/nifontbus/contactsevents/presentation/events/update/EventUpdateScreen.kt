@@ -111,10 +111,11 @@ fun EventUpdateScreenMain(
                     .background(Color.Transparent)
             ) {
 
+                val youCanUpdateEvent = stringResource(R.string.sYouCanUpdateEvent)
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(color = PrimaryDarkColor)) {
-                            append(stringResource(R.string.sYouCanUpdateEvent))
+                            append(youCanUpdateEvent)
                         }
                         withStyle(style = SpanStyle(color = LightGreen2)) {
                             append(person.displayName)

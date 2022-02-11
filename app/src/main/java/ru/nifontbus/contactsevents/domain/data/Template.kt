@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.provider.ContactsContract
 import kotlinx.parcelize.Parcelize
 import ru.nifontbus.contactsevents.R
+import ru.nifontbus.events_domain.model.EventType
 
 @Parcelize
 data class Template(

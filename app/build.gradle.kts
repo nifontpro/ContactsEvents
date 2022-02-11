@@ -63,7 +63,14 @@ dependencies {
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)
 
+    implementation(project(":core"))
     implementation(project(":core-ui"))
+
+    implementation(project(":events:events_data"))
+    implementation(project(":events:events_domain"))
+
+    implementation(project(":settings:settings_data"))
+    implementation(project(":settings:settings_domain"))
 
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)
@@ -99,5 +106,6 @@ dependencies {
     // Permissions
     implementation ("com.google.accompanist:accompanist-permissions:0.22.0-rc")
 
+    // Toolbar
     implementation ("me.onebone:toolbar-compose:2.3.0")
 }

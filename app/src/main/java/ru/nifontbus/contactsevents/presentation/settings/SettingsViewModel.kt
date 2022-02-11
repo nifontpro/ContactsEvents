@@ -2,7 +2,7 @@ package ru.nifontbus.contactsevents.presentation.settings
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ru.nifontbus.contactsevents.domain.use_cases.settings.SettingsUseCases
+import ru.nifontbus.settings_domain.use_cases.SettingsUseCases
 import javax.inject.Inject
 
 @HiltViewModel

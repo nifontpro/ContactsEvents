@@ -1,7 +1,7 @@
 package ru.nifontbus.contactsevents.domain.use_cases.groups
 
-import ru.nifontbus.contactsevents.domain.data.PersonsGroup
 import ru.nifontbus.contactsevents.domain.repository.ContactsRepository
+import ru.nifontbus.core.domain.model.PersonsGroup
 
 class GetGroupById(private val repository: ContactsRepository) {
 

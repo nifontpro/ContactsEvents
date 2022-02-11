@@ -4,12 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import ru.nifontbus.contactsevents.domain.data.Person
-import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
 import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
+import ru.nifontbus.core.domain.model.Person
+import ru.nifontbus.events_domain.use_cases.EventsUseCases
 import javax.inject.Inject
 
 @HiltViewModel

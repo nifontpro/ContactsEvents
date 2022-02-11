@@ -28,14 +28,14 @@ import ru.nifontbus.contactsevents.presentation.events.templates.TemplatesScreen
 import ru.nifontbus.contactsevents.presentation.events.update.EventUpdateScreen
 import ru.nifontbus.contactsevents.presentation.events.update.NewEventScreen
 import ru.nifontbus.contactsevents.presentation.groups.GroupScreen
-import ru.nifontbus.contactsevents.presentation.navigation.Arg
 import ru.nifontbus.contactsevents.presentation.navigation.BottomBar
-import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.permission.GetPermission
 import ru.nifontbus.contactsevents.presentation.persons.PersonsScreen
 import ru.nifontbus.contactsevents.presentation.persons.info.PersonInfoScreen
 import ru.nifontbus.contactsevents.presentation.settings.SettingScreen
 import ru.nifontbus.contactsevents.ui.theme.ContactsEventsTheme
+import ru.nifontbus.core_ui.Arg
+import ru.nifontbus.core_ui.Screen
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
             startDestination = Screen.MainScreen.route
         ) {
             composable(Screen.MainScreen.route) {
-                MainScreen(extNavController)
+                ConfigureBottomNavigate(extNavController)
             }
 
             composable(
@@ -123,7 +123,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun MainScreen(extNavController: NavHostController) {
+    private fun ConfigureBottomNavigate(extNavController: NavHostController) {
         Surface(color = MaterialTheme.colors.background) {
             val navController = rememberNavController()
             Scaffold(

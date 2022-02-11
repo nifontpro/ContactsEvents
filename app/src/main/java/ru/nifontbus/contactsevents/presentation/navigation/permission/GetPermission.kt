@@ -22,9 +22,9 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
 import ru.nifontbus.contactsevents.R
-import ru.nifontbus.contactsevents.ui.theme.Half3Gray
-import ru.nifontbus.contactsevents.ui.theme.bigPadding
-import ru.nifontbus.contactsevents.ui.theme.mediumPadding
+import ru.nifontbus.core_ui.Half3Gray
+import ru.nifontbus.core_ui.bigPadding
+import ru.nifontbus.core_ui.mediumPadding
 
 @ExperimentalPermissionsApi
 @Composable

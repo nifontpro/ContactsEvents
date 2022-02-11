@@ -17,13 +17,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.flow.collect
 import ru.nifontbus.contactsevents.R
-import ru.nifontbus.contactsevents.domain.data.EventType
 import ru.nifontbus.contactsevents.domain.data.Template
-import ru.nifontbus.contactsevents.presentation.navigation.Arg
 import ru.nifontbus.contactsevents.presentation.navigation.TemplateSwipeToDismiss
-import ru.nifontbus.contactsevents.presentation.navigation.TopBar
+import ru.nifontbus.core_ui.Arg
+import ru.nifontbus.core_ui.TopBar
+import ru.nifontbus.events_domain.model.EventType
 
 @ExperimentalMaterialApi
 @Composable

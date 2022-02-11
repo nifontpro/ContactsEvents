@@ -25,13 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.nifontbus.contactsevents.R
-import ru.nifontbus.contactsevents.domain.data.Event
-import ru.nifontbus.contactsevents.domain.data.Person
-import ru.nifontbus.contactsevents.domain.utils.getLocalizedDate
-import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.persons.SmallRememberImage
-import ru.nifontbus.contactsevents.ui.theme.cornerShapeIconPercent
-import ru.nifontbus.contactsevents.ui.theme.mediumPadding
+import ru.nifontbus.core.domain.model.Person
+import ru.nifontbus.core.util.getLocalizedDate
+import ru.nifontbus.core_ui.Screen
+import ru.nifontbus.core_ui.cornerShapeIconPercent
+import ru.nifontbus.core_ui.mediumPadding
+import ru.nifontbus.events_domain.model.Event
 
 @Composable
 fun EventsScreen(

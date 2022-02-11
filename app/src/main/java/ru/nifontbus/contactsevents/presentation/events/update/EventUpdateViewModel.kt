@@ -10,13 +10,16 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import ru.nifontbus.contactsevents.domain.data.*
-import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
-import ru.nifontbus.contactsevents.domain.utils.isShortDate
-import ru.nifontbus.contactsevents.domain.utils.toMonthAndDay
-import ru.nifontbus.contactsevents.domain.utils.toShortDate
-import ru.nifontbus.contactsevents.presentation.navigation.Arg
+import ru.nifontbus.core.domain.model.Person
+import ru.nifontbus.core.domain.model.Resource
+import ru.nifontbus.core.util.isShortDate
+import ru.nifontbus.core.util.toMonthAndDay
+import ru.nifontbus.core.util.toShortDate
+import ru.nifontbus.core_ui.Arg
+import ru.nifontbus.events_domain.model.Event
+import ru.nifontbus.events_domain.model.EventType
+import ru.nifontbus.events_domain.use_cases.EventsUseCases
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -87,7 +90,13 @@ class EventUpdateViewModel @Inject constructor(
 
     fun updateEvent() = viewModelScope.launch {
         val newEvent =
-            Event(eventLabel.value, getRealDate(), eventType.value, person.value.id, oldEvent.value.id)
+            Event(
+                eventLabel.value,
+                getRealDate(),
+                eventType.value,
+                person.value.id,
+                oldEvent.value.id
+            )
         when (val result =
             eventsUseCases.updateEvent(newEvent, oldEvent.value)
         ) {

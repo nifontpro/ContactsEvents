@@ -3,9 +3,9 @@ package ru.nifontbus.contactsevents.domain.use_cases.persons
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
-import ru.nifontbus.contactsevents.domain.data.PersonsGroup
-import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.repository.ContactsRepository
+import ru.nifontbus.core.domain.model.Person
+import ru.nifontbus.core.domain.model.PersonsGroup
 
 class GetPersonsFromGroup(
     private val repository: ContactsRepository

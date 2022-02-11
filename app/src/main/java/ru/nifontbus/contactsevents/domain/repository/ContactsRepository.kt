@@ -1,8 +1,6 @@
 package ru.nifontbus.contactsevents.domain.repository
 
-import android.content.ContentProviderOperation
 import android.content.ContentUris
-import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.graphics.BitmapFactory
@@ -17,9 +15,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.nifontbus.contactsevents.R
-import ru.nifontbus.contactsevents.domain.data.*
+import ru.nifontbus.contactsevents.domain.data.Template
 import ru.nifontbus.contactsevents.domain.data.person_info.PersonInfo
 import ru.nifontbus.contactsevents.domain.data.person_info.Phone
+import ru.nifontbus.core.domain.model.Person
+import ru.nifontbus.core.domain.model.PersonsGroup
+import ru.nifontbus.events_domain.model.EventType
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -32,13 +33,9 @@ class ContactsRepository(private val context: Context) {
     private val _groups = MutableStateFlow<List<PersonsGroup>>(emptyList())
     val groups = _groups.asStateFlow()
 
-    private val _events = MutableStateFlow<List<Event>>(emptyList())
-    val events = _events.asStateFlow()
-
     init {
         personsUpdate()
         groupsUpdate()
-        eventsUpdate()
     }
 
     private fun personsUpdate() = CoroutineScope(Dispatchers.Default).launch {
@@ -152,62 +149,6 @@ class ContactsRepository(private val context: Context) {
         }
     }
 
-    private fun getEventsCursor(): Cursor? {
-        val uri: Uri = ContactsContract.Data.CONTENT_URI
-        /*.buildUpon()
-        .appendQueryParameter(
-            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE,
-            ContactsContract.Data.MIMETYPE
-        )
-        .build()*/
-        val projection = arrayOf(
-            ContactsContract.CommonDataKinds.Event._ID,
-            ContactsContract.CommonDataKinds.Event.DISPLAY_NAME,
-            ContactsContract.CommonDataKinds.Event.CONTACT_ID,
-            ContactsContract.CommonDataKinds.Event.LABEL,
-            ContactsContract.CommonDataKinds.Event.START_DATE,
-            ContactsContract.CommonDataKinds.Event.TYPE,
-        )
-
-        val where = ContactsContract.Data.MIMETYPE + "= ?"
-        val selectionArgs = arrayOf(
-            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
-        )
-        val sortOrder = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
-        return context.contentResolver.query(uri, projection, where, selectionArgs, sortOrder)
-    }
-
-    private fun eventsUpdate() = CoroutineScope(Dispatchers.Default).launch {
-        val cursor = getEventsCursor()
-        cursor?.let {
-            val idIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event._ID)
-            val labelIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL)
-            val contactIdIdx =
-                it.getColumnIndex(ContactsContract.CommonDataKinds.Event.CONTACT_ID)
-            val dateIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE)
-            val typeIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE)
-
-            _events.value = emptyList()
-
-            while (it.moveToNext()) {
-                val id = it.getLong(idIdx)
-                val contactId = it.getLong(contactIdIdx)
-                var label = it.getString(labelIdx) ?: ""
-                val date = it.getString(dateIdx)
-                var type = it.getInt(typeIdx)
-
-                if (type == EventType.CUSTOM && label == context.getString(R.string.sDayOfRepose)) {
-                    type = EventType.NEW_LIFE_DAY
-                    label = ""
-                }
-
-                _events.value = events.value +
-                        listOf(Event(label, date, type, contactId, id))
-            }
-            it.close()
-        }
-    }
-
     suspend fun getPersonInfo(contactId: Long): PersonInfo {
         val uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactId.toString())
 /*
@@ -243,137 +184,6 @@ class ContactsRepository(private val context: Context) {
         }
         return suspendCoroutine {
             it.resume(PersonInfo(phones))
-        }
-    }
-
-    suspend fun addEvent(event: Event): Resource<Unit> {
-        val values = getContentValuesForEvent(event)
-
-        return suspendCoroutine {
-            val exc = context.getString(R.string.sFailedCreateEvent)
-            it.resume(
-                try {
-                    val idStr =
-                        context.contentResolver.insert(
-                            ContactsContract.Data.CONTENT_URI, values
-                        )?.lastPathSegment ?: throw Exception(exc)
-
-                    val id = idStr.toLong()
-                    val newEvent = event.copy(id = id)
-                    _events.value = events.value + newEvent
-
-                    Resource.Success(context.getString(R.string.sEventCreateSuccessful))
-                } catch (e: Exception) {
-                    Resource.Error(e.localizedMessage ?: exc)
-                }
-            )
-        }
-    }
-
-    suspend fun updateEvent(newEvent: Event, oldEvent: Event): Resource<Unit> {
-        val whereBuf = StringBuffer()
-
-        whereBuf.append(ContactsContract.Data._ID)
-        whereBuf.append("=")
-        whereBuf.append(newEvent.id)
-
-        whereBuf.append(" and ")
-        whereBuf.append(ContactsContract.Data.RAW_CONTACT_ID)
-        whereBuf.append("=")
-        whereBuf.append(newEvent.personId)
-
-        whereBuf.append(" and ")
-        whereBuf.append(ContactsContract.Data.MIMETYPE)
-        whereBuf.append(" = '")
-        val mimetype = ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
-        whereBuf.append(mimetype)
-        whereBuf.append("'")
-
-        val values = getContentValuesForEvent(newEvent, false)
-
-        return suspendCoroutine {
-            val exc = context.getString(R.string.sFailedUpdateEvent)
-            it.resume(
-                try {
-                    context.contentResolver.update(
-                        ContactsContract.Data.CONTENT_URI, values, whereBuf.toString(), null
-                    )
-
-                    _events.value = events.value - oldEvent + newEvent
-
-                    Resource.Success(context.getString(R.string.sEventUpdateSuccessful))
-                } catch (e: Exception) {
-                    Resource.Error(e.localizedMessage ?: exc)
-                }
-            )
-        }
-    }
-
-    private fun getContentValuesForEvent(newEvent: Event, isNew: Boolean = true): ContentValues {
-        val values = ContentValues()
-
-        if (isNew) {
-            values.put(
-                ContactsContract.Data.MIMETYPE,
-                ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
-            )
-            values.put(ContactsContract.CommonDataKinds.Event.RAW_CONTACT_ID, newEvent.personId)
-        }
-
-        when (newEvent.type) {
-            EventType.CUSTOM -> {
-                values.put(ContactsContract.CommonDataKinds.Event.LABEL, newEvent.label)
-                values.put(ContactsContract.CommonDataKinds.Event.TYPE, EventType.CUSTOM)
-            }
-            EventType.NEW_LIFE_DAY -> {
-                values.put(
-                    ContactsContract.CommonDataKinds.Event.LABEL,
-                    context.getString(R.string.sDayOfRepose)
-                )
-                values.put(ContactsContract.CommonDataKinds.Event.TYPE, EventType.CUSTOM)
-            }
-            else -> {
-                if (!isNew) {
-                    values.put(ContactsContract.CommonDataKinds.Event.LABEL, "")
-                }
-                values.put(ContactsContract.CommonDataKinds.Event.TYPE, newEvent.type)
-            }
-        }
-
-        values.put(ContactsContract.CommonDataKinds.Event.START_DATE, newEvent.date)
-        return values
-    }
-
-    suspend fun deleteEvent(event: Event): Resource<Unit> {
-
-        val ops = ArrayList<ContentProviderOperation>()
-
-        ops.add(
-            ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
-                .withSelection(
-                    ContactsContract.Data._ID + "=? AND " +
-                            ContactsContract.Data.MIMETYPE + "=?", // Необязательно, но для надежности
-                    arrayOf(
-                        event.id.toString(),
-                        ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
-                    )
-                )
-                .build()
-        )
-
-        return suspendCoroutine {
-
-            it.resume(
-                try {
-                    context.contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
-                    _events.value = events.value - event
-                    Resource.Success(context.getString(R.string.sEventDeleteSuccessful))
-                } catch (e: Exception) {
-                    Resource.Error(
-                        e.localizedMessage ?: context.getString(R.string.sErrorDeleteEvent)
-                    )
-                }
-            )
         }
     }
 

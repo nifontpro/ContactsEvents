@@ -8,3 +8,12 @@ dependencyResolutionManagement {
 rootProject.name = "Contacts Events"
 include ':app'
 include ':core-ui'
+include ':events'
+include ':events:events_presenter'
+include ':events:events_data'
+include ':events:events_domain'
+include ':core'
+include ':settings'
+include ':settings:settings_data'
+include ':settings:settings_domain'
+include ':settings:settings_presenter'

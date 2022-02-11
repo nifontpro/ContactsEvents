@@ -28,16 +28,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import me.onebone.toolbar.*
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.CollapsingToolbarState
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import ru.nifontbus.contactsevents.R
-import ru.nifontbus.contactsevents.domain.data.Person
 import ru.nifontbus.contactsevents.domain.utils.toPx
 import ru.nifontbus.contactsevents.presentation.events.EventCard
-import ru.nifontbus.contactsevents.presentation.navigation.Screen
 import ru.nifontbus.contactsevents.presentation.navigation.TemplateSwipeToDismiss
-import ru.nifontbus.contactsevents.presentation.navigation.TopBar
 import ru.nifontbus.contactsevents.presentation.persons.SmallRememberImage
-import ru.nifontbus.contactsevents.ui.theme.*
+import ru.nifontbus.core.domain.model.Person
+import ru.nifontbus.core_ui.*
 
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi

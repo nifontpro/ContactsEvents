@@ -3,7 +3,10 @@ package ru.nifontbus.contactsevents.presentation.navigation
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -20,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import ru.nifontbus.contactsevents.ui.theme.BadgeBackground
-import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
+import ru.nifontbus.core_ui.BadgeBackground
+import ru.nifontbus.core_ui.PrimaryDarkColor
 
 @ExperimentalMaterialApi
 @Composable

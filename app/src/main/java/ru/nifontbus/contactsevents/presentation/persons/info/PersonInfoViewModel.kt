@@ -7,15 +7,17 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import ru.nifontbus.contactsevents.domain.data.Event
-import ru.nifontbus.contactsevents.domain.data.Person
-import ru.nifontbus.contactsevents.domain.data.Resource
 import ru.nifontbus.contactsevents.domain.data.person_info.PersonInfo
-import ru.nifontbus.contactsevents.domain.use_cases.events.EventsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
 import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
+import ru.nifontbus.core.domain.model.Person
+import ru.nifontbus.core.domain.model.Resource
+import ru.nifontbus.events_domain.model.Event
+import ru.nifontbus.events_domain.use_cases.EventsUseCases
 import javax.inject.Inject
 
 @HiltViewModel

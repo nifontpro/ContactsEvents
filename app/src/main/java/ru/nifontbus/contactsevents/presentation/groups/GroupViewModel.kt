@@ -5,9 +5,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import ru.nifontbus.contactsevents.domain.data.PersonsGroup
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
-import ru.nifontbus.contactsevents.domain.use_cases.settings.SettingsUseCases
+import ru.nifontbus.core.domain.model.PersonsGroup
+import ru.nifontbus.settings_domain.use_cases.SettingsUseCases
 import javax.inject.Inject
 
 @HiltViewModel

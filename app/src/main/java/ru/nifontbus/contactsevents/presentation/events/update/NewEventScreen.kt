@@ -25,19 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import kotlinx.coroutines.flow.collect
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Template
-import ru.nifontbus.contactsevents.domain.utils.getLocalizedDate
-import ru.nifontbus.contactsevents.domain.utils.toLocalDate
-import ru.nifontbus.contactsevents.domain.utils.toShortDate
-import ru.nifontbus.contactsevents.presentation.navigation.Screen
-import ru.nifontbus.contactsevents.presentation.navigation.TopBar
 import ru.nifontbus.contactsevents.presentation.navigation.permission.GetPermission
-import ru.nifontbus.contactsevents.ui.theme.IconGreen
-import ru.nifontbus.contactsevents.ui.theme.LightGreen2
-import ru.nifontbus.contactsevents.ui.theme.PrimaryDarkColor
-import ru.nifontbus.contactsevents.ui.theme.TextWhite
+import ru.nifontbus.core.util.getLocalizedDate
+import ru.nifontbus.core.util.toLocalDate
+import ru.nifontbus.core.util.toShortDate
+import ru.nifontbus.core_ui.*
 import java.time.LocalDate
 
 @ExperimentalPermissionsApi

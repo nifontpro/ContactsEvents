@@ -3,12 +3,12 @@ package ru.nifontbus.contactsevents.presentation.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.Group
-import androidx.compose.material.icons.outlined.ManageAccounts
 import androidx.compose.material.icons.outlined.RecentActors
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
+import ru.nifontbus.core_ui.Screen
 
 sealed class BottomNavItem(
     val name: String,

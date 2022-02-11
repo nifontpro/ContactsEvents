@@ -17,14 +17,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ru.nifontbus.contactsevents.R
-import ru.nifontbus.contactsevents.ui.theme.Half10Proc
-import ru.nifontbus.contactsevents.ui.theme.bigPadding
-import ru.nifontbus.contactsevents.ui.theme.mediumPadding
+import ru.nifontbus.core_ui.Half10Proc
+import ru.nifontbus.core_ui.bigPadding
+import ru.nifontbus.core_ui.mediumPadding
 
 @Composable
 fun SettingScreen(paddingValues: PaddingValues) {

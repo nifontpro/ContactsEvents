@@ -10,15 +10,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import ru.nifontbus.contactsevents.ui.theme.DeleteColor
-import ru.nifontbus.contactsevents.ui.theme.TextWhite
-import ru.nifontbus.contactsevents.ui.theme.Transparent
+import ru.nifontbus.core_ui.DeleteColor
+import ru.nifontbus.core_ui.TextWhite
+import ru.nifontbus.core_ui.Transparent
 
 @ExperimentalMaterialApi
 @Composable

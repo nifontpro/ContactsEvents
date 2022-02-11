@@ -103,9 +103,8 @@ dependencies {
     // Splash Screen
     implementation("androidx.core:core-splashscreen:1.0.0-beta01")
 
-    // Permissions
-    implementation ("com.google.accompanist:accompanist-permissions:0.22.0-rc")
-
     // Toolbar
     implementation ("me.onebone:toolbar-compose:2.3.0")
+
+    implementation ("com.google.accompanist:accompanist-permissions:0.22.0-rc")
 }

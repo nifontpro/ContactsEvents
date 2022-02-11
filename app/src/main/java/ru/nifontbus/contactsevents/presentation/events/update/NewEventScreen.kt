@@ -27,7 +27,7 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Template
-import ru.nifontbus.contactsevents.presentation.navigation.permission.GetPermission
+import ru.nifontbus.core_ui.permission.GetPermission
 import ru.nifontbus.core.util.getLocalizedDate
 import ru.nifontbus.core.util.toLocalDate
 import ru.nifontbus.core.util.toShortDate

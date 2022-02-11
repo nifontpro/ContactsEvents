@@ -1,14 +1,10 @@
 <resources>
     <string name="app_name" translatable="false">Contacts Events</string>
 
-    <!--<string name="group_my_contacts">My Contacts</string>
-    <string name="group_starred_in_android">Starred in Android</string>
-    <string name="group_friends">Friends</string>
-    <string name="group_family">Family</string>
-    <string name="group_coworkers">Coworkers</string>-->
+
     <string name="sDelimetr" translatable="false">", "</string>
     <string name="sGroups">"Groups: "</string>
-<!--    <string name="sNewLifeDay">Day of Repose</string>-->
+
     <string name="sDayOfRepose" translatable="false">Day of Repose</string>
     <string name="sAngelDay">Name days</string>
     <string name="sWeddingDay">Wedding Day</string>
@@ -54,9 +50,4 @@
     <!--    Template screen-->
     <string name="sTypeEvents">Type of events</string>
 
-    <!--    Permission-->
-    <string name="sReadDenied">Read contacts permission denied. This permission is necessary for the full operation of the application: reading contact data, including their events. Please, grant us access on the Settings screen.</string>
-    <string name="sWriteDenied">Write contacts permission denied. See this FAQ with information about why we need this permission. Please, grant us access on the Settings screen.</string>
-    <string name="sOpenSettings">Open Settings</string>
-    <string name="sRetry">Retry</string>
 </resources>

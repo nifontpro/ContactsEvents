@@ -29,18 +29,19 @@ import ru.nifontbus.contactsevents.presentation.events.update.EventUpdateScreen
 import ru.nifontbus.contactsevents.presentation.events.update.NewEventScreen
 import ru.nifontbus.contactsevents.presentation.groups.GroupScreen
 import ru.nifontbus.contactsevents.presentation.navigation.BottomBar
-import ru.nifontbus.contactsevents.presentation.navigation.permission.GetPermission
 import ru.nifontbus.contactsevents.presentation.persons.PersonsScreen
 import ru.nifontbus.contactsevents.presentation.persons.info.PersonInfoScreen
 import ru.nifontbus.contactsevents.presentation.settings.SettingScreen
 import ru.nifontbus.contactsevents.ui.theme.ContactsEventsTheme
 import ru.nifontbus.core_ui.Arg
 import ru.nifontbus.core_ui.Screen
+import ru.nifontbus.core_ui.permission.GetPermission
+import ru.nifontbus.core_ui.R
 
+@ExperimentalPermissionsApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
-@ExperimentalPermissionsApi
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -60,8 +61,8 @@ class MainActivity : ComponentActivity() {
             ContactsEventsTheme {
                 Surface(color = MaterialTheme.colors.background) {
                     GetPermission(
-                        Manifest.permission.READ_CONTACTS,
-                        stringResource(R.string.sReadDenied)
+                        permission = Manifest.permission.READ_CONTACTS,
+                        text = stringResource(R.string.sReadDenied)
                     ) {
                         ConfigureExtNavigate()
                     }

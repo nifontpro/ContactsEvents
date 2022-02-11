@@ -1,4 +1,4 @@
-package ru.nifontbus.contactsevents.presentation.navigation.permission
+package ru.nifontbus.core_ui.permission
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -21,10 +21,10 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
-import ru.nifontbus.contactsevents.R
 import ru.nifontbus.core_ui.Half3Gray
 import ru.nifontbus.core_ui.bigPadding
 import ru.nifontbus.core_ui.mediumPadding
+import ru.nifontbus.core_ui.R
 
 @ExperimentalPermissionsApi
 @Composable

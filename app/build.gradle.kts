@@ -3,6 +3,7 @@ plugins {
     kotlin("android")
     id("dagger.hilt.android.plugin")
     id("kotlin-kapt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -97,4 +98,6 @@ dependencies {
 
     // Permissions
     implementation ("com.google.accompanist:accompanist-permissions:0.22.0-rc")
+
+    implementation ("me.onebone:toolbar-compose:2.3.0")
 }

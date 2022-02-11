@@ -130,11 +130,13 @@ fun EventCard(
                     }
                 }
 
+
                 val dateText = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontStyle = FontStyle.Normal)) {
                         append(event.date.getLocalizedDate())
                     }
                     event.getFullYear()?.let {
+                        val yearLeft = stringResource(R.string.sYearLeft, it)
                         if (it > 0) {
                             withStyle(
                                 style = SpanStyle(
@@ -142,7 +144,7 @@ fun EventCard(
                                     fontWeight = FontWeight.W300
                                 )
                             ) {
-                                append(stringResource(R.string.sYearLeft, it))
+                                append(yearLeft)
                             }
                         }
                     }

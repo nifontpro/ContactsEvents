@@ -1,10 +1,5 @@
 package ru.nifontbus.contactsevents.presentation.persons.info
 
-import android.content.ComponentName
-import android.content.ContentUris
-import android.content.Context
-import android.content.Intent
-import android.provider.ContactsContract
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -30,10 +25,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.flow.collect
 import me.onebone.toolbar.*
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.data.Person
@@ -45,7 +38,6 @@ import ru.nifontbus.contactsevents.presentation.navigation.TopBar
 import ru.nifontbus.contactsevents.presentation.persons.SmallRememberImage
 import ru.nifontbus.contactsevents.ui.theme.*
 
-@ExperimentalToolbarApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @Composable

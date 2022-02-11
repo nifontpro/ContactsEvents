@@ -8,12 +8,8 @@
 
     <string name="sGroups">"Группы: "</string>
     <string name="sNewLifeDay">День преставления</string>
-    <string name="sAngelDay">Именины</string>
-    <string name="sWeddingDay">День свадьбы</string>
-
-    <!--    Event screen-->
-    <string name="sYearLeft">, лет: %d</string>
-    <string name="sDaysLeft">, %d д.</string>
+<!--    <string name="sAngelDay">Именины</string>-->
+<!--    <string name="sWeddingDay">День свадьбы</string>-->
 
     <!--    Person screen-->
     <string name="sNoPersonInGroup">Нет контактов в группе</string>
@@ -30,26 +26,10 @@
     <string name="sPersonInfo">О контакте</string>
     <string name="sEvents">События: </string>
 
-    <!--    New event screen-->
-    <string name="sNewEvent">Новое событие</string>
-    <string name="sYouCanCreateEvent">"Вы можете создать новое событие для контакта "</string>
-    <string name="sEventLabel">Название события</string>
-    <string name="sCreateEvent">Создать событие</string>
-    <string name="sWithoutYear">Не учывать год</string>
-    <string name="sDate">Дата:</string>
-    <string name="sSelectDate">Выберите дату</string>
-
-    <!--    Event Update Screen-->
-    <string name="sUpdateEvent">Обновить событие</string>
-    <string name="sYouCanUpdateEvent">"Вы можете обновить данные события для контакта "</string>
-
     <!--    Settings screen-->
     <string name="sContact">События</string>
     <string name="sEventsSetting">Контактов</string>
     <string name="sReposeFeatures">События усопших</string>
     <string name="s40Day">Считать 40-й день</string>
-
-    <!--    Template screen-->
-    <string name="sTypeEvents">Шаблоны событий</string>
 
 </resources>

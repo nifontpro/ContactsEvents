@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import ru.nifontbus.contactsevents.domain.data.person_info.PersonInfo
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
-import ru.nifontbus.contactsevents.domain.use_cases.persons.PersonsUseCases
-import ru.nifontbus.core.domain.model.Person
 import ru.nifontbus.core.domain.model.Resource
 import ru.nifontbus.events_domain.model.Event
 import ru.nifontbus.events_domain.use_cases.EventsUseCases
+import ru.nifontbus.persons_domain.model.Person
+import ru.nifontbus.persons_domain.model.PersonInfo
+import ru.nifontbus.persons_domain.use_cases.PersonsUseCases
 import javax.inject.Inject
 
 @HiltViewModel

@@ -68,9 +68,17 @@ dependencies {
 
     implementation(project(":events:events_data"))
     implementation(project(":events:events_domain"))
+    implementation(project(":events:events_presenter"))
+
+    implementation(project(":persons:persons_data"))
+    implementation(project(":persons:persons_domain"))
 
     implementation(project(":settings:settings_data"))
     implementation(project(":settings:settings_domain"))
+
+    implementation(project(":templates:templates_data"))
+    implementation(project(":templates:templates_domain"))
+    implementation(project(":templates:templates_presenter"))
 
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)

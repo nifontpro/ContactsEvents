@@ -18,9 +18,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import ru.nifontbus.contactsevents.presentation.navigation.BottomNavItem
 import ru.nifontbus.core.domain.model.PersonsGroup
 import ru.nifontbus.core_ui.PrimaryDarkColor
+import ru.nifontbus.core_ui.component.BottomNavItem
 
 @ExperimentalMaterialApi
 @Composable

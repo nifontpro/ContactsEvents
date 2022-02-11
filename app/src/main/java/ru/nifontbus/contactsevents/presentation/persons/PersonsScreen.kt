@@ -29,8 +29,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.utils.Search
-import ru.nifontbus.core.domain.model.Person
 import ru.nifontbus.core_ui.*
+import ru.nifontbus.core_ui.component.SmallRememberImage
+import ru.nifontbus.persons_domain.model.Person
 
 @ExperimentalFoundationApi
 @Composable
@@ -160,30 +161,6 @@ private fun PersonCard(
             getImage = viewModel::getPhotoById
         )
     } // Row
-}
-
-@Composable
-fun SmallRememberImage(
-    personId: Long,
-    modifier: Modifier = Modifier,
-    getImage: suspend (id: Long) -> ImageBitmap?
-) {
-    var img by remember {
-        mutableStateOf<ImageBitmap?>(null)
-    }
-
-    LaunchedEffect(personId) {
-        img = getImage(personId)
-    }
-
-    img?.let {
-        Image(
-            bitmap = it,
-            contentDescription = "Photo",
-            modifier = modifier,
-            contentScale = ContentScale.FillWidth
-        )
-    }
 }
 
 @Composable

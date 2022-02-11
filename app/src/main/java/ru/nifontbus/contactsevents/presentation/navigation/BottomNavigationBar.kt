@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.nifontbus.core_ui.BadgeBackground
 import ru.nifontbus.core_ui.PrimaryDarkColor
+import ru.nifontbus.core_ui.component.BottomNavItem
 
 @ExperimentalMaterialApi
 @Composable

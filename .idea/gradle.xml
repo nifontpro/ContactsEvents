@@ -18,10 +18,18 @@
             <option value="$PROJECT_DIR$/events/events_data" />
             <option value="$PROJECT_DIR$/events/events_domain" />
             <option value="$PROJECT_DIR$/events/events_presenter" />
+            <option value="$PROJECT_DIR$/persons" />
+            <option value="$PROJECT_DIR$/persons/persons_data" />
+            <option value="$PROJECT_DIR$/persons/persons_domain" />
+            <option value="$PROJECT_DIR$/persons/persons_presenter" />
             <option value="$PROJECT_DIR$/settings" />
             <option value="$PROJECT_DIR$/settings/settings_data" />
             <option value="$PROJECT_DIR$/settings/settings_domain" />
             <option value="$PROJECT_DIR$/settings/settings_presenter" />
+            <option value="$PROJECT_DIR$/templates" />
+            <option value="$PROJECT_DIR$/templates/templates_data" />
+            <option value="$PROJECT_DIR$/templates/templates_domain" />
+            <option value="$PROJECT_DIR$/templates/templates_presenter" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

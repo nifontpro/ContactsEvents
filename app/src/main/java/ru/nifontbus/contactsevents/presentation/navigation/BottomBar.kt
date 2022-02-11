@@ -4,6 +4,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
+import ru.nifontbus.core_ui.component.BottomNavItem
 
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi

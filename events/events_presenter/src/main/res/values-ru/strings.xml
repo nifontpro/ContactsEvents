@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Event screen-->
+    <string name="sYearLeft">, лет: %d</string>
+    <string name="sDaysLeft">, %d д.</string>
+
+    <!--    New event screen-->
+    <string name="sNewEvent">Новое событие</string>
+    <string name="sYouCanCreateEvent">"Вы можете создать новое событие для контакта "</string>
+    <string name="sEventLabel">Название события</string>
+    <string name="sCreateEvent">Создать событие</string>
+    <string name="sWithoutYear">Не учывать год</string>
+    <string name="sDate">Дата:</string>
+    <string name="sSelectDate">Выберите дату</string>
+
+    <!--    Event Update Screen-->
+    <string name="sUpdateEvent">Обновить событие</string>
+    <string name="sYouCanUpdateEvent">"Вы можете обновить данные события для контакта "</string>
+</resources>

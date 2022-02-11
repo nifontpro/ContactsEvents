@@ -10,10 +10,6 @@ import ru.nifontbus.contactsevents.domain.repository.ContactsRepository
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GetGroupById
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GetGroups
 import ru.nifontbus.contactsevents.domain.use_cases.groups.GroupsUseCases
-import ru.nifontbus.contactsevents.domain.use_cases.persons.*
-import ru.nifontbus.contactsevents.domain.use_cases.template.GetTemplates
-import ru.nifontbus.contactsevents.domain.use_cases.template.TemplatesUseCases
-import ru.nifontbus.settings_domain.repository.SettingsRepository
 import javax.inject.Singleton
 
 // https://howtodoandroid.com/android-hilt-dependency-injection/
@@ -27,32 +23,6 @@ object AppModule {
     fun provideContacts(
         @ApplicationContext context: Context
     ): ContactsRepository = ContactsRepository(context)
-
-    @Provides
-    @Singleton
-    fun provideTemplatesUseCases(
-        repository: ContactsRepository,
-        settingsRepository: SettingsRepository
-    ): TemplatesUseCases {
-        return TemplatesUseCases(
-            getTemplates = GetTemplates(repository, settingsRepository),
-        )
-    }
-
-
-    @Provides
-    @Singleton
-    fun providePersonsUseCases(repository: ContactsRepository) =
-        PersonsUseCases(
-            getPersons = GetPersons(repository),
-            getPersonById = GetPersonById(repository),
-            getPersonByIdFlow = GetPersonByIdFlow(repository),
-            getPersonsFromGroup = GetPersonsFromGroup(repository),
-            getPersonsFilteredFromGroup = GetPersonsFilteredFromGroup(repository),
-            getPersonInfo = GetPersonInfo(repository),
-            getPhotoById = GetPhotoById(repository),
-            getDisplayPhoto = GetDisplayPhoto(repository)
-        )
 
     @Provides
     @Singleton

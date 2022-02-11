@@ -6,12 +6,8 @@
     <string name="sGroups">"Groups: "</string>
 
     <string name="sDayOfRepose" translatable="false">Day of Repose</string>
-    <string name="sAngelDay">Name days</string>
-    <string name="sWeddingDay">Wedding Day</string>
-
-    <!--    Event screen-->
-    <string name="sYearLeft">, years: %d</string>
-    <string name="sDaysLeft">, %d d.</string>
+<!--    <string name="sAngelDay">Name days</string>-->
+<!--    <string name="sWeddingDay">Wedding Day</string>-->
 
     <!--    Person screen-->
     <string name="sNoPersonInGroup">No contacts in group</string>
@@ -28,26 +24,10 @@
     <string name="sPersonInfo">Contact info</string>
     <string name="sEvents">Events: </string>
 
-    <!--    New event screen-->
-    <string name="sNewEvent">New event</string>
-    <string name="sYouCanCreateEvent">"You can create new event for contact "</string>
-    <string name="sEventLabel">Event label</string>
-    <string name="sCreateEvent">Create event</string>
-    <string name="sWithoutYear">Without a year</string>
-    <string name="sDate">Date:</string>
-    <string name="sSelectDate">Select date</string>
-
-    <!--    Event Update Screen-->
-    <string name="sUpdateEvent">Update event</string>
-    <string name="sYouCanUpdateEvent">"You can update event for contact "</string>
-
     <!--    Settings screen-->
     <string name="sContact">Contact</string>
     <string name="sEventsSetting">Events</string>
     <string name="sReposeFeatures">Repose events</string>
     <string name="s40Day">Counting the 40th day</string>
-
-    <!--    Template screen-->
-    <string name="sTypeEvents">Type of events</string>
 
 </resources>

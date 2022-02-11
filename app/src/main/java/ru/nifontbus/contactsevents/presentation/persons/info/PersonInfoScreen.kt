@@ -34,11 +34,12 @@ import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import ru.nifontbus.contactsevents.R
 import ru.nifontbus.contactsevents.domain.utils.toPx
-import ru.nifontbus.contactsevents.presentation.events.EventCard
-import ru.nifontbus.contactsevents.presentation.navigation.TemplateSwipeToDismiss
-import ru.nifontbus.contactsevents.presentation.persons.SmallRememberImage
-import ru.nifontbus.core.domain.model.Person
 import ru.nifontbus.core_ui.*
+import ru.nifontbus.core_ui.component.SmallRememberImage
+import ru.nifontbus.core_ui.component.TemplateSwipeToDismiss
+import ru.nifontbus.core_ui.component.TopBar
+import ru.nifontbus.events_presenter.EventCard
+import ru.nifontbus.persons_domain.model.Person
 
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi

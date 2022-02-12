@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--    Person screen-->
+    <string name="sNoPersonInGroup">Нет контактов в группе</string>
+
+    <!--    Person info-->
+    <string name="sPersonInfo">О контакте</string>
+    <string name="sEvents">События: </string>
+    <string name="sGroups">"Группы: "</string>
+
+</resources>

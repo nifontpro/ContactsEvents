@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Contact repository-->
+    <string name="sFailedCreateEvent">Failed create event!</string>
+    <string name="sEventCreateSuccessful">Event create successful</string>
+    <string name="sFailedUpdateEvent">Failed update the event!</string>
+    <string name="sEventUpdateSuccessful">Event update successful</string>
+    <string name="sEventDeleteSuccessful">Event delete successful</string>
+    <string name="sErrorDeleteEvent">Error delete event!</string>
+</resources>

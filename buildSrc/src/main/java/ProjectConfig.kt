@@ -1,5 +1,5 @@
 object ProjectConfig {
-    const val appId = "com.plcoding.calorytracker"
+    const val appId = "ru.nifontbus.contactsevents"
     const val compileSdk = 31
     const val minSdk = 26
     const val targetSdk = 31

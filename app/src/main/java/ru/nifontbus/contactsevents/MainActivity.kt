@@ -22,25 +22,26 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
-import ru.nifontbus.contactsevents.domain.data.Template
-import ru.nifontbus.contactsevents.presentation.events.EventsScreen
-import ru.nifontbus.contactsevents.presentation.events.templates.TemplatesScreen
-import ru.nifontbus.contactsevents.presentation.events.update.EventUpdateScreen
-import ru.nifontbus.contactsevents.presentation.events.update.NewEventScreen
-import ru.nifontbus.contactsevents.presentation.groups.GroupScreen
-import ru.nifontbus.contactsevents.presentation.navigation.Arg
-import ru.nifontbus.contactsevents.presentation.navigation.BottomBar
-import ru.nifontbus.contactsevents.presentation.navigation.Screen
-import ru.nifontbus.contactsevents.presentation.navigation.permission.GetPermission
-import ru.nifontbus.contactsevents.presentation.persons.PersonsScreen
-import ru.nifontbus.contactsevents.presentation.persons.info.PersonInfoScreen
-import ru.nifontbus.contactsevents.presentation.settings.SettingScreen
+import ru.nifontbus.contactsevents.ui.navigation.BottomBar
 import ru.nifontbus.contactsevents.ui.theme.ContactsEventsTheme
+import ru.nifontbus.core_ui.Arg
+import ru.nifontbus.core_ui.R
+import ru.nifontbus.core_ui.Screen
+import ru.nifontbus.core_ui.permission.GetPermission
+import ru.nifontbus.events_presenter.EventsScreen
+import ru.nifontbus.events_presenter.update.EventUpdateScreen
+import ru.nifontbus.events_presenter.update.NewEventScreen
+import ru.nifontbus.groups_presenter.GroupScreen
+import ru.nifontbus.persons_presenter.PersonsScreen
+import ru.nifontbus.persons_presenter.info.PersonInfoScreen
+import ru.nifontbus.settings_presenter.SettingScreen
+import ru.nifontbus.templates_domain.model.Template
+import ru.nifontbus.templates_presenter.TemplatesScreen
 
+@ExperimentalPermissionsApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
-@ExperimentalPermissionsApi
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -60,8 +61,8 @@ class MainActivity : ComponentActivity() {
             ContactsEventsTheme {
                 Surface(color = MaterialTheme.colors.background) {
                     GetPermission(
-                        Manifest.permission.READ_CONTACTS,
-                        stringResource(R.string.sReadDenied)
+                        permission = Manifest.permission.READ_CONTACTS,
+                        text = stringResource(R.string.sReadDenied)
                     ) {
                         ConfigureExtNavigate()
                     }
@@ -78,7 +79,7 @@ class MainActivity : ComponentActivity() {
             startDestination = Screen.MainScreen.route
         ) {
             composable(Screen.MainScreen.route) {
-                MainScreen(extNavController)
+                ConfigureBottomNavigate(extNavController)
             }
 
             composable(
@@ -123,7 +124,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun MainScreen(extNavController: NavHostController) {
+    private fun ConfigureBottomNavigate(extNavController: NavHostController) {
         Surface(color = MaterialTheme.colors.background) {
             val navController = rememberNavController()
             Scaffold(

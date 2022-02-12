@@ -12,7 +12,28 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/buildSrc" />
+            <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core-ui" />
+            <option value="$PROJECT_DIR$/events" />
+            <option value="$PROJECT_DIR$/events/events_data" />
+            <option value="$PROJECT_DIR$/events/events_domain" />
+            <option value="$PROJECT_DIR$/events/events_presenter" />
+            <option value="$PROJECT_DIR$/groups" />
+            <option value="$PROJECT_DIR$/groups/groups_data" />
+            <option value="$PROJECT_DIR$/groups/groups_domain" />
+            <option value="$PROJECT_DIR$/groups/groups_presenter" />
+            <option value="$PROJECT_DIR$/persons" />
+            <option value="$PROJECT_DIR$/persons/persons_data" />
+            <option value="$PROJECT_DIR$/persons/persons_domain" />
+            <option value="$PROJECT_DIR$/persons/persons_presenter" />
+            <option value="$PROJECT_DIR$/settings" />
+            <option value="$PROJECT_DIR$/settings/settings_data" />
+            <option value="$PROJECT_DIR$/settings/settings_domain" />
+            <option value="$PROJECT_DIR$/settings/settings_presenter" />
+            <option value="$PROJECT_DIR$/templates" />
+            <option value="$PROJECT_DIR$/templates/templates_data" />
+            <option value="$PROJECT_DIR$/templates/templates_domain" />
+            <option value="$PROJECT_DIR$/templates/templates_presenter" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

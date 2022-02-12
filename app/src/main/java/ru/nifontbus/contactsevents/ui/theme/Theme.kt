@@ -8,6 +8,7 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
+import ru.nifontbus.core_ui.*
 
 private val DarkColorPalette = darkColors(
     primary = PrimaryColor,

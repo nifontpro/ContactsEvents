@@ -11,6 +11,10 @@
         <entry key="..\:/Kotlin/ContactsEvents/app/src/main/res/drawable/ic_launcher_background.xml" value="0.32083333333333336" />
         <entry key="..\:/Kotlin/ContactsEvents/app/src/main/res/drawable/ic_volunteer_activism.xml" value="0.31666666666666665" />
         <entry key="..\:/Kotlin/ContactsEvents/app/src/main/res/drawable/no_persons.xml" value="0.26666666666666666" />
+        <entry key="..\:/Kotlin/ContactsEvents/persons/persons_presenter/src/main/res/drawable/folder_off.xml" value="0.156" />
+        <entry key="..\:/Kotlin/ContactsEvents/persons/persons_presenter/src/main/res/drawable/no_persons.xml" value="0.1545" />
+        <entry key="..\:/Kotlin/ContactsEvents/settings/settings_presenter/src/main/res/drawable/folder_off.xml" value="0.156" />
+        <entry key="..\:/Kotlin/ContactsEvents/settings/settings_presenter/src/main/res/drawable/ic_compose.xml" value="0.1545" />
       </map>
     </option>
   </component>

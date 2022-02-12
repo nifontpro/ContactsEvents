@@ -22,11 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
-import ru.nifontbus.contactsevents.presentation.groups.GroupScreen
-import ru.nifontbus.contactsevents.presentation.navigation.BottomBar
-import ru.nifontbus.contactsevents.presentation.persons.PersonsScreen
-import ru.nifontbus.contactsevents.presentation.persons.info.PersonInfoScreen
-import ru.nifontbus.contactsevents.presentation.settings.SettingScreen
+import ru.nifontbus.contactsevents.ui.navigation.BottomBar
 import ru.nifontbus.contactsevents.ui.theme.ContactsEventsTheme
 import ru.nifontbus.core_ui.Arg
 import ru.nifontbus.core_ui.R
@@ -35,6 +31,10 @@ import ru.nifontbus.core_ui.permission.GetPermission
 import ru.nifontbus.events_presenter.EventsScreen
 import ru.nifontbus.events_presenter.update.EventUpdateScreen
 import ru.nifontbus.events_presenter.update.NewEventScreen
+import ru.nifontbus.groups_presenter.GroupScreen
+import ru.nifontbus.persons_presenter.PersonsScreen
+import ru.nifontbus.persons_presenter.info.PersonInfoScreen
+import ru.nifontbus.settings_presenter.SettingScreen
 import ru.nifontbus.templates_domain.model.Template
 import ru.nifontbus.templates_presenter.TemplatesScreen
 

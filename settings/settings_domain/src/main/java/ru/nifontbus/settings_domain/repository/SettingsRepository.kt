@@ -1,7 +1,7 @@
 package ru.nifontbus.settings_domain.repository
 
 import kotlinx.coroutines.flow.StateFlow
-import ru.nifontbus.core.domain.model.PersonsGroup
+import ru.nifontbus.groups_domain.model.PersonsGroup
 
 interface SettingsRepository {
 

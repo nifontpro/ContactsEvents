@@ -18,6 +18,10 @@
             <option value="$PROJECT_DIR$/events/events_data" />
             <option value="$PROJECT_DIR$/events/events_domain" />
             <option value="$PROJECT_DIR$/events/events_presenter" />
+            <option value="$PROJECT_DIR$/groups" />
+            <option value="$PROJECT_DIR$/groups/groups_data" />
+            <option value="$PROJECT_DIR$/groups/groups_domain" />
+            <option value="$PROJECT_DIR$/groups/groups_presenter" />
             <option value="$PROJECT_DIR$/persons" />
             <option value="$PROJECT_DIR$/persons/persons_data" />
             <option value="$PROJECT_DIR$/persons/persons_domain" />

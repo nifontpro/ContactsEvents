@@ -72,13 +72,19 @@ dependencies {
 
     implementation(project(":persons:persons_data"))
     implementation(project(":persons:persons_domain"))
+    implementation(project(":persons:persons_presenter"))
 
-    implementation(project(":settings:settings_data"))
-    implementation(project(":settings:settings_domain"))
+    implementation(project(":groups:groups_data"))
+    implementation(project(":groups:groups_domain"))
+    implementation(project(":groups:groups_presenter"))
 
     implementation(project(":templates:templates_data"))
     implementation(project(":templates:templates_domain"))
     implementation(project(":templates:templates_presenter"))
+
+    implementation(project(":settings:settings_data"))
+    implementation(project(":settings:settings_domain"))
+    implementation(project(":settings:settings_presenter"))
 
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)
@@ -110,9 +116,6 @@ dependencies {
 
     // Splash Screen
     implementation("androidx.core:core-splashscreen:1.0.0-beta01")
-
-    // Toolbar
-    implementation ("me.onebone:toolbar-compose:2.3.0")
 
     implementation ("com.google.accompanist:accompanist-permissions:0.22.0-rc")
 }

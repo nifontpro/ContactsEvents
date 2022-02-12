@@ -1,0 +1,11 @@
+<resources>
+    <!--    Person screen-->
+    <string name="sNoPersonInGroup">No contacts in group</string>
+
+    <!--    Person info-->
+    <string name="sPersonInfo">Contact info</string>
+    <string name="sEvents">Events: </string>
+    <string name="sGroups">"Groups: "</string>
+
+    <string name="sDelimetr" translatable="false">", "</string>
+</resources>

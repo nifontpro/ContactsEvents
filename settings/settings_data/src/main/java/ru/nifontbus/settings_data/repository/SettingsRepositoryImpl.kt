@@ -6,7 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.nifontbus.core.domain.model.PersonsGroup
+import ru.nifontbus.groups_domain.model.PersonsGroup
 import ru.nifontbus.settings_domain.repository.SettingsRepository
 
 class SettingsRepositoryImpl(context: Context) : SettingsRepository {

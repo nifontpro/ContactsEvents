@@ -4,5 +4,7 @@ apply {
 
 dependencies {
     "implementation" (project(":core"))
+    "implementation" (project(":groups:groups_domain"))
+
     "implementation"(Compose.uiGraphics)
 }

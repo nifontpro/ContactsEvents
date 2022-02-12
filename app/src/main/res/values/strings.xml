@@ -1,33 +1,3 @@
 <resources>
     <string name="app_name" translatable="false">Contacts Events</string>
-
-
-    <string name="sDelimetr" translatable="false">", "</string>
-    <string name="sGroups">"Groups: "</string>
-
-    <string name="sDayOfRepose" translatable="false">Day of Repose</string>
-<!--    <string name="sAngelDay">Name days</string>-->
-<!--    <string name="sWeddingDay">Wedding Day</string>-->
-
-    <!--    Person screen-->
-    <string name="sNoPersonInGroup">No contacts in group</string>
-
-    <!--    Contact repository-->
-    <string name="sFailedCreateEvent">Failed create event!</string>
-    <string name="sEventCreateSuccessful">Event create successful</string>
-    <string name="sFailedUpdateEvent">Failed update the event!</string>
-    <string name="sEventUpdateSuccessful">Event update successful</string>
-    <string name="sEventDeleteSuccessful">Event delete successful</string>
-    <string name="sErrorDeleteEvent">Error delete event!</string>
-
-    <!--    Person info-->
-    <string name="sPersonInfo">Contact info</string>
-    <string name="sEvents">Events: </string>
-
-    <!--    Settings screen-->
-    <string name="sContact">Contact</string>
-    <string name="sEventsSetting">Events</string>
-    <string name="sReposeFeatures">Repose events</string>
-    <string name="s40Day">Counting the 40th day</string>
-
 </resources>

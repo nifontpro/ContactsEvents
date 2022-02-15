@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.nifontbus.core_ui.BadgeBackground
-import ru.nifontbus.core_ui.PrimaryDarkColor
+import ru.nifontbus.core_ui.PrimaryNight
 import ru.nifontbus.core_ui.component.BottomNavItem
 
 @ExperimentalMaterialApi
@@ -63,7 +63,7 @@ fun BottomNavigationBar(
                 onClick = {
                     onItemClick(item)
                 },
-                selectedContentColor = PrimaryDarkColor,
+                selectedContentColor = MaterialTheme.colors.primaryVariant,
                 unselectedContentColor = Color.Gray,
                 icon = {
 //                    BottomItem(item, selected)
@@ -74,7 +74,7 @@ fun BottomNavigationBar(
                             .drawBehind {
                                 if (lineLength.value > 0f) {
                                     drawLine(
-                                        color = if (selected) PrimaryDarkColor
+                                        color = if (selected) PrimaryNight
                                         else Color.Gray,
                                         start = Offset(
                                             size.width / 2f - lineLength.value * 15.dp.toPx(),

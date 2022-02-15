@@ -143,7 +143,7 @@ class MainActivity : ComponentActivity() {
                         PersonsScreen(extNavController, bottomPadding)
                     }
                     composable(Screen.NavGroupScreen.route) {
-                        GroupScreen(/*extNavController, */bottomPadding)
+                        GroupScreen(bottomPadding)
                     }
                     composable(Screen.NavSettingScreen.route) {
                         SettingScreen(paddingValues)

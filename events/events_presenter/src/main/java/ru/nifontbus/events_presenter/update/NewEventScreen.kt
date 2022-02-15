@@ -101,10 +101,10 @@ fun NewEventScreenMain(
                 val sYouCanCreateEvent = stringResource(R.string.sYouCanCreateEvent)
                 Text(
                     buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = PrimaryDarkColor)) {
+                        withStyle(style = SpanStyle(color = MaterialTheme.colors.onPrimary)) {
                             append(sYouCanCreateEvent)
                         }
-                        withStyle(style = SpanStyle(color = LightGreen2)) {
+                        withStyle(style = SpanStyle(color = MaterialTheme.colors.primaryVariant)) {
                             append(person.displayName)
                         }
                     },

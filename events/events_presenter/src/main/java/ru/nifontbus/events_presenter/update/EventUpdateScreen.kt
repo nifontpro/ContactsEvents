@@ -25,7 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import ru.nifontbus.core_ui.*
+import ru.nifontbus.core_ui.IconGreen
+import ru.nifontbus.core_ui.Screen
+import ru.nifontbus.core_ui.TextWhite
 import ru.nifontbus.core_ui.component.TopBar
 import ru.nifontbus.core_ui.permission.GetPermission
 import ru.nifontbus.events_domain.model.Event
@@ -109,10 +111,10 @@ fun EventUpdateScreenMain(
                 val youCanUpdateEvent = stringResource(R.string.sYouCanUpdateEvent)
                 Text(
                     buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = PrimaryDarkColor)) {
+                        withStyle(style = SpanStyle(color = MaterialTheme.colors.onPrimary)) {
                             append(youCanUpdateEvent)
                         }
-                        withStyle(style = SpanStyle(color = LightGreen2)) {
+                        withStyle(style = SpanStyle(color = MaterialTheme.colors.primaryVariant)) {
                             append(person.displayName)
                         }
                     },

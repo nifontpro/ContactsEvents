@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import ru.nifontbus.core_ui.PrimaryDarkColor
 import ru.nifontbus.core_ui.component.BottomNavItem
 import ru.nifontbus.groups_domain.model.PersonsGroup
 
@@ -94,7 +93,7 @@ private fun GroupCard(
                     group.account,
                     modifier = Modifier.padding(horizontal = 10.dp),
                     style = MaterialTheme.typography.h6,
-                    color = PrimaryDarkColor
+                    color = MaterialTheme.colors.onSurface
                 )
             }
             IconButton(
@@ -108,7 +107,7 @@ private fun GroupCard(
                     },
                     contentDescription = "Current group",
                     tint = if (group.id == currentGroup?.id) {
-                        PrimaryDarkColor
+                        MaterialTheme.colors.primaryVariant
                     } else {
                         Color.Gray
                     }

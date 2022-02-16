@@ -93,9 +93,7 @@ fun EventCard(
             modifier = Modifier
                 .fillMaxSize()
                 .background(surfaceBrush())
-        )
-        {
-
+        ) {
             val daysLeft = event.daysLeft()
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,

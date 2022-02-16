@@ -29,7 +29,6 @@ import ru.nifontbus.core.util.getLocalizedDate
 import ru.nifontbus.core.util.toLocalDate
 import ru.nifontbus.core.util.toShortDate
 import ru.nifontbus.core_ui.Screen
-import ru.nifontbus.core_ui.TextWhite
 import ru.nifontbus.core_ui.component.TopBar
 import ru.nifontbus.core_ui.permission.GetPermission
 import ru.nifontbus.events_presenter.R
@@ -165,7 +164,7 @@ fun NewEventScreenMain(
                         ) {
                             Text(
                                 stringResource(R.string.sCreateEvent),
-                                color = TextWhite,
+                                color = MaterialTheme.colors.onSecondary,
                                 style = MaterialTheme.typography.body1,
                             )
                         }
@@ -211,7 +210,7 @@ fun SelectDate(
             } else stringResource(R.string.sSelectDate)
             Text(
                 text = txt,
-                color = TextWhite,
+                color = MaterialTheme.colors.onSecondary,
                 style = MaterialTheme.typography.body1,
             )
         }

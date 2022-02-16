@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
-import ru.nifontbus.core_ui.Half3Gray
 import ru.nifontbus.core_ui.bigPadding
 import ru.nifontbus.core_ui.normalPadding
 import ru.nifontbus.core_ui.R
@@ -71,7 +70,7 @@ private fun PermissionMessageBox(
                 .fillMaxWidth()
                 .padding(bigPadding)
                 .clip(RoundedCornerShape(5))
-                .background(Half3Gray)
+                .background(MaterialTheme.colors.primary.copy(alpha = 0.2f))
 
         ) {
             Text(

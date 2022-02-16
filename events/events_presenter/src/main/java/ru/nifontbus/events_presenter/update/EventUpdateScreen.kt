@@ -26,7 +26,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import ru.nifontbus.core_ui.Screen
-import ru.nifontbus.core_ui.TextWhite
 import ru.nifontbus.core_ui.component.TopBar
 import ru.nifontbus.core_ui.permission.GetPermission
 import ru.nifontbus.events_domain.model.Event
@@ -173,7 +172,7 @@ fun EventUpdateScreenMain(
                         ) {
                             Text(
                                 stringResource(R.string.sUpdateEvent),
-                                color = TextWhite,
+                                color = MaterialTheme.colors.onSecondary,
                                 style = MaterialTheme.typography.body1,
                             )
                         }

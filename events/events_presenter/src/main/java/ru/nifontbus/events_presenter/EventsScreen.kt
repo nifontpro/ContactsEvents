@@ -13,7 +13,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -25,6 +24,7 @@ import androidx.navigation.NavController
 import ru.nifontbus.core.util.getLocalizedDate
 import ru.nifontbus.core_ui.Screen
 import ru.nifontbus.core_ui.component.SmallRememberImage
+import ru.nifontbus.core_ui.component.surfaceBrush
 import ru.nifontbus.core_ui.cornerShapeIconPercent
 import ru.nifontbus.core_ui.normalPadding
 import ru.nifontbus.core_ui.smallPadding
@@ -92,14 +92,7 @@ fun EventCard(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(
-                            MaterialTheme.colors.surface,
-                            MaterialTheme.colors.onError
-                        )
-                    )
-                )
+                .background(surfaceBrush())
         )
         {
 
@@ -153,7 +146,7 @@ fun EventCard(
                                         fontWeight = FontWeight.Medium
                                     )
                                 ) {*/
-                                    append(yearLeft)
+                                append(yearLeft)
 //                                }
                             }
                         }
@@ -165,7 +158,7 @@ fun EventCard(
                             ) else stringResource(R.string.sNow)
 
 //                        withStyle(style = SpanStyle(fontStyle = FontStyle.Normal)) {
-                            append(daysLeftString)
+                        append(daysLeftString)
 //                        }
                     }
                     Text(

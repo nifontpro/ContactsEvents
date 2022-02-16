@@ -33,10 +33,7 @@ import me.onebone.toolbar.CollapsingToolbarState
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import ru.nifontbus.core_ui.*
-import ru.nifontbus.core_ui.component.SmallRememberImage
-import ru.nifontbus.core_ui.component.TemplateSwipeToDismiss
-import ru.nifontbus.core_ui.component.TopBar
-import ru.nifontbus.core_ui.component.toPx
+import ru.nifontbus.core_ui.component.*
 import ru.nifontbus.events_presenter.EventCard
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_presenter.R
@@ -62,13 +59,6 @@ fun PersonInfoScreen(
         scaffoldState = scaffoldState,
         backgroundColor = MaterialTheme.colors.background,
         topBar = {
-            /*TopBarOther("Person info", Icons.Default.Tune,
-                { extNavController.popBackStack() },
-                {
-                    viewModel.getEditState()
-                    navController.navigate(Screen.NavPersonEditScreen.route)
-                })*/
-
             TopBar(extNavController, stringResource(R.string.sPersonInfo))
         },
         floatingActionButton = {
@@ -76,12 +66,12 @@ fun PersonInfoScreen(
                 onClick = {
                     extNavController.navigate(Screen.ExtNewEventScreen.createRoute(person.id))
                 },
-                backgroundColor = MaterialTheme.colors.primary
+                backgroundColor = MaterialTheme.colors.secondary
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add event",
-                    tint = TextWhite
+                    tint = MaterialTheme.colors.onSecondary
                 )
             }
         },
@@ -96,7 +86,7 @@ fun PersonInfoScreen(
             Icon(
                 imageVector = Icons.Default.SettingsAccessibility,
                 contentDescription = "Background",
-                tint = Half3Gray,
+                tint = MaterialTheme.colors.primary.copy(alpha = 0.2f),
                 modifier = Modifier
                     .size(500.dp)
                     .align(Alignment.BottomCenter)
@@ -129,7 +119,6 @@ fun PersonInfoScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .parallax(0.3f)
-//                                .height(screenHeight / 3)
                                 .graphicsLayer { alpha = progress * 1.3f },
                             contentScale = ContentScale.FillWidth,
                             contentDescription = null
@@ -142,7 +131,7 @@ fun PersonInfoScreen(
                         person.displayName,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(MaterialTheme.colors.surface)
+                            .background(surfaceBrush())
                             .padding(normalPadding)
                             .road(
                                 whenCollapsed = Alignment.BottomStart,
@@ -227,7 +216,7 @@ private fun PersonInfoHeader(
             modifier = Modifier
                 .clip(RoundedCornerShape(10.dp))
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.surface)
+                .background(surfaceBrush())
         ) {
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,

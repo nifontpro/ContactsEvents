@@ -7,7 +7,6 @@ val normalPadding = 10.dp
 val bigPadding = 15.dp
 
 // Persons Screen
-val smallIconSize = 50.dp
 const val cornerShapeIconPercent = 10 // % закругления углов
 
 // Person Info Screen

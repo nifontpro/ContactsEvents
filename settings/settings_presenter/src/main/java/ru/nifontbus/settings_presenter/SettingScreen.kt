@@ -20,7 +20,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import ru.nifontbus.core_ui.Half10Proc
 import ru.nifontbus.core_ui.bigPadding
 import ru.nifontbus.core_ui.normalPadding
 
@@ -87,7 +86,7 @@ private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
             .padding(bottom = iconSize + 40.dp)
             .padding(horizontal = bigPadding)
             .clip(RoundedCornerShape(10))
-            .background(Half10Proc)
+            .background(MaterialTheme.colors.secondaryVariant.copy(alpha = 0.4f))
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),

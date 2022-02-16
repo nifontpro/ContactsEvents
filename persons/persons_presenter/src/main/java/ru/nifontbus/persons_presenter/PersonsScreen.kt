@@ -17,7 +17,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
@@ -31,6 +30,7 @@ import androidx.navigation.NavController
 import ru.nifontbus.core_ui.*
 import ru.nifontbus.core_ui.component.Search
 import ru.nifontbus.core_ui.component.SmallRememberImage
+import ru.nifontbus.core_ui.component.surfaceBrush
 import ru.nifontbus.persons_domain.model.Person
 
 @ExperimentalFoundationApi
@@ -139,14 +139,7 @@ private fun PersonCard(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(
-                            MaterialTheme.colors.surface,
-                            MaterialTheme.colors.onError
-                        )
-                    )
-                )
+                .background(surfaceBrush())
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -175,7 +168,6 @@ private fun PersonCard(
                     personId = person.id,
                     modifier = Modifier
                         .weight(1f)
-                        .size(smallIconSize)
                         .clip(RoundedCornerShape(cornerShapeIconPercent)),
                     getImage = getImage
                 )

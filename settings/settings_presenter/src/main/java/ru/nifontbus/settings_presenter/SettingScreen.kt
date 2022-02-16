@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ru.nifontbus.core_ui.Half10Proc
 import ru.nifontbus.core_ui.bigPadding
-import ru.nifontbus.core_ui.mediumPadding
+import ru.nifontbus.core_ui.normalPadding
 
 @Composable
 fun SettingScreen(paddingValues: PaddingValues) {
@@ -59,7 +59,7 @@ fun SettingScreen(paddingValues: PaddingValues) {
                 style = MaterialTheme.typography.h4,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .padding(end = screenWidth / 6, top = mediumPadding, bottom = 20.dp)
+                    .padding(end = screenWidth / 6, top = normalPadding, bottom = 20.dp)
             )
 
             Divider(modifier = Modifier.padding(horizontal = bigPadding))

@@ -1,8 +1,9 @@
 <resources>
 
     <!--    Event screen-->
-    <string name="sYearLeft">, years: %d</string>
-    <string name="sDaysLeft">, %d d.</string>
+    <string name="sYearLeft">"Passed %d y. / "</string>
+    <string name="sDaysLeft">Remain: %d d.</string>
+    <string name="sNow">Now!!!</string>
 
     <!--    New event screen-->
     <string name="sNewEvent">New event</string>

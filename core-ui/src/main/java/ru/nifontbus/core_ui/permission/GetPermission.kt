@@ -23,7 +23,7 @@ import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
 import ru.nifontbus.core_ui.Half3Gray
 import ru.nifontbus.core_ui.bigPadding
-import ru.nifontbus.core_ui.mediumPadding
+import ru.nifontbus.core_ui.normalPadding
 import ru.nifontbus.core_ui.R
 
 @ExperimentalPermissionsApi
@@ -77,10 +77,10 @@ private fun PermissionMessageBox(
             Text(
                 text,
                 style = MaterialTheme.typography.h6,
-                modifier = Modifier.padding(mediumPadding)
+                modifier = Modifier.padding(normalPadding)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = event, modifier = Modifier.padding(bottom = mediumPadding)) {
+            Button(onClick = event, modifier = Modifier.padding(bottom = normalPadding)) {
                 Text(buttonText)
             }
         }

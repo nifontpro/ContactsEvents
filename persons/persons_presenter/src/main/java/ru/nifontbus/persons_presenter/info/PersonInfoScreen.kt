@@ -90,7 +90,7 @@ fun PersonInfoScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = mediumPadding)
+                .padding(horizontal = normalPadding)
         ) {
 
             Icon(
@@ -143,7 +143,7 @@ fun PersonInfoScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colors.surface)
-                            .padding(mediumPadding)
+                            .padding(normalPadding)
                             .road(
                                 whenCollapsed = Alignment.BottomStart,
                                 whenExpanded = Alignment.BottomStart
@@ -172,7 +172,7 @@ fun PersonInfoScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = mediumPadding)
+                        .padding(bottom = normalPadding)
                 ) {
 
                     item {
@@ -234,7 +234,7 @@ private fun PersonInfoHeader(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(mediumPadding)
+                    .padding(normalPadding)
             ) {
                 var groupsString = ""
                 val delimetr = stringResource(R.string.sDelimetr)
@@ -255,7 +255,7 @@ private fun PersonInfoHeader(
 
                     Text(
                         groupsString,
-                        modifier = Modifier.padding(bottom = mediumPadding),
+                        modifier = Modifier.padding(bottom = normalPadding),
                         style = MaterialTheme.typography.h6
                     )
                 } // Row

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Event screen-->
-    <string name="sYearLeft">, лет: %d</string>
-    <string name="sDaysLeft">, %d д.</string>
+    <string name="sYearLeft">"Прошло %d л. / "</string>
+    <string name="sDaysLeft">Осталось: %d д.</string>
+    <string name="sNow">Сегодня!!!</string>
 
     <!--    New event screen-->
     <string name="sNewEvent">Новое событие</string>

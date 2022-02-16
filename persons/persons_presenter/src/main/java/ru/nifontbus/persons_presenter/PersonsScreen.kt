@@ -90,7 +90,7 @@ fun PersonsScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(mediumPadding)
+                .padding(normalPadding)
         ) {
             grouped.forEach { (initial, contactsForInitial) ->
                 stickyHeader {
@@ -99,7 +99,7 @@ fun PersonsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colors.secondary)
-                            .padding(vertical = smallPadding, horizontal = mediumPadding)
+                            .padding(vertical = smallPadding, horizontal = normalPadding)
                     )
                 }
 
@@ -133,7 +133,7 @@ private fun PersonCard(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(mediumPadding)
+            .padding(normalPadding)
     ) {
         Column(
             modifier = Modifier.weight(5f),

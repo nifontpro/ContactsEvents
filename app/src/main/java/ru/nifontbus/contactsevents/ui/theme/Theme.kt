@@ -21,6 +21,7 @@ private val LightColorPalette = lightColors(
     onSecondary = OnSecondary,
     onBackground = OnBackground,
     onSurface = OnSurface,
+    onError = OnError
 )
 
 private val DarkColorPalette = darkColors(
@@ -34,6 +35,7 @@ private val DarkColorPalette = darkColors(
     onSecondary = OnSecondaryNight,
     onBackground = OnBackgroundNight,
     onSurface = OnSurfaceNight,
+    onError = OnErrorNight
 )
 
 @Composable

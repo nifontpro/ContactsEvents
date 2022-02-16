@@ -28,7 +28,8 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import ru.nifontbus.core.util.getLocalizedDate
 import ru.nifontbus.core.util.toLocalDate
 import ru.nifontbus.core.util.toShortDate
-import ru.nifontbus.core_ui.*
+import ru.nifontbus.core_ui.Screen
+import ru.nifontbus.core_ui.TextWhite
 import ru.nifontbus.core_ui.component.TopBar
 import ru.nifontbus.core_ui.permission.GetPermission
 import ru.nifontbus.events_presenter.R
@@ -87,7 +88,7 @@ fun NewEventScreenMain(
                     .align(Alignment.BottomCenter)
                     .padding(20.dp)
                     .size(350.dp),
-                tint = IconGreen
+                tint = MaterialTheme.colors.secondary
             )
 
             Column(

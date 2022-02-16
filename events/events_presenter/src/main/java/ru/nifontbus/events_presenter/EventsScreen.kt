@@ -17,18 +17,17 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.nifontbus.core.util.getLocalizedDate
-import ru.nifontbus.core_ui.*
+import ru.nifontbus.core_ui.Screen
 import ru.nifontbus.core_ui.component.SmallRememberImage
+import ru.nifontbus.core_ui.cornerShapeIconPercent
+import ru.nifontbus.core_ui.normalPadding
+import ru.nifontbus.core_ui.smallPadding
 import ru.nifontbus.events_domain.model.Event
 import ru.nifontbus.persons_domain.model.Person
 
@@ -52,7 +51,7 @@ fun EventsScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = normalPadding, vertical = 3.dp)
+                .padding(horizontal = normalPadding, vertical = 2.dp)
         ) {
             items(events.value) { event ->
                 val person = viewModel.getPersonByIdFlow(event.personId)

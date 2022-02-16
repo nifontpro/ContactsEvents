@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import ru.nifontbus.core_ui.IconGreen
 import ru.nifontbus.core_ui.Screen
 import ru.nifontbus.core_ui.TextWhite
 import ru.nifontbus.core_ui.component.TopBar
@@ -97,7 +96,7 @@ fun EventUpdateScreenMain(
                     .align(Alignment.BottomCenter)
                     .padding(20.dp)
                     .size(350.dp),
-                tint = IconGreen
+                tint = MaterialTheme.colors.secondary
             )
 
             Column(

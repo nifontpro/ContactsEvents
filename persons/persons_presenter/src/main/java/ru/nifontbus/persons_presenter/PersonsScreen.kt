@@ -157,10 +157,10 @@ private fun PersonCard(
                         text = Search.colorSubstring(
                             string = person.displayName,
                             searchString = searchState.value,
-                            mainColor = MaterialTheme.colors.onBackground,
+                            mainColor = MaterialTheme.colors.onSurface,
                             searchColor = Color.Red
                         ),
-                        style = MaterialTheme.typography.h6,
+                        style = MaterialTheme.typography.h5,
                     )
                 } // Col
 

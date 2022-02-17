@@ -113,13 +113,17 @@ fun PersonInfoScreen(
 //                    val offsetY = state.offsetY // y offset of the layout
                     val progress = collapsingState.toolbarState.progress
 
-                    viewModel.displayPhoto?.let { it ->
+                    viewModel.displayPhoto.value?.let { it ->
                         Image(
                             bitmap = it,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .parallax(0.3f)
-                                .graphicsLayer { alpha = progress * 1.3f },
+                                .graphicsLayer { alpha = progress * 1.3f }
+                                .road(
+                                    whenCollapsed = Alignment.Center,
+                                    whenExpanded = Alignment.Center
+                                ),
                             contentScale = ContentScale.FillWidth,
                             contentDescription = null
                         )

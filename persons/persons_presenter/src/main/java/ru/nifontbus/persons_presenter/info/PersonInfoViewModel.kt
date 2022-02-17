@@ -1,5 +1,6 @@
 package ru.nifontbus.persons_presenter.info
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
@@ -34,16 +35,11 @@ class PersonInfoViewModel @Inject constructor(
     private val _personInfo = mutableStateOf(PersonInfo())
     val personInfo: State<PersonInfo> = _personInfo
 
-    var displayPhoto: ImageBitmap? = null
+    val displayPhoto: MutableState<ImageBitmap?> = mutableStateOf(null)
 
     val personEvents by lazy {
         eventsUseCases.getSortedEventsByPerson(person.value.id)
     }
-
-/*    // PersonEditScreen:
-    var firstName = mutableStateOf("")
-    var lastName = mutableStateOf("")
-    var family = mutableStateOf("")*/
 
     private val _action = MutableSharedFlow<String>()
     val action: SharedFlow<String> = _action.asSharedFlow()
@@ -61,7 +57,7 @@ class PersonInfoViewModel @Inject constructor(
                 }
                 _personInfo.value = getPersonInfo(it)
             }
-            displayPhoto = getDisplayPhoto(person.value.id)
+            displayPhoto.value = getDisplayPhoto(person.value.id)
         }
     }
 

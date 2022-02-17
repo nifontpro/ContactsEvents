@@ -11,8 +11,8 @@ val Background = Color(0xFFE0E0E0)
 val Surface = Color(0xFFFFFFFF)
 val OnPrimary = Color(0xFFFFFFFF)
 val OnSecondary = Color(0xFFEEEEEE)
-val OnBackground = Color(0xFF000000)
-val OnSurface = Color(0xFF808080)
+val OnBackground = Color(0xFF202020)
+val OnSurface = Color(0xFF707070)
 val OnError = Color(0xFFE0FFF0)
 
 // Brand night colors:

@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -23,8 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import ru.nifontbus.core_ui.BadgeBackground
-import ru.nifontbus.core_ui.PrimaryDarkColor
 import ru.nifontbus.core_ui.component.BottomNavItem
 
 @ExperimentalMaterialApi
@@ -41,7 +38,7 @@ fun BottomNavigationBar(
     val backStackEntry = navController.currentBackStackEntryAsState()
     BottomNavigation(
         modifier = modifier,
-        backgroundColor = MaterialTheme.colors.onSecondary,
+        backgroundColor = MaterialTheme.colors.primaryVariant,
         elevation = 5.dp
     ) {
         items.forEach { item ->
@@ -57,16 +54,15 @@ fun BottomNavigationBar(
                     durationMillis = 300
                 )
             )
-
+            val selectedColor = MaterialTheme.colors.onSecondary
             BottomNavigationItem(
                 selected = selected,
                 onClick = {
                     onItemClick(item)
                 },
-                selectedContentColor = PrimaryDarkColor,
-                unselectedContentColor = Color.Gray,
+                selectedContentColor = selectedColor,
+                unselectedContentColor = selectedColor.copy(alpha = 0.9f),
                 icon = {
-//                    BottomItem(item, selected)
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -74,8 +70,8 @@ fun BottomNavigationBar(
                             .drawBehind {
                                 if (lineLength.value > 0f) {
                                     drawLine(
-                                        color = if (selected) PrimaryDarkColor
-                                        else Color.Gray,
+                                        color = if (selected) selectedColor
+                                        else selectedColor,
                                         start = Offset(
                                             size.width / 2f - lineLength.value * 15.dp.toPx(),
                                             size.height
@@ -107,15 +103,15 @@ fun BottomNavigationBar(
                             }*/
                             Text(
                                 text = " ${item.badgeCount.value} ",
-                                color = Color.White,
+                                color = MaterialTheme.colors.onPrimary,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center,
                                 fontSize = 10.sp,
                                 modifier = Modifier
                                     .align(Alignment.TopCenter)
                                     .offset(10.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(BadgeBackground)
+                                    .clip(RoundedCornerShape(percent = 100))
+                                    .background(MaterialTheme.colors.secondary)
                             )
                         }
                     }

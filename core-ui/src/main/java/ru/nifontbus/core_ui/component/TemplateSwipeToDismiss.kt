@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.nifontbus.core_ui.DeleteColor
-import ru.nifontbus.core_ui.TextWhite
 import ru.nifontbus.core_ui.Transparent
 
 @ExperimentalMaterialApi
@@ -70,7 +69,7 @@ fun TemplateSwipeToDismiss(
 
             val tintColor = when (direction) {
                 DismissDirection.StartToEnd -> Transparent
-                DismissDirection.EndToStart -> TextWhite
+                DismissDirection.EndToStart -> MaterialTheme.colors.onSecondary
             }
 
             Box(

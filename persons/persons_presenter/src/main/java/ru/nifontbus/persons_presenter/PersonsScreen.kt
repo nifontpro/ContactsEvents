@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -29,6 +30,7 @@ import androidx.navigation.NavController
 import ru.nifontbus.core_ui.*
 import ru.nifontbus.core_ui.component.Search
 import ru.nifontbus.core_ui.component.SmallRememberImage
+import ru.nifontbus.core_ui.component.surfaceBrush
 import ru.nifontbus.persons_domain.model.Person
 
 @ExperimentalFoundationApi
@@ -58,8 +60,7 @@ fun PersonsScreen(
         topBar = { SearchView(state = viewModel.searchState) },
         scaffoldState = scaffoldState,
         backgroundColor = MaterialTheme.colors.background,
-        modifier = Modifier
-            .padding(bottom = bottomPadding)
+        modifier = Modifier.padding(bottom = bottomPadding)
     ) {
 
         LaunchedEffect(key1 = viewModel.searchState.value) {
@@ -73,7 +74,7 @@ fun PersonsScreen(
                         .align(Alignment.TopCenter)
                         .padding(20.dp),
                     style = MaterialTheme.typography.h5,
-                    color = IconGreen,
+                    color = MaterialTheme.colors.secondary,
                 )
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.no_persons),
@@ -81,7 +82,7 @@ fun PersonsScreen(
                     modifier = Modifier
                         .align(Alignment.Center)
                         .size(300.dp),
-                    tint = IconGreen
+                    tint = MaterialTheme.colors.secondary
                 )
             }
             return@Scaffold
@@ -90,32 +91,29 @@ fun PersonsScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(mediumPadding)
+                .padding(horizontal = normalPadding, vertical = 2.dp)
         ) {
             grouped.forEach { (initial, contactsForInitial) ->
                 stickyHeader {
                     Text(
-                        "$initial ",
+                        text = "$initial ",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(MaterialTheme.colors.secondary)
-                            .padding(vertical = smallPadding, horizontal = mediumPadding)
+                            .background(MaterialTheme.colors.primaryVariant.copy(alpha = 0.8f))
+                            .padding(vertical = smallPadding, horizontal = normalPadding),
+                        color = MaterialTheme.colors.onPrimary
                     )
                 }
 
                 items(contactsForInitial) { person ->
-                    Box(
-                        modifier = Modifier
-                            .padding(vertical = smallPadding)
-                            .clip(RoundedCornerShape(3.dp))
-                            .background(MaterialTheme.colors.surface)
-                            .clickable {
-                                extNavController.navigate(
-                                    Screen.ExtPersonInfoScreen.createRoute(person.id)
-                                )
-                            },
+                    PersonCard(
+                        person = person,
+                        searchState = viewModel.searchState,
+                        getImage = viewModel::getPhotoById
                     ) {
-                        PersonCard(person, viewModel)
+                        extNavController.navigate(
+                            Screen.ExtPersonInfoScreen.createRoute(person.id)
+                        )
                     }
                 }
             }
@@ -126,39 +124,56 @@ fun PersonsScreen(
 @Composable
 private fun PersonCard(
     person: Person,
-    viewModel: PersonsViewModel
+    searchState: MutableState<String>,
+    getImage: suspend (id: Long) -> ImageBitmap?,
+    onClick: () -> Unit,
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(mediumPadding)
-    ) {
-        Column(
-            modifier = Modifier.weight(5f),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                text = Search.colorSubstring(
-                    person.displayName,
-                    viewModel.searchState.value,
-                    MaterialTheme.colors.onBackground, Color.Red
-                ),
-                style = MaterialTheme.typography.h6,
-            )
-        } // Col
 
-        SmallRememberImage(
-            personId = person.id,
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier
+            .padding(vertical = smallPadding)
+            .clickable { onClick() },
+        elevation = 4.dp
+    ) {
+        Box(
             modifier = Modifier
-                .weight(1f)
-                .size(smallIconSize)
-                .clip(RoundedCornerShape(cornerShapeIconPercent)),
-            getImage = viewModel::getPhotoById
-        )
-    } // Row
+                .fillMaxSize()
+                .background(surfaceBrush())
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(normalPadding)
+            ) {
+                Column(
+                    modifier = Modifier.weight(5f),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = Search.colorSubstring(
+                            string = person.displayName,
+                            searchString = searchState.value,
+                            mainColor = MaterialTheme.colors.onSurface,
+                            searchColor = Color.Red
+                        ),
+                        style = MaterialTheme.typography.h5,
+                    )
+                } // Col
+
+                SmallRememberImage(
+                    personId = person.id,
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(cornerShapeIconPercent)),
+                    getImage = getImage
+                )
+            } // Row
+        }
+    }
 }
 
 @Composable
@@ -200,15 +215,15 @@ fun SearchView(state: MutableState<String>) {
         },
         singleLine = true,
         shape = RectangleShape, // The TextFiled has rounded corners top left and right by default
-/*        colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.White,
-            cursorColor = Color.White,
-            leadingIconColor = Color.White,
-            trailingIconColor = Color.White,
-            backgroundColor = colorResource(id = R.color.colorPrimary),
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = MaterialTheme.colors.onPrimary,
+            cursorColor = MaterialTheme.colors.onPrimary,
+            leadingIconColor = MaterialTheme.colors.onPrimary,
+            trailingIconColor = MaterialTheme.colors.onPrimary,
+            backgroundColor = MaterialTheme.colors.primary,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent
-        )*/
+        )
     )
 }

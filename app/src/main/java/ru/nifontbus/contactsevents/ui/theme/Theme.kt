@@ -10,27 +10,32 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import ru.nifontbus.core_ui.*
 
-private val DarkColorPalette = darkColors(
-    primary = PrimaryColor,
-    primaryVariant = PrimaryColor,
-    secondary = SecondaryDarkColor,
-    background = Dark2Gray,
-    surface = HalfGrayDark,
-    onBackground = TextWhite,
-    onSecondary = Dark3Gray,
-    error = LightRed
+private val LightColorPalette = lightColors(
+    primary = Primary,
+    primaryVariant = PrimaryVariant,
+    secondary = Secondary,
+    secondaryVariant = SecondaryVariant,
+    background = Background,
+    surface = Surface,
+    onPrimary = OnPrimary,
+    onSecondary = OnSecondary,
+    onBackground = OnBackground,
+    onSurface = OnSurface,
+    onError = OnError
 )
 
-private val LightColorPalette = lightColors(
-    primary = PrimaryColor,
-    primaryVariant = PrimaryDarkColor,
-    secondary = SecondaryColor,
-    background = BackgroundLight,
-    surface = SurfaceLight,
-    onPrimary = Color.White,
-    onSecondary = TextWhite,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
+private val DarkColorPalette = darkColors(
+    primary = PrimaryNight,
+    primaryVariant = PrimaryVariantNight,
+    secondary = SecondaryNight,
+    secondaryVariant = SecondaryVariantNight,
+    background = BackgroundNight,
+    surface = SurfaceNight,
+    onPrimary = OnPrimaryNight,
+    onSecondary = OnSecondaryNight,
+    onBackground = OnBackgroundNight,
+    onSurface = OnSurfaceNight,
+    onError = OnErrorNight
 )
 
 @Composable

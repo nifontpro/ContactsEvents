@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.DatePickerDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ReadMore
@@ -28,8 +27,11 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import ru.nifontbus.core.util.getLocalizedDate
 import ru.nifontbus.core.util.toLocalDate
 import ru.nifontbus.core.util.toShortDate
-import ru.nifontbus.core_ui.*
+import ru.nifontbus.core_ui.Screen
+import ru.nifontbus.core_ui.bigPadding
 import ru.nifontbus.core_ui.component.TopBar
+import ru.nifontbus.core_ui.component.surfaceBrush
+import ru.nifontbus.core_ui.normalPadding
 import ru.nifontbus.core_ui.permission.GetPermission
 import ru.nifontbus.events_presenter.R
 import ru.nifontbus.templates_domain.model.Template
@@ -79,21 +81,21 @@ fun NewEventScreenMain(
         }
     ) {
 
-        Box(modifier = Modifier.fillMaxSize()) {
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
 
             Icon(
                 imageVector = Icons.Outlined.NotificationAdd, contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(20.dp)
-                    .size(350.dp),
-                tint = IconGreen
+                    .padding(bigPadding)
+                    .size(maxHeight / 2),
+                tint = MaterialTheme.colors.secondary.copy(alpha = 0.2f)
             )
 
             Column(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(horizontal = 10.dp)
+                    .padding(horizontal = normalPadding)
                     .fillMaxWidth()
                     .background(Color.Transparent)
             ) {
@@ -101,72 +103,81 @@ fun NewEventScreenMain(
                 val sYouCanCreateEvent = stringResource(R.string.sYouCanCreateEvent)
                 Text(
                     buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = PrimaryDarkColor)) {
+                        withStyle(style = SpanStyle(color = MaterialTheme.colors.onBackground)) {
                             append(sYouCanCreateEvent)
                         }
-                        withStyle(style = SpanStyle(color = LightGreen2)) {
+                        withStyle(style = SpanStyle(color = MaterialTheme.colors.primaryVariant)) {
                             append(person.displayName)
                         }
                     },
-                    modifier = Modifier.padding(10.dp),
-                    style = MaterialTheme.typography.h6
+                    modifier = Modifier.padding(normalPadding),
+                    style = MaterialTheme.typography.h5
                 )
-                Box( // Внутренний полупрозрачный
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.surface)
+
+
+                Card(
+                    shape = MaterialTheme.shapes.large,
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = 8.dp
                 ) {
 
-                    Column(
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(20.dp)
+                            .background(surfaceBrush())
                     ) {
 
-                        val edMod = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 10.dp)
-                            .clip(RoundedCornerShape(5.dp))
-
-                        val keyboardController = LocalSoftwareKeyboardController.current
-
-                        TextField(
-                            value = viewModel.eventLabel.value,
-                            enabled = viewModel.isEnabledEdit(),
-                            onValueChange = {
-                                viewModel.setEventLabel(it)
-                            },
-                            modifier = edMod,
-                            singleLine = true,
-                            placeholder = { Text(stringResource(R.string.sEventLabel)) },
-                            trailingIcon = {
-                                IconButton(onClick = {
-                                    extNavController.navigate(Screen.ExtTemplatesScreen.route)
-                                }) {
-                                    Icon(imageVector = Icons.Default.ReadMore, null)
-                                }
-                            },
-                        )
-
-                        SelectDate(viewModel.date, viewModel.isNoYear)
-
-                        Button(
-                            onClick = {
-                                keyboardController?.hide()
-                                viewModel.addEvent()
-                            }, modifier = Modifier
+                        Column(
+                            verticalArrangement = Arrangement.SpaceBetween,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
                                 .fillMaxWidth()
-                                .height(55.dp),
-                            enabled = viewModel.isEnabledSave()
+                                .padding(bigPadding)
                         ) {
-                            Text(
-                                stringResource(R.string.sCreateEvent),
-                                color = TextWhite,
-                                style = MaterialTheme.typography.body1,
+
+                            val edMod = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = normalPadding)
+                                .clip(MaterialTheme.shapes.small)
+
+                            val keyboardController = LocalSoftwareKeyboardController.current
+
+                            OutlinedTextField(
+                                value = viewModel.eventLabel.value,
+                                enabled = viewModel.isEnabledEdit(),
+                                onValueChange = {
+                                    viewModel.setEventLabel(it)
+                                },
+                                modifier = edMod,
+                                singleLine = true,
+                                placeholder = { Text(stringResource(R.string.sEventLabel)) },
+                                colors = textFieldColors(),
+                                trailingIcon = {
+                                    IconButton(onClick = {
+                                        extNavController.navigate(Screen.ExtTemplatesScreen.route)
+                                    }) {
+                                        Icon(imageVector = Icons.Default.ReadMore, null)
+                                    }
+                                },
                             )
+
+                            SelectDate(viewModel.date, viewModel.isNoYear)
+
+                            Button(
+                                onClick = {
+                                    keyboardController?.hide()
+                                    viewModel.addEvent()
+                                }, modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(55.dp),
+                                enabled = viewModel.isEnabledSave(),
+                                colors = buttonColors()
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.sCreateEvent),
+                                    style = MaterialTheme.typography.body1,
+                                )
+                            }
                         }
                     }
                 }
@@ -200,7 +211,8 @@ fun SelectDate(
             }, modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 10.dp)
-                .height(55.dp)
+                .height(55.dp),
+            colors = buttonColors()
 
         ) {
             val sDate = stringResource(R.string.sDate)
@@ -210,7 +222,7 @@ fun SelectDate(
             } else stringResource(R.string.sSelectDate)
             Text(
                 text = txt,
-                color = TextWhite,
+                color = MaterialTheme.colors.onSecondary,
                 style = MaterialTheme.typography.body1,
             )
         }
@@ -230,3 +242,25 @@ fun SelectDate(
 
     }
 }
+
+@Composable
+fun textFieldColors() = TextFieldDefaults.textFieldColors(
+    textColor = MaterialTheme.colors.onBackground,
+    backgroundColor = MaterialTheme.colors.surface,
+    cursorColor = MaterialTheme.colors.secondary,
+    focusedIndicatorColor = MaterialTheme.colors.secondary,
+    unfocusedIndicatorColor = MaterialTheme.colors.onSurface,
+    placeholderColor = MaterialTheme.colors.onSurface,
+    leadingIconColor = MaterialTheme.colors.onSurface,
+    trailingIconColor = MaterialTheme.colors.onSurface,
+)
+
+@Composable
+fun buttonColors() =
+    ButtonDefaults.buttonColors(
+        backgroundColor = MaterialTheme.colors.secondary,
+        contentColor = MaterialTheme.colors.onSecondary,
+        disabledBackgroundColor = MaterialTheme.colors.background.copy(alpha = 0.5f),
+        disabledContentColor = MaterialTheme.colors.onSurface
+            .copy(alpha = ContentAlpha.disabled)
+    )

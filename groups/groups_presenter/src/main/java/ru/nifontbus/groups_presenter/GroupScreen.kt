@@ -1,5 +1,6 @@
 package ru.nifontbus.groups_presenter
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,8 +19,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import ru.nifontbus.core_ui.PrimaryDarkColor
 import ru.nifontbus.core_ui.component.BottomNavItem
+import ru.nifontbus.core_ui.component.surfaceBrush
+import ru.nifontbus.core_ui.normalPadding
+import ru.nifontbus.core_ui.smallPadding
 import ru.nifontbus.groups_domain.model.PersonsGroup
 
 @ExperimentalMaterialApi
@@ -74,45 +77,52 @@ private fun GroupCard(
     viewModel: GroupViewModel,
     currentGroup: PersonsGroup?
 ) {
-    Surface(
+    Card(
         shape = RoundedCornerShape(4.dp),
-        modifier = Modifier.padding(vertical = 3.dp)
+        modifier = Modifier.padding(vertical = 8.dp),
+        elevation = 4.dp
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(surfaceBrush())
         ) {
-            Column {
-                Text(
-                    "[${group.localTitle(LocalContext.current)}]",
-                    modifier = Modifier.padding(horizontal = 10.dp),
-                    style = MaterialTheme.typography.h5,
-                    color = MaterialTheme.colors.onBackground
-                )
-                Text(
-                    group.account,
-                    modifier = Modifier.padding(horizontal = 10.dp),
-                    style = MaterialTheme.typography.h6,
-                    color = PrimaryDarkColor
-                )
-            }
-            IconButton(
-                onClick = { viewModel.setCurrentGroup(group) },
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = normalPadding, vertical = smallPadding),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = if (group.id == currentGroup?.id) {
-                        Icons.Default.DoneOutline
-                    } else {
-                        Icons.Default.RadioButtonUnchecked
-                    },
-                    contentDescription = "Current group",
-                    tint = if (group.id == currentGroup?.id) {
-                        PrimaryDarkColor
-                    } else {
-                        Color.Gray
-                    }
-                )
+                Column {
+                    Text(
+                        "[${group.localTitle(LocalContext.current)}]",
+                        style = MaterialTheme.typography.h5,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                    Text(
+                        group.account,
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.onSurface
+                    )
+                }
+                IconButton(
+                    onClick = { viewModel.setCurrentGroup(group) },
+                ) {
+                    Icon(
+                        imageVector = if (group.id == currentGroup?.id) {
+                            Icons.Default.DoneOutline
+                        } else {
+                            Icons.Default.RadioButtonUnchecked
+                        },
+                        contentDescription = "Current group",
+                        tint = if (group.id == currentGroup?.id) {
+                            MaterialTheme.colors.primaryVariant
+                        } else {
+                            Color.Gray
+                        }
+                    )
+                }
             }
         }
     }

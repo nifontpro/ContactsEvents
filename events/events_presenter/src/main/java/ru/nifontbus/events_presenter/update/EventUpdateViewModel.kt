@@ -14,7 +14,7 @@ import ru.nifontbus.core.domain.model.Resource
 import ru.nifontbus.core.util.isShortDate
 import ru.nifontbus.core.util.toMonthAndDay
 import ru.nifontbus.core.util.toShortDate
-import ru.nifontbus.core_ui.Arg
+import ru.nifontbus.core_ui.Argument
 import ru.nifontbus.events_domain.model.Event
 import ru.nifontbus.events_domain.model.EventType
 import ru.nifontbus.events_domain.use_cases.EventsUseCases
@@ -49,13 +49,13 @@ class EventUpdateViewModel @Inject constructor(
     val action: SharedFlow<String> = _action.asSharedFlow()
 
     init {
-        savedStateHandle.get<Long>(Arg.personId)?.let { it ->
+        savedStateHandle.get<Long>(Argument.personId)?.let { it ->
             personsUseCases.getPersonById(it)?.let { findPerson ->
                 _person.value = findPerson
             }
         }
 
-        savedStateHandle.get<Long>(Arg.eventId)?.let { it ->
+        savedStateHandle.get<Long>(Argument.eventId)?.let { it ->
             eventsUseCases.getEventById(it)?.let { findEvent ->
                 _oldEvent.value = findEvent
                 _eventLabel.value = findEvent.label

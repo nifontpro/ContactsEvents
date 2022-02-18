@@ -16,4 +16,6 @@
     <color name="on_secondary_night">#FFEEEEEE</color>
     <color name="background_night">#FF202020</color>
 
+    <color name="red">#FFBB3333</color>
+
 </resources>

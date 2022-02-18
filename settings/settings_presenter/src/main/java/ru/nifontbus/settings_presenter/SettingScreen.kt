@@ -3,7 +3,6 @@ package ru.nifontbus.settings_presenter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.VolunteerActivism
@@ -11,62 +10,57 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ru.nifontbus.core_ui.bigPadding
+import ru.nifontbus.core_ui.component.surfaceBrush
 import ru.nifontbus.core_ui.normalPadding
 
 @Composable
 fun SettingScreen(paddingValues: PaddingValues) {
     val viewModel: SettingsViewModel = hiltViewModel()
-    Box(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        MaterialTheme.colors.background,
-                        MaterialTheme.colors.primaryVariant
-                    )
-                )
-            )
+            .background(MaterialTheme.colors.background)
     ) {
-        val configuration = LocalConfiguration.current
-        val screenWidth = configuration.screenWidthDp.dp
-        val screenHeight = configuration.screenHeightDp.dp
+        val screenWidth = maxWidth
+        val screenHeight = maxHeight
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
 
             Text(
                 text = stringResource(R.string.sContact),
-                style = MaterialTheme.typography.h4,
+                style = MaterialTheme.typography.h3,
                 modifier = Modifier
                     .align(Alignment.Start)
-                    .padding(start = screenWidth / 6, top = 20.dp)
+                    .padding(start = screenWidth / 6, top = bigPadding),
+                color = MaterialTheme.colors.onSurface
             )
             Text(
                 text = stringResource(R.string.sEventsSetting),
-                style = MaterialTheme.typography.h4,
+                style = MaterialTheme.typography.h3,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .padding(end = screenWidth / 6, top = normalPadding, bottom = 20.dp)
+                    .padding(end = screenWidth / 6, top = normalPadding, bottom = bigPadding),
+                color = MaterialTheme.colors.onSurface
             )
 
-            Divider(modifier = Modifier.padding(horizontal = bigPadding))
+            Divider(
+                modifier = Modifier.padding(horizontal = bigPadding),
+                color = MaterialTheme.colors.onSurface
+            )
         }
         Icon(
             imageVector = Icons.Default.VolunteerActivism,
             contentDescription = "Volunteer Activism",
-            tint = MaterialTheme.colors.secondary,
+            tint = MaterialTheme.colors.error.copy(alpha = 0.4f),
             modifier = Modifier
                 .size(screenHeight / 2.8f)
                 .align(Alignment.Center)
@@ -79,54 +73,59 @@ fun SettingScreen(paddingValues: PaddingValues) {
 
 @Composable
 private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
-    Box(
+    Card(
+        shape = MaterialTheme.shapes.large,
         modifier = Modifier
             .fillMaxWidth()
             .align(Alignment.BottomStart)
             .padding(bottom = iconSize + 40.dp)
-            .padding(horizontal = bigPadding)
-            .clip(RoundedCornerShape(10))
-            .background(MaterialTheme.colors.secondaryVariant.copy(alpha = 0.4f))
+            .padding(horizontal = bigPadding),
+        elevation = 8.dp
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(surfaceBrush())
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Checkbox(
-                    checked = viewModel.reposeFeatures.collectAsState().value,
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-                    ),
-                    onCheckedChange = { viewModel.setReposeFeatures(it) },
-                )
-                Text(
-                    stringResource(R.string.sReposeFeatures)
-                )
-            }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = viewModel.reposeFeatures.collectAsState().value,
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                        ),
+                        onCheckedChange = { viewModel.setReposeFeatures(it) },
+                    )
+                    Text(
+                        stringResource(R.string.sReposeFeatures)
+                    )
+                }
 
 //            if (viewModel.reposeFeatures.collectAsState().value) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox(
-                    checked = viewModel.add40Day.collectAsState().value,
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-                    ),
-                    enabled = viewModel.reposeFeatures.collectAsState().value,
-                    onCheckedChange = { viewModel.setAdd40Day(it) }
-                )
-                Text(
-                    stringResource(R.string.s40Day),
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = viewModel.add40Day.collectAsState().value,
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                        ),
+                        enabled = viewModel.reposeFeatures.collectAsState().value,
+                        onCheckedChange = { viewModel.setAdd40Day(it) }
+                    )
+                    Text(
+                        stringResource(R.string.s40Day),
 //                    color = MaterialTheme.colors.onPrimary
-                )
-            }
-//            }
-        } // Column
+                    )
+                }
+            } // Column
+        }
     }
 }
 

@@ -3,7 +3,6 @@ package ru.nifontbus.events_presenter.update
 import android.Manifest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ReadMore
@@ -26,7 +25,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import ru.nifontbus.core_ui.Screen
+import ru.nifontbus.core_ui.bigPadding
 import ru.nifontbus.core_ui.component.TopBar
+import ru.nifontbus.core_ui.component.surfaceBrush
+import ru.nifontbus.core_ui.normalPadding
 import ru.nifontbus.core_ui.permission.GetPermission
 import ru.nifontbus.events_domain.model.Event
 import ru.nifontbus.events_presenter.R
@@ -87,21 +89,21 @@ fun EventUpdateScreenMain(
         }
     ) {
 
-        Box(modifier = Modifier.fillMaxSize()) {
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
 
             Icon(
                 imageVector = Icons.Outlined.EditNotifications, contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(20.dp)
-                    .size(350.dp),
-                tint = MaterialTheme.colors.secondary
+                    .padding(bigPadding)
+                    .size(maxHeight / 2),
+                tint = MaterialTheme.colors.secondary.copy(alpha = 0.2f)
             )
 
             Column(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(horizontal = 10.dp)
+                    .padding(horizontal = normalPadding)
                     .fillMaxWidth()
                     .background(Color.Transparent)
             ) {
@@ -109,21 +111,28 @@ fun EventUpdateScreenMain(
                 val youCanUpdateEvent = stringResource(R.string.sYouCanUpdateEvent)
                 Text(
                     buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = MaterialTheme.colors.onPrimary)) {
+                        withStyle(style = SpanStyle(color = MaterialTheme.colors.onBackground)) {
                             append(youCanUpdateEvent)
                         }
                         withStyle(style = SpanStyle(color = MaterialTheme.colors.primaryVariant)) {
                             append(person.displayName)
                         }
                     },
-                    modifier = Modifier.padding(10.dp),
-                    style = MaterialTheme.typography.h6
+                    modifier = Modifier.padding(normalPadding),
+                    style = MaterialTheme.typography.h5
                 )
-                Box( // Внутренний полупрозрачный
+
+                Card(
+                    shape = MaterialTheme.shapes.large,
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = 8.dp
+                ) {
+
+                }
+                Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
                         .fillMaxWidth()
-                        .background(MaterialTheme.colors.surface)
+                        .background(surfaceBrush())
                 ) {
 
                     Column(
@@ -131,17 +140,17 @@ fun EventUpdateScreenMain(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(20.dp)
+                            .padding(bigPadding)
                     ) {
 
                         val edMod = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 10.dp)
-                            .clip(RoundedCornerShape(5.dp))
+                            .padding(bottom = normalPadding)
+                            .clip(MaterialTheme.shapes.small)
 
                         val keyboardController = LocalSoftwareKeyboardController.current
 
-                        TextField(
+                        OutlinedTextField(
                             value = viewModel.eventLabel.value,
                             enabled = viewModel.isEnabledEdit(),
                             onValueChange = {
@@ -150,6 +159,7 @@ fun EventUpdateScreenMain(
                             modifier = edMod,
                             singleLine = true,
                             placeholder = { Text(stringResource(R.string.sEventLabel)) },
+                            colors = textFieldColors(),
                             trailingIcon = {
                                 IconButton(onClick = {
                                     extNavController.navigate(Screen.ExtTemplatesScreen.route)
@@ -168,11 +178,11 @@ fun EventUpdateScreenMain(
                             }, modifier = Modifier
                                 .fillMaxWidth()
                                 .height(55.dp),
-                            enabled = viewModel.isEnabledUpdate()
+                            enabled = viewModel.isEnabledUpdate(),
+                            colors = buttonColors()
                         ) {
                             Text(
-                                stringResource(R.string.sUpdateEvent),
-                                color = MaterialTheme.colors.onSecondary,
+                                text= stringResource(R.string.sUpdateEvent),
                                 style = MaterialTheme.typography.body1,
                             )
                         }

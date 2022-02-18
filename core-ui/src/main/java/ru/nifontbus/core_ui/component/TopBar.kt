@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIos
@@ -22,27 +19,33 @@ import ru.nifontbus.core_ui.normalPadding
 
 @Composable
 fun TopBar(navController: NavController, header: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colors.primary)
-            .padding(start = normalPadding, top = normalPadding, bottom = normalPadding),
-        verticalAlignment = Alignment.CenterVertically
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 12.dp,
+        shape = MaterialTheme.shapes.small
     ) {
-        IconButton(
-            onClick = { navController.popBackStack() },
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.primary)
+                .padding(start = normalPadding, top = normalPadding, bottom = normalPadding),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack, contentDescription = "Back",
-                tint = MaterialTheme.colors.onSecondary
+            IconButton(
+                onClick = { navController.popBackStack() },
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack, contentDescription = "Back",
+                    tint = MaterialTheme.colors.onSecondary
+                )
+            }
+
+            Text(
+                text = header,
+                style = MaterialTheme.typography.h4,
+                color = MaterialTheme.colors.onSecondary
             )
         }
-
-        Text(
-            text = header,
-            style = MaterialTheme.typography.h4,
-            color = MaterialTheme.colors.onSecondary
-        )
     }
 }
 

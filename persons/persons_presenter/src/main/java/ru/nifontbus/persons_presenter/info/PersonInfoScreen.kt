@@ -27,11 +27,13 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import me.onebone.toolbar.CollapsingToolbarScaffold
-import me.onebone.toolbar.CollapsingToolbarState
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import ru.nifontbus.core_ui.*
-import ru.nifontbus.core_ui.component.*
+import ru.nifontbus.core_ui.component.SmallRememberImage
+import ru.nifontbus.core_ui.component.TemplateSwipeToDismiss
+import ru.nifontbus.core_ui.component.TopBar
+import ru.nifontbus.core_ui.component.surfaceBrush
 import ru.nifontbus.events_presenter.EventCard
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_presenter.R
@@ -78,14 +80,14 @@ fun PersonInfoScreen(
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = normalPadding)
+//                .padding(horizontal = normalPadding)
         ) {
 
-            val collapsingState = rememberCollapsingToolbarScaffoldState(
-                toolbarState = CollapsingToolbarState(
+            val collapsingState = rememberCollapsingToolbarScaffoldState()
+            /*    toolbarState = CollapsingToolbarState(
                     initial = (maxHeight.toPx() / 2.5f).toInt()
                 )
-            )
+            )*/
 
 //            https://stackoverflow.com/questions/57727876/android-contacts-high-res-displayphoto-not-showing-up
 
@@ -171,7 +173,9 @@ fun PersonInfoScreen(
                             },
                             {
                                 EventCard(
-                                    event, person,
+                                    modifier = Modifier.padding(horizontal = normalPadding),
+                                    event = event,
+                                    person = person,
                                     onClick = {
                                         extNavController.navigate(
                                             Screen.ExtEventUpdateScreen.createRoute(
@@ -180,7 +184,7 @@ fun PersonInfoScreen(
                                         )
                                     },
                                     getImage = { null }, // без картинки
-                                    isShowName = false
+                                    isShowName = false,
                                 )
                             },
 //                                enabled = template.type == 0,
@@ -200,84 +204,89 @@ private fun PersonInfoHeader(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = normalPadding)
+            .padding(top = normalPadding)
             .background(Color.Transparent)
     ) {
 
-        Box( // Внутренний полупрозрачный 1
-            modifier = Modifier
-                .clip(RoundedCornerShape(10.dp))
-                .fillMaxWidth()
-                .background(surfaceBrush())
+        Card(
+            shape = MaterialTheme.shapes.large,
+            elevation = 4.dp
         ) {
-            Column(
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally,
+            Box( // Внутренний полупрозрачный 1
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(normalPadding)
+                    .background(surfaceBrush())
             ) {
-                var groupsString = ""
-                val delimetr = stringResource(R.string.sDelimetr)
-                person.groups.forEach { groupId ->
-                    //LE
-                    viewModel.getGroupById(groupId)?.let {
-                        groupsString += it.localTitle(LocalContext.current) + delimetr
-                    }
-                }
-                groupsString = stringResource(R.string.sGroups) +
-                        groupsString.removeSuffix(delimetr)
-
-                Row(
-//                            horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth(),
+                Column(
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(normalPadding)
                 ) {
+                    var groupsString = ""
+                    val delimetr = stringResource(R.string.sDelimetr)
+                    person.groups.forEach { groupId ->
+                        //LE
+                        viewModel.getGroupById(groupId)?.let {
+                            groupsString += it.localTitle(LocalContext.current) + delimetr
+                        }
+                    }
+                    groupsString = stringResource(R.string.sGroups) +
+                            groupsString.removeSuffix(delimetr)
 
-                    Text(
-                        text = groupsString,
-                        modifier = Modifier.padding(bottom = normalPadding),
-                        style = MaterialTheme.typography.h6,
-                        color = MaterialTheme.colors.onSurface
-                    )
-                } // Row
-
-                val personInfo = viewModel.personInfo.value
-                if (personInfo.phones.isNotEmpty()) {
-                    Divider()
                     Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Phone,
-                            contentDescription = "Phone",
-                            tint = MaterialTheme.colors.primary,
-                            modifier = Modifier.padding(end = 15.dp)
+
+                        Text(
+                            text = groupsString,
+                            modifier = Modifier.padding(bottom = normalPadding),
+                            style = MaterialTheme.typography.h6,
+                            color = MaterialTheme.colors.onSurface
                         )
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            personInfo.phones.forEachIndexed { idx, phone ->
-                                Column {
-                                    Text(
-                                        text = phone.number,
-                                        style = MaterialTheme.typography.h6,
-                                        color = MaterialTheme.colors.onSurface
-                                    )
-                                    Text(
-                                        text = phone.stringType(LocalContext.current),
-                                        color = MaterialTheme.colors.onSurface
-                                    )
-                                    if (idx < personInfo.phones.lastIndex) {
-                                        Divider()
+                    } // Row
+
+                    val personInfo = viewModel.personInfo.value
+                    if (personInfo.phones.isNotEmpty()) {
+                        Divider()
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Phone,
+                                contentDescription = "Phone",
+                                tint = MaterialTheme.colors.primary,
+                                modifier = Modifier.padding(end = 15.dp)
+                            )
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                personInfo.phones.forEachIndexed { idx, phone ->
+                                    Column {
+                                        Text(
+                                            text = phone.number,
+                                            style = MaterialTheme.typography.h6,
+                                            color = MaterialTheme.colors.onSurface
+                                        )
+                                        Text(
+                                            text = phone.stringType(LocalContext.current),
+                                            color = MaterialTheme.colors.onSurface
+                                        )
+                                        if (idx < personInfo.phones.lastIndex) {
+                                            Divider()
+                                        }
                                     }
                                 }
-                            }
 
+                            }
                         }
                     }
                 }
-            }
-        } // Box
+            } // Box
+        } // Card
         Text(
             stringResource(R.string.sEvents),
             modifier = Modifier.padding(vertical = smallPadding),

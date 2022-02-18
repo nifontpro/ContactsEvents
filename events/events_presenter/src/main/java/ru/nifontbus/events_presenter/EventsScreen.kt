@@ -57,7 +57,8 @@ fun EventsScreen(
                 val person = viewModel.getPersonByIdFlow(event.personId)
                     .collectAsState(null).value
                 EventCard(
-                    event, person,
+                    event = event,
+                    person = person,
                     onClick = {
                         person?.let {
                             extNavController.navigate(
@@ -74,15 +75,16 @@ fun EventsScreen(
 
 @Composable
 fun EventCard(
+    modifier: Modifier = Modifier,
     event: Event,
     person: Person?,
     onClick: () -> Unit = {},
     getImage: suspend (id: Long) -> ImageBitmap?,
-    isShowName: Boolean = true
+    isShowName: Boolean = true,
 ) {
     Card(
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier
+        shape = MaterialTheme.shapes.large,
+        modifier = modifier
             .padding(vertical = 8.dp)
             .clickable { onClick() },
         border = if (event.daysLeft() == 0L) BorderStroke(1.dp, MaterialTheme.colors.onBackground)
@@ -129,7 +131,7 @@ fun EventCard(
                     Text(
                         text = "${event.date.getLocalizedDate()}: $description",
                         modifier = modText,
-                        color = if (daysLeft == 0L) MaterialTheme.colors.primaryVariant
+                        color = if (daysLeft == 0L) MaterialTheme.colors.onBackground
                         else MaterialTheme.colors.onSurface,
                         style = MaterialTheme.typography.h6
                     )

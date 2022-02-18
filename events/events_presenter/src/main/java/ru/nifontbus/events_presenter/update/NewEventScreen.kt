@@ -112,10 +112,12 @@ fun NewEventScreenMain(
                         }
                     },
                     modifier = Modifier.padding(normalPadding),
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.h5
                 )
+
+
                 Card(
-                    shape = RoundedCornerShape(8.dp),
+                    shape = MaterialTheme.shapes.large,
                     modifier = Modifier.fillMaxWidth(),
                     elevation = 8.dp
                 ) {
@@ -131,17 +133,17 @@ fun NewEventScreenMain(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(20.dp)
+                                .padding(bigPadding)
                         ) {
 
                             val edMod = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 10.dp)
-                                .clip(RoundedCornerShape(5.dp))
+                                .padding(bottom = normalPadding)
+                                .clip(MaterialTheme.shapes.small)
 
                             val keyboardController = LocalSoftwareKeyboardController.current
 
-                            TextField(
+                            OutlinedTextField(
                                 value = viewModel.eventLabel.value,
                                 enabled = viewModel.isEnabledEdit(),
                                 onValueChange = {
@@ -169,7 +171,8 @@ fun NewEventScreenMain(
                                 }, modifier = Modifier
                                     .fillMaxWidth()
                                     .height(55.dp),
-                                enabled = viewModel.isEnabledSave()
+                                enabled = viewModel.isEnabledSave(),
+                                colors = buttonColors()
                             ) {
                                 Text(
                                     text = stringResource(R.string.sCreateEvent),
@@ -209,7 +212,8 @@ fun SelectDate(
             }, modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 10.dp)
-                .height(55.dp)
+                .height(55.dp),
+            colors = buttonColors()
 
         ) {
             val sDate = stringResource(R.string.sDate)
@@ -243,11 +247,21 @@ fun SelectDate(
 @Composable
 fun textFieldColors() = TextFieldDefaults.textFieldColors(
     textColor = MaterialTheme.colors.onBackground,
-    backgroundColor = MaterialTheme.colors.background,
+    backgroundColor = MaterialTheme.colors.surface,
     cursorColor = MaterialTheme.colors.secondary,
-    focusedIndicatorColor = MaterialTheme.colors.primaryVariant,
+    focusedIndicatorColor = MaterialTheme.colors.secondary,
     unfocusedIndicatorColor = MaterialTheme.colors.onSurface,
     placeholderColor = MaterialTheme.colors.onSurface,
     leadingIconColor = MaterialTheme.colors.onSurface,
     trailingIconColor = MaterialTheme.colors.onSurface,
 )
+
+@Composable
+fun buttonColors() =
+    ButtonDefaults.buttonColors(
+        backgroundColor = MaterialTheme.colors.secondary,
+        contentColor = MaterialTheme.colors.onSecondary,
+        disabledBackgroundColor = MaterialTheme.colors.background.copy(alpha = 0.5f),
+        disabledContentColor = MaterialTheme.colors.onSurface
+            .copy(alpha = ContentAlpha.disabled)
+    )

@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ru.nifontbus.core_ui.normalPadding
+import ru.nifontbus.core_ui.smallPadding
 
 @Composable
 fun TopBar(navController: NavController, header: String) {
@@ -28,7 +29,7 @@ fun TopBar(navController: NavController, header: String) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colors.primary)
-                .padding(start = normalPadding, top = normalPadding, bottom = normalPadding),
+                .padding(start = normalPadding, top = smallPadding, bottom = smallPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
@@ -42,7 +43,7 @@ fun TopBar(navController: NavController, header: String) {
 
             Text(
                 text = header,
-                style = MaterialTheme.typography.h4,
+                style = MaterialTheme.typography.h3,
                 color = MaterialTheme.colors.onSecondary
             )
         }

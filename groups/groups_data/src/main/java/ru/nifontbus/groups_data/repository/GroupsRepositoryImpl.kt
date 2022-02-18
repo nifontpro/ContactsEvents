@@ -1,6 +1,7 @@
 package ru.nifontbus.groups_data.repository
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.ContactsContract
 import kotlinx.coroutines.CoroutineScope
@@ -11,13 +12,16 @@ import kotlinx.coroutines.launch
 import ru.nifontbus.groups_domain.model.PersonsGroup
 import ru.nifontbus.groups_domain.repository.GroupsRepository
 
-
 class GroupsRepositoryImpl(
-    private val context: Context
+    private val context: Context,
+    private val sharedPreferences: SharedPreferences
 ) : GroupsRepository {
 
     private val _groups = MutableStateFlow<List<PersonsGroup>>(emptyList())
     override val groups = _groups.asStateFlow()
+
+    private val _currentGroup: MutableStateFlow<PersonsGroup?> = MutableStateFlow(null)
+    override val currentGroup = _currentGroup.asStateFlow()
 
     init {
         groupsUpdate()
@@ -54,79 +58,42 @@ class GroupsRepositoryImpl(
             it.close()
             _groups.value = groupsList
         }
+        loadCurrentGroup()
     }
 
-    //    https://stackoverflow.com/questions/57727876/android-contacts-high-res-displayphoto-not-showing-up
-/*    private fun dispatchSyncHighResPhotoIntent(uri: Uri) {
-//        val uri = ContentUris.withAppendedId(ContactsContract.RawContacts.CONTENT_URI, rawContactId)
-        val intent = Intent()
-        intent.setDataAndType(uri, ContactsContract.Contacts.CONTENT_ITEM_TYPE)
-        intent.component = ComponentName(
-            "com.google.android.syncadapters.contacts",
-            "com.google.android.syncadapters.contacts.SyncHighResPhotoIntentService"
-        )
-        intent.action = "com.google.android.syncadapters.contacts.SYNC_HIGH_RES_PHOTO"
-        context.startService(intent)
-    }*/
+    override fun setCurrentGroup(group: PersonsGroup?) {
+        _currentGroup.value = group
+        saveCurrentGroup(group)
+    }
 
-//    https://www.grokkingandroid.com/use-contentobserver-to-listen-to-changes/
-/*    inner class MyObserver(handler: Handler?) : ContentObserver(handler) {
-        override fun onChange(selfChange: Boolean, uri: Uri?) {
-            super.onChange(selfChange, uri)
-            Log.e("my", "---> Change $uri")
+    private fun saveCurrentGroup(group: PersonsGroup?) =
+        CoroutineScope(Dispatchers.Main).launch {
+            val editor = sharedPreferences.edit()
+            editor.putLong(GROUP_ID, group?.id ?: -1L)
+            editor.putString(GROUP_NAME, group?.title)
+            editor.apply()
         }
-    }*/
 
-} // EOC
+    private fun loadCurrentGroup() {
+        val id: Long = sharedPreferences.getLong(GROUP_ID, -1L)
+        val name: String? = sharedPreferences.getString(GROUP_NAME, null)
+        if (id != -1L && name != null) {
+            _currentGroup.value = PersonsGroup(title = name, id = id)
+        } else {
+            _currentGroup.value = if (groups.value.isNotEmpty()) groups.value[0] else null
+        }
+    }
 
+    companion object {
+        private const val GROUP_ID = "group_id"
+        private const val GROUP_NAME = "group_name"
+    }
+}
+
+/*
 fun String.toIntDefault(default: Int) =
     try {
         this.toInt()
     } catch (e: Exception) {
         default
-    }
-
-// +event:
-// https://question-it.com/questions/5800521/dobavit-sobytie-dlja-kontakta-v-tablitsu-kontaktov-android
-
-// Операции с данными:
-// https://developer.android.com/reference/android/provider/ContactsContract.Data.html?authuser=1
-
-// +contacts
-// https://stackru.com/questions/32761829/vstavka-novogo-kontakta-programmno-cherez-moe-prilozhenie-bez-ispolzovaniya-intent
-
-/*   private fun getAggregationContacts(id: Int) {
-       val uri = ContactsContract.Contacts.CONTENT_URI.buildUpon()
-           .appendEncodedPath(id.toString())
-           .appendPath(ContactsContract.Contacts.AggregationSuggestions.CONTENT_DIRECTORY)
-           .appendQueryParameter("limit", "3")
-           .build()
-       val cursor = context.contentResolver.query(
-           uri,
-           arrayOf(
-               ContactsContract.Contacts.DISPLAY_NAME,
-               ContactsContract.Contacts._ID,
-               ContactsContract.Contacts.LOOKUP_KEY
-           ),
-           null, null, null
-       );
-       Log.d("my", DatabaseUtils.dumpCursorToString(cursor))
-   }*/
-
-/*    private fun getEventsCursorById(id: Long): Cursor? {
-        val uri: Uri = ContactsContract.Data.CONTENT_URI
-
-        val projection = arrayOf(
-            ContactsContract.Data.DATA_SET,
-            ContactsContract.Data._ID,
-            ContactsContract.Data.MIMETYPE,
-        )
-
-        val where = ContactsContract.Data._ID + "=?" + "=?" +
-                " AND " + ContactsContract.Data.MIMETYPE
-        val selectionArgs = arrayOf(
-            id.toString(),
-            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
-        )
-        return context.contentResolver.query(uri, projection, where, selectionArgs, null)
     }*/

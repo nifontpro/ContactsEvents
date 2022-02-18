@@ -7,4 +7,8 @@ interface GroupsRepository {
 
     val groups: StateFlow<List<PersonsGroup>>
 
+    val currentGroup: StateFlow<PersonsGroup?>
+
+    fun setCurrentGroup(group: PersonsGroup?)
+
 }

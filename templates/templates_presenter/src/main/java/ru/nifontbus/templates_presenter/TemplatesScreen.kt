@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import ru.nifontbus.core_ui.Arg
+import ru.nifontbus.core_ui.Argument
 import ru.nifontbus.core_ui.component.TemplateSwipeToDismiss
 import ru.nifontbus.core_ui.component.TopBar
 import ru.nifontbus.events_domain.model.EventType
@@ -73,7 +73,7 @@ fun TemplatesScreen(
                     {
                         TemplateCard(template) {
                             extNavController.previousBackStackEntry?.arguments?.putParcelable(
-                                Arg.template,
+                                Argument.template,
                                 Template(
                                     type = template.type,
                                     label = template.getDescriptionForSelect(context)

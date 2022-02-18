@@ -12,8 +12,5 @@ dependencies {
     "implementation" (project(":groups:groups_domain"))
 
     // Toolbar
-    "implementation"("me.onebone:toolbar-compose:2.3.0")
-
-
-
+    "implementation"("me.onebone:toolbar-compose:2.3.1")
 }

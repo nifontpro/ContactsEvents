@@ -8,11 +8,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import ru.nifontbus.core.domain.model.Resource
+import ru.nifontbus.core_ui.Argument
 import ru.nifontbus.events_domain.model.Event
 import ru.nifontbus.events_domain.use_cases.EventsUseCases
 import ru.nifontbus.groups_domain.use_cases.GroupsUseCases
@@ -44,14 +46,9 @@ class PersonInfoViewModel @Inject constructor(
     private val _action = MutableSharedFlow<String>()
     val action: SharedFlow<String> = _action.asSharedFlow()
 
-//    val deleteBoxInfo = mutableStateOf(false)
-
-/*    private val _deleteListMessage = mutableStateOf<List<String>>(emptyList())
-    val deleteListMessage: State<List<String>> = _deleteListMessage*/
-
     init {
         viewModelScope.launch {
-            savedStateHandle.get<Long>("person_id")?.let { it ->
+            savedStateHandle.get<Long>(Argument.personId)?.let { it ->
                 personsUseCases.getPersonById(it)?.let { findPerson ->
                     _person.value = findPerson
                 }
@@ -84,59 +81,3 @@ class PersonInfoViewModel @Inject constructor(
         _action.emit(msg)
     }
 }
-
-/*    fun deleteEvent(id: String) = viewModelScope.launch {
-        when (val result = eventsUseCases.deleteEvent(id)) {
-            is Resource.Success -> {
-                sendMessage(result.message)
-            }
-            is Resource.Error -> sendMessage(result.message)
-        }
-    }*/
-
-/*    fun deletePerson() = viewModelScope.launch {
-        deleteBoxInfo.value = true
-        personsUseCases.deletePersonWithEvents(person.value).collect { message ->
-            deleteMessage(message)
-        }
-    }*/
-
-/*    private fun deleteMessage(message: String) {
-        val newList = deleteListMessage.value.toMutableList()
-        newList.add(message)
-        _deleteListMessage.value = newList
-    }*/
-
-/*    private fun updatePersonState() {
-        _person.value = person.value.copy(
-            firstName = firstName.value,
-            lastName = lastName.value,
-            family = family.value
-        )
-    }*/
-
-/*    fun getEditState() {
-        firstName.value = person.value.firstName
-        lastName.value = person.value.lastName
-        family.value = person.value.family
-    }*/
-
-/*    fun updatePerson() = viewModelScope.launch {
-        when (val result = personsUseCases.updatePerson(
-            Person(firstName.value, lastName.value, family.value, id = person.value.id)
-        )) {
-            is Resource.Success -> {
-                sendMessage(result.message)
-                updatePersonState()
-            }
-            is Resource.Error -> sendMessage(result.message)
-        }
-    }*/
-
-/*
-    fun isEnabledUpdatePerson(): Boolean = firstName.value.isNotEmpty() &&
-            !((firstName.value == person.value.firstName) &&
-                    (lastName.value == person.value.lastName) &&
-                    (family.value == person.value.family)
-                    )
-*/

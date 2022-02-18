@@ -29,7 +29,10 @@ import ru.nifontbus.core.util.getLocalizedDate
 import ru.nifontbus.core.util.toLocalDate
 import ru.nifontbus.core.util.toShortDate
 import ru.nifontbus.core_ui.Screen
+import ru.nifontbus.core_ui.bigPadding
 import ru.nifontbus.core_ui.component.TopBar
+import ru.nifontbus.core_ui.component.surfaceBrush
+import ru.nifontbus.core_ui.normalPadding
 import ru.nifontbus.core_ui.permission.GetPermission
 import ru.nifontbus.events_presenter.R
 import ru.nifontbus.templates_domain.model.Template
@@ -79,21 +82,21 @@ fun NewEventScreenMain(
         }
     ) {
 
-        Box(modifier = Modifier.fillMaxSize()) {
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
 
             Icon(
                 imageVector = Icons.Outlined.NotificationAdd, contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(20.dp)
-                    .size(350.dp),
-                tint = MaterialTheme.colors.secondary
+                    .padding(bigPadding)
+                    .size(maxHeight / 2),
+                tint = MaterialTheme.colors.secondary.copy(alpha = 0.2f)
             )
 
             Column(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(horizontal = 10.dp)
+                    .padding(horizontal = normalPadding)
                     .fillMaxWidth()
                     .background(Color.Transparent)
             ) {
@@ -101,72 +104,78 @@ fun NewEventScreenMain(
                 val sYouCanCreateEvent = stringResource(R.string.sYouCanCreateEvent)
                 Text(
                     buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = MaterialTheme.colors.onPrimary)) {
+                        withStyle(style = SpanStyle(color = MaterialTheme.colors.onBackground)) {
                             append(sYouCanCreateEvent)
                         }
                         withStyle(style = SpanStyle(color = MaterialTheme.colors.primaryVariant)) {
                             append(person.displayName)
                         }
                     },
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(normalPadding),
                     style = MaterialTheme.typography.h6
                 )
-                Box( // Внутренний полупрозрачный
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.surface)
+                Card(
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = 8.dp
                 ) {
 
-                    Column(
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(20.dp)
+                            .background(surfaceBrush())
                     ) {
 
-                        val edMod = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 10.dp)
-                            .clip(RoundedCornerShape(5.dp))
-
-                        val keyboardController = LocalSoftwareKeyboardController.current
-
-                        TextField(
-                            value = viewModel.eventLabel.value,
-                            enabled = viewModel.isEnabledEdit(),
-                            onValueChange = {
-                                viewModel.setEventLabel(it)
-                            },
-                            modifier = edMod,
-                            singleLine = true,
-                            placeholder = { Text(stringResource(R.string.sEventLabel)) },
-                            trailingIcon = {
-                                IconButton(onClick = {
-                                    extNavController.navigate(Screen.ExtTemplatesScreen.route)
-                                }) {
-                                    Icon(imageVector = Icons.Default.ReadMore, null)
-                                }
-                            },
-                        )
-
-                        SelectDate(viewModel.date, viewModel.isNoYear)
-
-                        Button(
-                            onClick = {
-                                keyboardController?.hide()
-                                viewModel.addEvent()
-                            }, modifier = Modifier
+                        Column(
+                            verticalArrangement = Arrangement.SpaceBetween,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
                                 .fillMaxWidth()
-                                .height(55.dp),
-                            enabled = viewModel.isEnabledSave()
+                                .padding(20.dp)
                         ) {
-                            Text(
-                                stringResource(R.string.sCreateEvent),
-                                color = MaterialTheme.colors.onSecondary,
-                                style = MaterialTheme.typography.body1,
+
+                            val edMod = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 10.dp)
+                                .clip(RoundedCornerShape(5.dp))
+
+                            val keyboardController = LocalSoftwareKeyboardController.current
+
+                            TextField(
+                                value = viewModel.eventLabel.value,
+                                enabled = viewModel.isEnabledEdit(),
+                                onValueChange = {
+                                    viewModel.setEventLabel(it)
+                                },
+                                modifier = edMod,
+                                singleLine = true,
+                                placeholder = { Text(stringResource(R.string.sEventLabel)) },
+                                colors = textFieldColors(),
+                                trailingIcon = {
+                                    IconButton(onClick = {
+                                        extNavController.navigate(Screen.ExtTemplatesScreen.route)
+                                    }) {
+                                        Icon(imageVector = Icons.Default.ReadMore, null)
+                                    }
+                                },
                             )
+
+                            SelectDate(viewModel.date, viewModel.isNoYear)
+
+                            Button(
+                                onClick = {
+                                    keyboardController?.hide()
+                                    viewModel.addEvent()
+                                }, modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(55.dp),
+                                enabled = viewModel.isEnabledSave()
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.sCreateEvent),
+                                    style = MaterialTheme.typography.body1,
+                                )
+                            }
                         }
                     }
                 }
@@ -230,3 +239,15 @@ fun SelectDate(
 
     }
 }
+
+@Composable
+fun textFieldColors() = TextFieldDefaults.textFieldColors(
+    textColor = MaterialTheme.colors.onBackground,
+    backgroundColor = MaterialTheme.colors.background,
+    cursorColor = MaterialTheme.colors.secondary,
+    focusedIndicatorColor = MaterialTheme.colors.primaryVariant,
+    unfocusedIndicatorColor = MaterialTheme.colors.onSurface,
+    placeholderColor = MaterialTheme.colors.onSurface,
+    leadingIconColor = MaterialTheme.colors.onSurface,
+    trailingIconColor = MaterialTheme.colors.onSurface,
+)

@@ -24,7 +24,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import ru.nifontbus.contactsevents.ui.navigation.BottomBar
 import ru.nifontbus.contactsevents.ui.theme.ContactsEventsTheme
-import ru.nifontbus.core_ui.Arg
+import ru.nifontbus.core_ui.Argument
 import ru.nifontbus.core_ui.R
 import ru.nifontbus.core_ui.Screen
 import ru.nifontbus.core_ui.permission.GetPermission
@@ -84,28 +84,28 @@ class MainActivity : ComponentActivity() {
 
             composable(
                 Screen.ExtPersonInfoScreen.route,
-                arguments = listOf(navArgument(Arg.personId)),
+                arguments = listOf(navArgument(Argument.personId)),
             ) {
                 PersonInfoScreen(extNavController)
             }
 
             composable(
                 Screen.ExtNewEventScreen.route,
-                arguments = listOf(navArgument(Arg.personId)),
+                arguments = listOf(navArgument(Argument.personId)),
             ) { entry ->
                 val returnTemplate =
-                    entry.arguments?.getParcelable<Template>(Arg.template)
+                    entry.arguments?.getParcelable<Template>(Argument.template)
                 NewEventScreen(extNavController, returnTemplate)
             }
 
             composable(
                 Screen.ExtEventUpdateScreen.route,
                 arguments = listOf(
-                    navArgument(Arg.personId), navArgument(Arg.eventId)
+                    navArgument(Argument.personId), navArgument(Argument.eventId)
                 ),
             ) { entry ->
                 val returnTemplate =
-                    entry.arguments?.getParcelable<Template>(Arg.template)
+                    entry.arguments?.getParcelable<Template>(Argument.template)
                 EventUpdateScreen(extNavController, returnTemplate)
             }
 

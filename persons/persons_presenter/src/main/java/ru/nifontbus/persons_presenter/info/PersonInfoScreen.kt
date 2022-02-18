@@ -10,7 +10,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.SettingsAccessibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -21,7 +20,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -77,27 +75,16 @@ fun PersonInfoScreen(
         },
     ) {
 
-        Box(
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = normalPadding)
         ) {
 
-            Icon(
-                imageVector = Icons.Default.SettingsAccessibility,
-                contentDescription = "Background",
-                tint = MaterialTheme.colors.primary.copy(alpha = 0.2f),
-                modifier = Modifier
-                    .size(500.dp)
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 50.dp)
-            )
-
-            val configuration = LocalConfiguration.current
-            val screenHeight = configuration.screenHeightDp.dp
-
             val collapsingState = rememberCollapsingToolbarScaffoldState(
-                toolbarState = CollapsingToolbarState(initial = screenHeight.toPx().toInt() / 3)
+                toolbarState = CollapsingToolbarState(
+                    initial = (maxHeight.toPx() / 2.5f).toInt()
+                )
             )
 
 //            https://stackoverflow.com/questions/57727876/android-contacts-high-res-displayphoto-not-showing-up
@@ -107,7 +94,7 @@ fun PersonInfoScreen(
                 state = collapsingState,
                 scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
                 toolbarModifier = Modifier
-                    .background(Color.Transparent)
+                    .background(Transparent)
                     .padding(bottom = smallPadding),
                 toolbar = {
 //                    val offsetY = state.offsetY // y offset of the layout
@@ -247,9 +234,10 @@ private fun PersonInfoHeader(
                 ) {
 
                     Text(
-                        groupsString,
+                        text = groupsString,
                         modifier = Modifier.padding(bottom = normalPadding),
-                        style = MaterialTheme.typography.h6
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.onSurface
                     )
                 } // Row
 
@@ -264,14 +252,21 @@ private fun PersonInfoHeader(
                         Icon(
                             imageVector = Icons.Default.Phone,
                             contentDescription = "Phone",
-                            tint = MaterialTheme.colors.primaryVariant,
+                            tint = MaterialTheme.colors.primary,
                             modifier = Modifier.padding(end = 15.dp)
                         )
                         Column(modifier = Modifier.fillMaxWidth()) {
                             personInfo.phones.forEachIndexed { idx, phone ->
                                 Column {
-                                    Text(phone.number, style = MaterialTheme.typography.h6)
-                                    Text(phone.stringType(LocalContext.current))
+                                    Text(
+                                        text = phone.number,
+                                        style = MaterialTheme.typography.h6,
+                                        color = MaterialTheme.colors.onSurface
+                                    )
+                                    Text(
+                                        text = phone.stringType(LocalContext.current),
+                                        color = MaterialTheme.colors.onSurface
+                                    )
                                     if (idx < personInfo.phones.lastIndex) {
                                         Divider()
                                     }

@@ -2,9 +2,15 @@ package ru.nifontbus.contactsevents.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import ru.nifontbus.contactsevents.R
+
+val copyist = FontFamily(
+    Font(R.font.copyist, FontWeight.Normal),
+)
 
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -34,9 +40,14 @@ val Typography = Typography(
         fontSize = 22.sp
     ),
     h3 = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 32.sp
+        fontFamily = copyist,
+        fontWeight = FontWeight.Normal,
+        fontSize = 60.sp
+    ),
+    h2 = TextStyle(
+        fontFamily = copyist,
+        fontWeight = FontWeight.Normal,
+        fontSize = 80.sp
     )
     /* Other default text styles to override
     button = TextStyle(

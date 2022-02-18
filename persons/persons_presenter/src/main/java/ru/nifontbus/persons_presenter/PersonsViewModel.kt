@@ -8,19 +8,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.nifontbus.core_ui.component.BottomNavItem
+import ru.nifontbus.groups_domain.use_cases.GroupsUseCases
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_domain.use_cases.PersonsUseCases
-import ru.nifontbus.settings_domain.use_cases.SettingsUseCases
 import javax.inject.Inject
 
 @HiltViewModel
 class PersonsViewModel @Inject constructor(
     private val personsUseCases: PersonsUseCases,
-    settingsUseCases: SettingsUseCases
+    groupsUseCases: GroupsUseCases
 ) : ViewModel() {
 
     var searchState = mutableStateOf("")
-    private val currentGroup = settingsUseCases.getCurrentGroup()
+    private val currentGroup = groupsUseCases.getCurrentGroup()
 
     private val _persons = mutableStateOf(emptyList<Person>())
     val persons: State<List<Person>> = _persons

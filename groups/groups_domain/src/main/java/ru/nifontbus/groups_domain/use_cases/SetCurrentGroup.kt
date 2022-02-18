@@ -1,10 +1,10 @@
-package ru.nifontbus.settings_domain.use_cases
+package ru.nifontbus.groups_domain.use_cases
 
 import ru.nifontbus.groups_domain.model.PersonsGroup
-import ru.nifontbus.settings_domain.repository.SettingsRepository
+import ru.nifontbus.groups_domain.repository.GroupsRepository
 
 class SetCurrentGroup(
-    private val repository: SettingsRepository
+    private val repository: GroupsRepository
 ) {
     operator fun invoke(personsGroup: PersonsGroup?) {
         repository.setCurrentGroup(personsGroup)

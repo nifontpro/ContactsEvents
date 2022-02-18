@@ -7,16 +7,14 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import ru.nifontbus.groups_domain.model.PersonsGroup
 import ru.nifontbus.groups_domain.use_cases.GroupsUseCases
-import ru.nifontbus.settings_domain.use_cases.SettingsUseCases
 import javax.inject.Inject
 
 @HiltViewModel
 class GroupViewModel @Inject constructor(
-    groupsUseCases: GroupsUseCases,
-    private val settingsUseCases: SettingsUseCases
+    private val groupsUseCases: GroupsUseCases,
 ) : ViewModel() {
 
-    val currentGroup = settingsUseCases.getCurrentGroup()
+    val currentGroup = groupsUseCases.getCurrentGroup()
 
     val groups = groupsUseCases.getGroups()
 
@@ -39,7 +37,7 @@ class GroupViewModel @Inject constructor(
 
     fun setCurrentGroup(group: PersonsGroup) {
         if (currentGroup.value?.id != group.id) {
-            settingsUseCases.setCurrentGroup(group)
+            groupsUseCases.setCurrentGroup(group)
         }
     }
 

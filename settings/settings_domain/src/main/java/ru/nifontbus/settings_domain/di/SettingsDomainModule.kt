@@ -16,8 +16,6 @@ object SettingsDomainModule {
     @Provides
     @ViewModelScoped
     fun provideSettingsUseCases(repository: SettingsRepository) = SettingsUseCases(
-        setCurrentGroup = SetCurrentGroup(repository),
-        getCurrentGroup = GetCurrentGroup(repository),
         getReposeFeatures = GetReposeFeatures(repository),
         getAdd40Day = GetAdd40Day(repository),
         saveReposeFeatures = SaveReposeFeatures(repository),

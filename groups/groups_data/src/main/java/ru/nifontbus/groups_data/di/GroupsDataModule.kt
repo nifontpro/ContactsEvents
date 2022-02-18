@@ -1,6 +1,7 @@
 package ru.nifontbus.groups_data.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +18,8 @@ object GroupsDataModule {
     @Provides
     @Singleton
     fun provideGroupsRepository(
-        @ApplicationContext context: Context
-    ): GroupsRepository = GroupsRepositoryImpl(context)
+        @ApplicationContext context: Context,
+        sharedPreferences: SharedPreferences
+    ): GroupsRepository = GroupsRepositoryImpl(context, sharedPreferences)
 
 }

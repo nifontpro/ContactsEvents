@@ -37,7 +37,7 @@ fun SettingScreen(paddingValues: PaddingValues) {
 
             Text(
                 text = stringResource(R.string.sContact),
-                style = MaterialTheme.typography.h3,
+                style = MaterialTheme.typography.h2,
                 modifier = Modifier
                     .align(Alignment.Start)
                     .padding(start = screenWidth / 6, top = bigPadding),
@@ -45,7 +45,7 @@ fun SettingScreen(paddingValues: PaddingValues) {
             )
             Text(
                 text = stringResource(R.string.sEventsSetting),
-                style = MaterialTheme.typography.h3,
+                style = MaterialTheme.typography.h2,
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(end = screenWidth / 6, top = normalPadding, bottom = bigPadding),
@@ -79,8 +79,8 @@ private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
             .fillMaxWidth()
             .align(Alignment.BottomStart)
             .padding(bottom = iconSize + 40.dp)
-            .padding(horizontal = bigPadding),
-        elevation = 8.dp
+            .padding(horizontal = 40.dp),
+        elevation = 10.dp
     ) {
         Box(
             modifier = Modifier
@@ -88,9 +88,11 @@ private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                 .background(surfaceBrush())
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = bigPadding),
                 verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally,
+//                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically

@@ -1,6 +1,8 @@
 package ru.nifontbus.settings_data.di
 
+import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,6 +18,17 @@ object SettingsDataModule {
     @Provides
     @Singleton
     fun provideSettings(
-        @ApplicationContext context: Context
-    ): SettingsRepository = SettingsRepositoryImpl(context)
+        sharedPreferences: SharedPreferences
+    ): SettingsRepository = SettingsRepositoryImpl(sharedPreferences)
+
+    @Provides
+    @Singleton
+    fun provideSharedPref(app: Application): SharedPreferences {
+        return app.getSharedPreferences(
+            SHARED_PREF_NAME,
+            Context.MODE_PRIVATE
+        )
+    }
 }
+
+const val SHARED_PREF_NAME = "Current_setting"

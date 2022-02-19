@@ -62,8 +62,6 @@ class PersonInfoViewModel @Inject constructor(
 
     private suspend fun getPersonInfo(id: Long) = personsUseCases.getPersonInfo(id)
 
-    suspend fun getPhotoById(id: Long) = personsUseCases.getPhotoById(id)
-
     private suspend fun getDisplayPhoto(id: Long) = personsUseCases.getDisplayPhoto(id)
 
     fun deleteEvent(event: Event) = viewModelScope.launch {

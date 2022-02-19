@@ -1,6 +1,7 @@
 package ru.nifontbus.events_presenter
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,7 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
@@ -23,7 +24,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.nifontbus.core.util.getLocalizedDate
 import ru.nifontbus.core_ui.Screen
-import ru.nifontbus.core_ui.component.SmallRememberImage
 import ru.nifontbus.core_ui.component.surfaceBrush
 import ru.nifontbus.core_ui.cornerShapeIconPercent
 import ru.nifontbus.core_ui.normalPadding
@@ -58,15 +58,14 @@ fun EventsScreen(
                     .collectAsState(null).value
                 EventCard(
                     event = event,
-                    person =  person,
+                    person = person,
                     onClick = {
                         person?.let {
                             extNavController.navigate(
                                 Screen.ExtPersonInfoScreen.createRoute(it.id)
                             )
                         }
-                    },
-                    getImage = viewModel::getPhotoById // { viewModel.getPhotoById(it) } - Eq
+                    }
                 )
             }
         }
@@ -79,8 +78,7 @@ fun EventCard(
     event: Event,
     person: Person?,
     onClick: () -> Unit = {},
-    getImage: suspend (id: Long) -> ImageBitmap?,
-    isShowName: Boolean = true,
+    isShowNameAndImage: Boolean = true,
 ) {
     Card(
         shape = MaterialTheme.shapes.large,
@@ -112,7 +110,7 @@ fun EventCard(
                     horizontalAlignment = Alignment.Start,
                 ) {
 
-                    if (isShowName) {
+                    if (isShowNameAndImage) {
                         person?.let {
                             Text(
                                 text = it.displayName,
@@ -141,13 +139,7 @@ fun EventCard(
                         event.getFullYear()?.let {
                             val yearLeft = stringResource(R.string.sYearLeft, it)
                             if (it > 0) {
-                                /*withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                ) {*/
                                 append(yearLeft)
-//                                }
                             }
                         }
 
@@ -156,10 +148,7 @@ fun EventCard(
                                 R.string.sDaysLeft,
                                 daysLeft
                             ) else stringResource(R.string.sNow)
-
-//                        withStyle(style = SpanStyle(fontStyle = FontStyle.Normal)) {
                         append(daysLeftString)
-//                        }
                     }
                     Text(
                         text = dateText,
@@ -169,14 +158,19 @@ fun EventCard(
                     )
                 } // Column
 
-                person?.let {
-                    SmallRememberImage(
-                        personId = it.id,
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(cornerShapeIconPercent)),
-                        getImage = getImage
-                    )
+                if (isShowNameAndImage) {
+                    person?.let {
+                        it.photo?.let { photo ->
+                            Image(
+                                bitmap = photo,
+                                contentDescription = "Photo",
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(cornerShapeIconPercent)),
+                                contentScale = ContentScale.FillWidth
+                            )
+                        }
+                    }
                 }
             } // Row
         }

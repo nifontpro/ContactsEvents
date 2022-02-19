@@ -30,7 +30,6 @@ import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import ru.nifontbus.core_ui.*
-import ru.nifontbus.core_ui.component.SmallRememberImage
 import ru.nifontbus.core_ui.component.TemplateSwipeToDismiss
 import ru.nifontbus.core_ui.component.TopBar
 import ru.nifontbus.core_ui.component.surfaceBrush
@@ -134,21 +133,24 @@ fun PersonInfoScreen(
                         maxLines = if (progress < 0.2) 1 else 3
                     )
 
-                    SmallRememberImage(
-                        personId = person.id,
-                        modifier = Modifier
-                            .padding(smallPadding)
-                            .size(personInfoSmallIconSize)
-                            .clip(RoundedCornerShape(10))
-                            .graphicsLayer {
-                                alpha = maxOf(0f, 1 - progress * 3)
-                            }
-                            .road(
-                                whenCollapsed = Alignment.BottomEnd,
-                                whenExpanded = Alignment.BottomEnd
-                            ),
-                        getImage = viewModel::getPhotoById
-                    )
+                    person.photo?.let {
+                        Image(
+                            bitmap = it,
+                            contentDescription = "Photo",
+                            modifier = Modifier
+                                .padding(smallPadding)
+                                .size(personInfoSmallIconSize)
+                                .clip(RoundedCornerShape(10))
+                                .graphicsLayer {
+                                    alpha = maxOf(0f, 1 - progress * 3)
+                                }
+                                .road(
+                                    whenCollapsed = Alignment.BottomEnd,
+                                    whenExpanded = Alignment.BottomEnd
+                                ),
+                            contentScale = ContentScale.FillWidth
+                        )
+                    }
                 } // toolbar
             ) {
                 LazyColumn(
@@ -183,8 +185,7 @@ fun PersonInfoScreen(
                                             )
                                         )
                                     },
-                                    getImage = { null }, // без картинки
-                                    isShowName = false,
+                                    isShowNameAndImage = false,
                                 )
                             },
 //                                enabled = template.type == 0,

@@ -58,7 +58,7 @@ fun EventsScreen(
                     .collectAsState(null).value
                 EventCard(
                     event = event,
-                    person = person,
+                    person =  person,
                     onClick = {
                         person?.let {
                             extNavController.navigate(

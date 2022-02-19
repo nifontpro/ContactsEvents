@@ -1,6 +1,7 @@
 package ru.nifontbus.persons_presenter
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
@@ -29,7 +31,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ru.nifontbus.core_ui.*
 import ru.nifontbus.core_ui.component.Search
-import ru.nifontbus.core_ui.component.SmallRememberImage
 import ru.nifontbus.core_ui.component.surfaceBrush
 import ru.nifontbus.persons_domain.model.Person
 
@@ -109,7 +110,6 @@ fun PersonsScreen(
                     PersonCard(
                         person = person,
                         searchState = viewModel.searchState,
-                        getImage = viewModel::getPhotoById
                     ) {
                         extNavController.navigate(
                             Screen.ExtPersonInfoScreen.createRoute(person.id)
@@ -125,7 +125,6 @@ fun PersonsScreen(
 private fun PersonCard(
     person: Person,
     searchState: MutableState<String>,
-    getImage: suspend (id: Long) -> ImageBitmap?,
     onClick: () -> Unit,
 ) {
 
@@ -164,13 +163,16 @@ private fun PersonCard(
                     )
                 } // Col
 
-                SmallRememberImage(
-                    personId = person.id,
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(cornerShapeIconPercent)),
-                    getImage = getImage
-                )
+                person.photo?.let {
+                    Image(
+                        bitmap = it,
+                        contentDescription = "Photo",
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(cornerShapeIconPercent)),
+                        contentScale = ContentScale.FillWidth
+                    )
+                }
             } // Row
         }
     }

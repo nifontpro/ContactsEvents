@@ -117,9 +117,9 @@ private fun GroupCard(
                         },
                         contentDescription = "Current group",
                         tint = if (group.id == currentGroup?.id) {
-                            MaterialTheme.colors.primaryVariant
+                            MaterialTheme.colors.onBackground
                         } else {
-                            Color.Gray
+                            MaterialTheme.colors.onSurface
                         }
                     )
                 }

@@ -38,6 +38,4 @@ class PersonsViewModel @Inject constructor(
             BottomNavItem.PersonItem.badgeCount.value = it.size
         }
     }
-
-    suspend fun getPhotoById(id: Long) = personsUseCases.getPhotoById(id)
 }

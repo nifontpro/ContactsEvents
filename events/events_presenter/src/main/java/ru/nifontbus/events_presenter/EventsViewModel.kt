@@ -20,7 +20,6 @@ class EventsViewModel @Inject constructor(
     val events = eventsUseCases.getSortedEvents()
 
     fun getPersonByIdFlow(id: Long): Flow<Person?> = personsUseCases.getPersonByIdFlow(id)
-    suspend fun getPhotoById(id: Long) = personsUseCases.getPhotoById(id)
 
     init {
         viewModelScope.launch {

@@ -54,7 +54,7 @@ class PersonsRepositoryImpl(
             val idRef = it.getColumnIndex(ContactsContract.Contacts._ID)
             val displayNameRef = it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
             val hasPhoneNumberRef = it.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)
-            val photoRef = it.getColumnIndex(ContactsContract.Contacts.PHOTO_URI)
+//            val photoRef = it.getColumnIndex(ContactsContract.Contacts.PHOTO_URI)
 
             while (it.moveToNext()) {
 //                val key = it.getString(keyRef) // LookUp Key
@@ -62,7 +62,7 @@ class PersonsRepositoryImpl(
                 val hasPhoneNumber = it.getInt(hasPhoneNumberRef) == 1
                 val displayName = it.getString(displayNameRef) ?: "?"
                 val groups = getGroupsByContact(id)
-                val photoUri = it.getString(photoRef)
+//                val photoUri = it.getString(photoRef)
 
                 _persons.value =
                     persons.value + listOf(
@@ -70,7 +70,7 @@ class PersonsRepositoryImpl(
                             displayName = displayName,
                             groups = groups,
                             hasPhoneNumber = hasPhoneNumber,
-                            photoUri = photoUri,
+                            photo = getPhotoById(id),
                             id = id
                         )
                     )
@@ -144,7 +144,7 @@ class PersonsRepositoryImpl(
         }
     }
 
-    override suspend fun getPhotoById(contactId: Long): ImageBitmap? {
+    private suspend fun getPhotoById(contactId: Long): ImageBitmap? {
         val contactUri =
             ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId)
         val photoUri =

@@ -12,8 +12,6 @@ interface PersonsRepository {
 
     suspend fun getPersonInfo(contactId: Long): PersonInfo
 
-    suspend fun getPhotoById(contactId: Long): ImageBitmap?
-
     suspend fun getDisplayPhoto(contactId: Long): ImageBitmap?
 
 }

@@ -44,7 +44,7 @@ fun ContactsEventsTheme(
     content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) {
-        DarkColorPalette
+        LightColorPalette
     } else {
         if (Build.VERSION.SDK_INT >= 29) {
             LightColorPalette

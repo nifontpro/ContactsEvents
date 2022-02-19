@@ -280,7 +280,6 @@ private fun PersonInfoHeader(
                                         }
                                     }
                                 }
-
                             }
                         }
                     }
@@ -290,7 +289,7 @@ private fun PersonInfoHeader(
         Text(
             stringResource(R.string.sEvents),
             modifier = Modifier.padding(vertical = smallPadding),
-            color = MaterialTheme.colors.primaryVariant,
+            color = MaterialTheme.colors.onBackground,
             style = MaterialTheme.typography.h5
         )
     } // Column Header

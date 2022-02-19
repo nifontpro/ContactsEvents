@@ -51,16 +51,11 @@ fun SettingScreen(paddingValues: PaddingValues) {
                     .padding(end = screenWidth / 6, top = normalPadding, bottom = bigPadding),
                 color = MaterialTheme.colors.onSurface
             )
-
-            Divider(
-                modifier = Modifier.padding(horizontal = bigPadding),
-                color = MaterialTheme.colors.onSurface
-            )
         }
         Icon(
             imageVector = Icons.Default.VolunteerActivism,
             contentDescription = "Volunteer Activism",
-            tint = MaterialTheme.colors.error.copy(alpha = 0.4f),
+            tint = MaterialTheme.colors.error.copy(alpha = 0.6f),
             modifier = Modifier
                 .size(screenHeight / 2.8f)
                 .align(Alignment.Center)

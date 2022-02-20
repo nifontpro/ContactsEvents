@@ -8,5 +8,5 @@ data class Person(
     val hasPhoneNumber: Boolean = false,
     val photo: ImageBitmap? = null,
     var id: Long = -1,
-//    val key: String = "",
+    val lookup: String = ""
 )

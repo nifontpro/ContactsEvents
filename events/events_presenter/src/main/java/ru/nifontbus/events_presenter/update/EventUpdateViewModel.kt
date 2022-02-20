@@ -77,7 +77,13 @@ class EventUpdateViewModel @Inject constructor(
     fun addEvent() = viewModelScope.launch {
         when (val result =
             eventsUseCases.addEvent(
-                Event(eventLabel.value, getRealDate(), eventType.value, person.value.id)
+                Event(
+                    label = eventLabel.value,
+                    date = getRealDate(),
+                    type = eventType.value,
+                    personId = person.value.id,
+                    lookup = person.value.lookup
+                )
             )) {
             is Resource.Success -> {
                 _eventLabel.value = ""

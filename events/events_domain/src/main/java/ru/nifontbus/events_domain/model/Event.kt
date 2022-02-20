@@ -14,7 +14,8 @@ data class Event(
     val date: String = "",
     val type: Int = EventType.CUSTOM,
     val personId: Long = -1,
-    val id: Long = -1
+    val id: Long = -1,
+    val lookup: String = "",
 ) {
 
     companion object {

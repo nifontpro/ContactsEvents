@@ -38,6 +38,7 @@ class PersonsRepositoryImpl(
 
         val projection = arrayOf(
             ContactsContract.Contacts._ID,
+            ContactsContract.Contacts.LOOKUP_KEY,
             ContactsContract.Contacts.DISPLAY_NAME,
             ContactsContract.Contacts.HAS_PHONE_NUMBER,
             ContactsContract.Contacts.PHOTO_URI,
@@ -50,19 +51,17 @@ class PersonsRepositoryImpl(
         )
 
         cursor?.let {
-//            val keyRef = it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY)
             val idRef = it.getColumnIndex(ContactsContract.Contacts._ID)
+            val lookupRef = it.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)
             val displayNameRef = it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
             val hasPhoneNumberRef = it.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)
-//            val photoRef = it.getColumnIndex(ContactsContract.Contacts.PHOTO_URI)
 
             while (it.moveToNext()) {
-//                val key = it.getString(keyRef) // LookUp Key
+                val lookup = it.getString(lookupRef)
                 val id = it.getLong(idRef)
                 val hasPhoneNumber = it.getInt(hasPhoneNumberRef) == 1
                 val displayName = it.getString(displayNameRef) ?: "?"
                 val groups = getGroupsByContact(id)
-//                val photoUri = it.getString(photoRef)
 
                 _persons.value =
                     persons.value + listOf(
@@ -71,7 +70,8 @@ class PersonsRepositoryImpl(
                             groups = groups,
                             hasPhoneNumber = hasPhoneNumber,
                             photo = getPhotoById(id),
-                            id = id
+                            id = id,
+                            lookup = lookup
                         )
                     )
             }
@@ -196,6 +196,14 @@ class PersonsRepositoryImpl(
             )
         }
     }
+} // EOC
+
+fun String.toIntDefault(default: Int) =
+    try {
+        this.toInt()
+    } catch (e: Exception) {
+        default
+    }
 
 //    https://stackoverflow.com/questions/57727876/android-contacts-high-res-displayphoto-not-showing-up
 /*    private fun dispatchSyncHighResPhotoIntent(uri: Uri) {
@@ -217,15 +225,6 @@ class PersonsRepositoryImpl(
             Log.e("my", "---> Change $uri")
         }
     }*/
-
-} // EOC
-
-fun String.toIntDefault(default: Int) =
-    try {
-        this.toInt()
-    } catch (e: Exception) {
-        default
-    }
 
 // +event:
 // https://question-it.com/questions/5800521/dobavit-sobytie-dlja-kontakta-v-tablitsu-kontaktov-android

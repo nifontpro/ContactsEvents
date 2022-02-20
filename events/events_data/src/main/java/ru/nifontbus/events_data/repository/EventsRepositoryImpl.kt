@@ -22,7 +22,8 @@ import kotlin.coroutines.suspendCoroutine
 
 class EventsRepositoryImpl(
     private val context: Context
-): EventsRepository {
+) : EventsRepository {
+
     private val _events = MutableStateFlow<List<Event>>(emptyList())
     override val events: StateFlow<List<Event>> = _events.asStateFlow()
 
@@ -36,6 +37,7 @@ class EventsRepositoryImpl(
             ContactsContract.CommonDataKinds.Event._ID,
             ContactsContract.CommonDataKinds.Event.DISPLAY_NAME,
             ContactsContract.CommonDataKinds.Event.CONTACT_ID,
+            ContactsContract.CommonDataKinds.Event.LOOKUP_KEY,
             ContactsContract.CommonDataKinds.Event.LABEL,
             ContactsContract.CommonDataKinds.Event.START_DATE,
             ContactsContract.CommonDataKinds.Event.TYPE,
@@ -56,6 +58,8 @@ class EventsRepositoryImpl(
             val labelIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL)
             val contactIdIdx =
                 it.getColumnIndex(ContactsContract.CommonDataKinds.Event.CONTACT_ID)
+            val lookupIdx =
+                it.getColumnIndex(ContactsContract.CommonDataKinds.Event.LOOKUP_KEY)
             val dateIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE)
             val typeIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE)
 
@@ -63,6 +67,7 @@ class EventsRepositoryImpl(
 
             while (it.moveToNext()) {
                 val id = it.getLong(idIdx)
+                val lookup = it.getString(lookupIdx)
                 val contactId = it.getLong(contactIdIdx)
                 var label = it.getString(labelIdx) ?: ""
                 val date = it.getString(dateIdx)
@@ -74,19 +79,27 @@ class EventsRepositoryImpl(
                 }
 
                 _events.value = events.value +
-                        listOf(Event(label, date, type, contactId, id))
+                        listOf(
+                            Event(
+                                label = label,
+                                date = date,
+                                type = type,
+                                personId = contactId,
+                                id = id,
+                                lookup = lookup
+                            )
+                        )
             }
             it.close()
         }
     }
 
     override suspend fun addEvent(event: Event): Resource<Unit> {
-        val values = getContentValuesForEvent(event)
-
         return suspendCoroutine {
             val exc = context.getString(R.string.sFailedCreateEvent)
             it.resume(
                 try {
+                    val values = getContentValuesForEvent(event)
                     val idStr =
                         context.contentResolver.insert(
                             ContactsContract.Data.CONTENT_URI, values
@@ -112,7 +125,7 @@ class EventsRepositoryImpl(
         whereBuf.append(newEvent.id)
 
         whereBuf.append(" and ")
-        whereBuf.append(ContactsContract.Data.RAW_CONTACT_ID)
+        whereBuf.append(ContactsContract.Data.CONTACT_ID)
         whereBuf.append("=")
         whereBuf.append(newEvent.personId)
 
@@ -123,12 +136,11 @@ class EventsRepositoryImpl(
         whereBuf.append(mimetype)
         whereBuf.append("'")
 
-        val values = getContentValuesForEvent(newEvent, false)
-
         return suspendCoroutine {
             val exc = context.getString(R.string.sFailedUpdateEvent)
             it.resume(
                 try {
+                    val values = getContentValuesForEvent(newEvent, false)
                     context.contentResolver.update(
                         ContactsContract.Data.CONTENT_URI, values, whereBuf.toString(), null
                     )
@@ -145,13 +157,14 @@ class EventsRepositoryImpl(
 
     private fun getContentValuesForEvent(newEvent: Event, isNew: Boolean = true): ContentValues {
         val values = ContentValues()
+        val rawId = getRawId(newEvent.personId)
 
         if (isNew) {
             values.put(
                 ContactsContract.Data.MIMETYPE,
                 ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
             )
-            values.put(ContactsContract.CommonDataKinds.Event.RAW_CONTACT_ID, newEvent.personId)
+            values.put(ContactsContract.CommonDataKinds.Event.RAW_CONTACT_ID, rawId)
         }
 
         when (newEvent.type) {
@@ -211,4 +224,22 @@ class EventsRepositoryImpl(
         }
     }
 
-} // eoc
+    /**
+     * Получение Raw_Id по Id контакта
+     */
+    private fun getRawId(contactId: Long): Long {
+        var rawId = -1L
+        val uri = ContactsContract.RawContacts.CONTENT_URI
+        val projection = arrayOf(ContactsContract.RawContacts._ID)
+        val selection = ContactsContract.RawContacts.CONTACT_ID + " = ?"
+        val selectionArgs = arrayOf(contactId.toString())
+        val cursor = context.contentResolver.query(uri, projection, selection, selectionArgs, null)
+        cursor?.let {
+            val rawIdx = it.getColumnIndex(ContactsContract.RawContacts._ID)
+            it.moveToFirst()
+            rawId = it.getLong(rawIdx)
+            cursor.close()
+        }
+        return rawId
+    }
+}

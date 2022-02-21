@@ -157,9 +157,8 @@ class EventsRepositoryImpl(
 
     private fun getContentValuesForEvent(newEvent: Event, isNew: Boolean = true): ContentValues {
         val values = ContentValues()
-        val rawId = getRawId(newEvent.personId)
-
         if (isNew) {
+            val rawId = getRawId(newEvent.personId)
             values.put(
                 ContactsContract.Data.MIMETYPE,
                 ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE

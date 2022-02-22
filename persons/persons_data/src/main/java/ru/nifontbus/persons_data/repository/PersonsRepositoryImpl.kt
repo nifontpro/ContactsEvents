@@ -21,7 +21,6 @@ import ru.nifontbus.persons_domain.repository.PersonsRepository
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-
 class PersonsRepositoryImpl(
     private val context: Context
 ) : PersonsRepository {
@@ -50,6 +49,8 @@ class PersonsRepositoryImpl(
             uri, projection, null, null, sortOrder
         )
 
+//                Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
+
         cursor?.let {
             val idRef = it.getColumnIndex(ContactsContract.Contacts._ID)
             val lookupRef = it.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)
@@ -67,7 +68,11 @@ class PersonsRepositoryImpl(
                     persons.value + listOf(
                         Person(
                             displayName = displayName,
-                            groups = groups,
+                            groups = if (groups.isNotEmpty()) {
+                                groups
+                            } else {
+                                listOf(-1)
+                            },
                             hasPhoneNumber = hasPhoneNumber,
                             photo = getPhotoById(id),
                             id = id,
@@ -118,7 +123,6 @@ class PersonsRepositoryImpl(
         val cursorInfo = context.contentResolver.query(
             infoUri, null, null, null, null
         )
-//        Log.e("my", DatabaseUtils.dumpCursorToString(cursorInfo))
         val phones = mutableListOf<Phone>()
 
         cursorInfo?.let {

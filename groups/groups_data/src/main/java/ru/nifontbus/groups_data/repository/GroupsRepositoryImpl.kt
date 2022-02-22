@@ -56,7 +56,7 @@ class GroupsRepositoryImpl(
                 groupsList.add(newGroup)
             }
             it.close()
-            _groups.value = groupsList
+            _groups.value = groupsList + listOf(PersonsGroup())
         }
         loadCurrentGroup()
     }

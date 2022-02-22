@@ -1,54 +1,12 @@
 <resources>
-<!--    <string name="app_name" translatable="false">Contacts Events</string>-->
 
-    <string name="group_my_contacts">My Contacts</string>
+<!--    <string name="group_my_contacts">My Contacts</string>
     <string name="group_starred_in_android">Starred in Android</string>
     <string name="group_friends">Friends</string>
     <string name="group_family">Family</string>
-    <string name="group_coworkers">Coworkers</string>
-<!--    <string name="sDelimetr" translatable="false">", "</string>-->
-<!--    <string name="sGroups">"Groups: "</string>-->
+    <string name="group_coworkers">Coworkers</string>-->
+
     <string name="sNewLifeDay">Day of Repose</string>
     <string name="sDayOfRepose" translatable="false">Day of Repose</string>
-<!--    <string name="sAngelDay">Name days</string>-->
-<!--    <string name="sWeddingDay">Wedding Day</string>-->
 
-<!--    &lt;!&ndash;    Event screen&ndash;&gt;-->
-<!--    <string name="sYearLeft">, years: %d</string>-->
-<!--    <string name="sDaysLeft">, %d d.</string>-->
-
-<!--    &lt;!&ndash;    Person screen&ndash;&gt;-->
-<!--    <string name="sNoPersonInGroup">No contacts in group</string>-->
-
-<!--    &lt;!&ndash;    Person info&ndash;&gt;-->
-<!--    <string name="sPersonInfo">Contact info</string>-->
-<!--    <string name="sEvents">Events: </string>-->
-
-<!--    &lt;!&ndash;    New event screen&ndash;&gt;-->
-<!--    <string name="sNewEvent">New event</string>-->
-<!--    <string name="sYouCanCreateEvent">"You can create new event for contact "</string>-->
-<!--    <string name="sEventLabel">Event label</string>-->
-<!--    <string name="sCreateEvent">Create event</string>-->
-<!--    <string name="sWithoutYear">Without a year</string>-->
-<!--    <string name="sDate">Date:</string>-->
-<!--    <string name="sSelectDate">Select date</string>-->
-
-<!--    &lt;!&ndash;    Event Update Screen&ndash;&gt;-->
-<!--    <string name="sUpdateEvent">Update event</string>-->
-<!--    <string name="sYouCanUpdateEvent">"You can update event for contact "</string>-->
-
-<!--    &lt;!&ndash;    Settings screen&ndash;&gt;-->
-<!--    <string name="sContact">Contact</string>-->
-<!--    <string name="sEventsSetting">Events</string>-->
-<!--    <string name="sReposeFeatures">Repose events</string>-->
-<!--    <string name="s40Day">Counting the 40th day</string>-->
-
-<!--    &lt;!&ndash;    Template screen&ndash;&gt;-->
-<!--    <string name="sTypeEvents">Type of events</string>-->
-
-<!--    &lt;!&ndash;    Permission&ndash;&gt;-->
-<!--    <string name="sReadDenied">Read contacts permission denied. This permission is necessary for the full operation of the application: reading contact data, including their events. Please, grant us access on the Settings screen.</string>-->
-<!--    <string name="sWriteDenied">Write contacts permission denied. See this FAQ with information about why we need this permission. Please, grant us access on the Settings screen.</string>-->
-<!--    <string name="sOpenSettings">Open Settings</string>-->
-<!--    <string name="sRetry">Retry</string>-->
 </resources>

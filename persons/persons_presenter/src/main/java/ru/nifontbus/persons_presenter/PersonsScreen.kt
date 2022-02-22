@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -127,7 +126,6 @@ private fun PersonCard(
     searchState: MutableState<String>,
     onClick: () -> Unit,
 ) {
-
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
@@ -135,46 +133,41 @@ private fun PersonCard(
             .clickable { onClick() },
         elevation = 4.dp
     ) {
-        Box(
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .background(surfaceBrush())
+                .padding(normalPadding)
         ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(normalPadding)
+            Column(
+                modifier = Modifier.weight(5f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
             ) {
-                Column(
-                    modifier = Modifier.weight(5f),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Text(
-                        text = Search.colorSubstring(
-                            string = person.displayName,
-                            searchString = searchState.value,
-                            mainColor = MaterialTheme.colors.onSurface,
-                            searchColor = Color.Red
-                        ),
-                        style = MaterialTheme.typography.h5,
-                    )
-                } // Col
+                Text(
+                    text = Search.colorSubstring(
+                        string = person.displayName,
+                        searchString = searchState.value,
+                        mainColor = MaterialTheme.colors.onSurface,
+                        searchColor = Color.Red
+                    ),
+                    style = MaterialTheme.typography.h5,
+                )
+            } // Col
 
-                person.photo?.let {
-                    Image(
-                        bitmap = it,
-                        contentDescription = "Photo",
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(cornerShapeIconPercent)),
-                        contentScale = ContentScale.FillWidth
-                    )
-                }
-            } // Row
-        }
+            person.photo?.let {
+                Image(
+                    bitmap = it,
+                    contentDescription = "Photo",
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(cornerShapeIconPercent)),
+                    contentScale = ContentScale.FillWidth
+                )
+            }
+        } // Row
     }
 }
 

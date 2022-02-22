@@ -169,27 +169,24 @@ fun PersonInfoScreen(
                     ) { _, event ->
 
                         TemplateSwipeToDismiss(
-                            modifier = Modifier.padding(bottom = smallPadding),
-                            {
+                            onDelete = {
                                 viewModel.deleteEvent(event)
                             },
-                            {
-                                EventCard(
-                                    modifier = Modifier.padding(horizontal = normalPadding),
-                                    event = event,
-                                    person = person,
-                                    onClick = {
-                                        extNavController.navigate(
-                                            Screen.ExtEventUpdateScreen.createRoute(
-                                                person.id, event.id
-                                            )
+                        ) {
+                            EventCard(
+                                modifier = Modifier.padding(horizontal = normalPadding),
+                                event = event,
+                                person = person,
+                                onClick = {
+                                    extNavController.navigate(
+                                        Screen.ExtEventUpdateScreen.createRoute(
+                                            person.id, event.id
                                         )
-                                    },
-                                    isShowNameAndImage = false,
-                                )
-                            },
-//                                enabled = template.type == 0,
-                        )
+                                    )
+                                },
+                                isShowNameAndImage = false,
+                            )
+                        }
                     }
                 } // LazyColumn
             }

@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-            ContactsEventsTheme(darkTheme = true) {
+            ContactsEventsTheme() {
                 Surface(color = MaterialTheme.colors.background) {
                     GetPermission(
                         permission = Manifest.permission.READ_CONTACTS,

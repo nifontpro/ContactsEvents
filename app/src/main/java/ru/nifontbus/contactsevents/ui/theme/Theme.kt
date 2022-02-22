@@ -7,7 +7,6 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.graphics.Color
 import ru.nifontbus.core_ui.*
 
 private val LightColorPalette = lightColors(
@@ -43,17 +42,14 @@ fun ContactsEventsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        LightColorPalette
-    } else {
-        if (Build.VERSION.SDK_INT >= 29) {
-            LightColorPalette
+    val colors =
+        if (Build.VERSION.SDK_INT >= 30  ) {
+            if (darkTheme) DarkColorPalette else LightColorPalette
         } else {
-            DarkColorPalette
+            LightColorPalette
         }
 
-    }
-    
+
     CompositionLocalProvider(LocalSpacing provides Spacing()) {
 
         MaterialTheme(

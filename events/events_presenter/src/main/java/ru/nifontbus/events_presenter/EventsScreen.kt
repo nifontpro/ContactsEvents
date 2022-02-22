@@ -89,90 +89,85 @@ fun EventCard(
         else null,
         elevation = 4.dp
     ) {
-        Box(
+        val daysLeft = event.daysLeft()
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .background(surfaceBrush())
+                .padding(horizontal = normalPadding),
         ) {
-            val daysLeft = event.daysLeft()
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = normalPadding),
+
+            val modText = Modifier.padding(vertical = smallPadding)
+            Column(
+                modifier = Modifier.weight(5f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start,
             ) {
-
-                val modText = Modifier.padding(vertical = smallPadding)
-                Column(
-                    modifier = Modifier.weight(5f),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.Start,
-                ) {
-
-                    if (isShowNameAndImage) {
-                        person?.let {
-                            Text(
-                                text = it.displayName,
-                                modifier = modText,
-                                style = MaterialTheme.typography.h5,
-                                color = MaterialTheme.colors.onBackground
-                            )
-                            Divider(
-                                modifier = Modifier.padding(end = normalPadding),
-                                color = MaterialTheme.colors.onSurface
-                            )
-                        }
-                    }
-
-                    val description = event.getDescription(LocalContext.current)
-                    Text(
-                        text = "${event.date.getLocalizedDate()}: $description",
-                        modifier = modText,
-                        color = if (daysLeft == 0L) MaterialTheme.colors.onBackground
-                        else MaterialTheme.colors.onSurface,
-                        style = MaterialTheme.typography.h6
-                    )
-
-                    val dateText = buildAnnotatedString {
-
-                        event.getFullYear()?.let {
-                            val yearLeft = stringResource(R.string.sYearLeft, it)
-                            if (it > 0) {
-                                append(yearLeft)
-                            }
-                        }
-
-                        val daysLeftString =
-                            if (daysLeft > 0) stringResource(
-                                R.string.sDaysLeft,
-                                daysLeft
-                            ) else stringResource(R.string.sNow)
-                        append(daysLeftString)
-                    }
-                    Text(
-                        text = dateText,
-                        modifier = Modifier.padding(bottom = smallPadding),
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.onSurface
-                    )
-                } // Column
 
                 if (isShowNameAndImage) {
                     person?.let {
-                        it.photo?.let { photo ->
-                            Image(
-                                bitmap = photo,
-                                contentDescription = "Photo",
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clip(RoundedCornerShape(cornerShapeIconPercent)),
-                                contentScale = ContentScale.FillWidth
-                            )
-                        }
+                        Text(
+                            text = it.displayName,
+                            modifier = modText,
+                            style = MaterialTheme.typography.h5,
+                            color = MaterialTheme.colors.onBackground
+                        )
+                        Divider(
+                            modifier = Modifier.padding(end = normalPadding),
+                            color = MaterialTheme.colors.onSurface
+                        )
                     }
                 }
-            } // Row
-        }
+
+                val description = event.getDescription(LocalContext.current)
+                Text(
+                    text = "${event.date.getLocalizedDate()}: $description",
+                    modifier = modText,
+                    color = if (daysLeft == 0L) MaterialTheme.colors.onBackground
+                    else MaterialTheme.colors.onSurface,
+                    style = MaterialTheme.typography.h6
+                )
+
+                val dateText = buildAnnotatedString {
+
+                    event.getFullYear()?.let {
+                        val yearLeft = stringResource(R.string.sYearLeft, it)
+                        if (it > 0) {
+                            append(yearLeft)
+                        }
+                    }
+
+                    val daysLeftString =
+                        if (daysLeft > 0) stringResource(
+                            R.string.sDaysLeft,
+                            daysLeft
+                        ) else stringResource(R.string.sNow)
+                    append(daysLeftString)
+                }
+                Text(
+                    text = dateText,
+                    modifier = Modifier.padding(bottom = smallPadding),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onSurface
+                )
+            } // Column
+
+            if (isShowNameAndImage) {
+                person?.let {
+                    it.photo?.let { photo ->
+                        Image(
+                            bitmap = photo,
+                            contentDescription = "Photo",
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(cornerShapeIconPercent)),
+                            contentScale = ContentScale.FillWidth
+                        )
+                    }
+                }
+            }
+        } // Row
     }
 }

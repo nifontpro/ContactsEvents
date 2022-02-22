@@ -1,9 +1,13 @@
 package ru.nifontbus.templates_presenter
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Android
@@ -20,6 +24,9 @@ import androidx.navigation.NavController
 import ru.nifontbus.core_ui.Argument
 import ru.nifontbus.core_ui.component.TemplateSwipeToDismiss
 import ru.nifontbus.core_ui.component.TopBar
+import ru.nifontbus.core_ui.component.surfaceBrush
+import ru.nifontbus.core_ui.normalPadding
+import ru.nifontbus.core_ui.smallPadding
 import ru.nifontbus.events_domain.model.EventType
 import ru.nifontbus.templates_domain.model.Template
 
@@ -66,55 +73,56 @@ fun TemplatesScreen(
             ) { _, template ->
 
                 TemplateSwipeToDismiss(
-                    modifier = Modifier.padding(vertical = 4.dp),
-                    {
+                    onDelete = {
 //                        viewModel.deleteTemplate(template)
                     },
-                    {
-                        TemplateCard(template) {
-                            extNavController.previousBackStackEntry?.arguments?.putParcelable(
-                                Argument.template,
-                                Template(
-                                    type = template.type,
-                                    label = template.getDescriptionForSelect(context)
-                                )
-                            )
-                            extNavController.popBackStack()
-                        }
-                    },
                     enabled = false // template.type == 0,
-                )
+                ) {
+                    TemplateCard(template) {
+                        extNavController.previousBackStackEntry?.arguments?.putParcelable(
+                            Argument.template,
+                            Template(
+                                type = template.type,
+                                label = template.getDescriptionForSelect(context)
+                            )
+                        )
+                        extNavController.popBackStack()
+                    }
+                }
             }
         }
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun TemplateCard(
     template: Template,
-    onSelect: () -> Unit,
+    onSelect: () -> Unit = {},
 ) {
-    Surface(
-        onClick = onSelect,
-        elevation = 1.dp,
-        shape = RoundedCornerShape(3.dp),
+    Card(
+        elevation = 4.dp,
+        shape = MaterialTheme.shapes.medium,
+        modifier = Modifier
+            .padding(vertical = smallPadding)
+            .clickable { onSelect() }
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(surfaceBrush()),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 template.getDescription(LocalContext.current),
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
+                modifier = Modifier.padding(normalPadding),
                 style = MaterialTheme.typography.h5,
             )
             if (template.type == EventType.CUSTOM) {
                 Icon(
                     imageVector = Icons.Outlined.Edit,
                     contentDescription = "",
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(normalPadding),
                     tint = MaterialTheme.colors.primaryVariant
                 )
             }
@@ -124,7 +132,7 @@ private fun TemplateCard(
                 Icon(
                     imageVector = Icons.Outlined.Android,
                     contentDescription = "",
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(normalPadding),
                     tint = MaterialTheme.colors.primaryVariant
                 )
             }

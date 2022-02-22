@@ -25,9 +25,9 @@ import ru.nifontbus.core_ui.Transparent
 @Composable
 fun TemplateSwipeToDismiss(
     modifier: Modifier = Modifier,
-    onDelete: () -> Unit,
-    dismissContent: @Composable RowScope.() -> Unit,
+    onDelete: () -> Unit = {},
     enabled: Boolean = true,
+    dismissContent: @Composable RowScope.() -> Unit,
 ) {
 
     val dismissState = rememberDismissState()

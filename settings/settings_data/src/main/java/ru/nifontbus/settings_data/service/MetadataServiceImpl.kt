@@ -17,7 +17,7 @@ class MetadataServiceImpl : MetadataService {
     private val _message = MutableSharedFlow<String>()
     private val message = _message.asSharedFlow()
 
-    private val _event = MutableSharedFlow<MainEvent>()
+    private val _event = MutableSharedFlow<MainEvent>(1)
     private val event = _event.asSharedFlow()
 
 

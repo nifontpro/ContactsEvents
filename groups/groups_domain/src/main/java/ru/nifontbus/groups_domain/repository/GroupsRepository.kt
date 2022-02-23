@@ -11,4 +11,5 @@ interface GroupsRepository {
 
     fun setCurrentGroup(group: PersonsGroup?)
 
+    suspend fun syncGroups()
 }

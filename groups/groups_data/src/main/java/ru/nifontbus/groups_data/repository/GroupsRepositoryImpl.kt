@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import ru.nifontbus.groups_domain.model.PersonsGroup
 import ru.nifontbus.groups_domain.repository.GroupsRepository
 
@@ -24,10 +25,16 @@ class GroupsRepositoryImpl(
     override val currentGroup = _currentGroup.asStateFlow()
 
     init {
+        CoroutineScope(Dispatchers.Default).launch {
+            groupsUpdate()
+        }
+    }
+
+    override suspend fun syncGroups() {
         groupsUpdate()
     }
 
-    private fun groupsUpdate() = CoroutineScope(Dispatchers.Default).launch {
+    private suspend fun groupsUpdate() {
         val uri: Uri = ContactsContract.Groups.CONTENT_URI
         val projection = arrayOf(
             ContactsContract.Groups.TITLE,
@@ -53,6 +60,7 @@ class GroupsRepositoryImpl(
                 val title = it.getString(titleIdx) ?: "?"
                 val account = it.getString(accountIdx) ?: ""
                 val newGroup = PersonsGroup(title, account, id)
+                yield()
                 groupsList.add(newGroup)
             }
             it.close()

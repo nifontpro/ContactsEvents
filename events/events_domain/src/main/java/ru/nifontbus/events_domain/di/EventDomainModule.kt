@@ -29,7 +29,8 @@ object EventDomainModule {
             getSortedEventsByPerson = GetSortedEventsByPerson(repository),
             deleteEvent = DeleteEvent(repository),
             getEventById = GetEventById(repository),
-            updateEvent = UpdateEvent(repository)
+            updateEvent = UpdateEvent(repository),
+            syncEvents = SyncEvents(repository)
         )
     }
 }

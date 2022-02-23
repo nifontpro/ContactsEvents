@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.SharedFlow
 
 interface MetadataService {
 
-    // Рассылает сообщение всем подписчикам
     suspend fun sendMessage(msg: String)
     fun subscribeMessage(): SharedFlow<String>
 

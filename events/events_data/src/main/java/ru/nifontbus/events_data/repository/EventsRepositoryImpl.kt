@@ -6,27 +6,23 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import ru.nifontbus.core.domain.model.Resource
 import ru.nifontbus.events_data.R
 import ru.nifontbus.events_domain.model.Event
 import ru.nifontbus.events_domain.model.EventType
 import ru.nifontbus.events_domain.repository.EventsRepository
-import ru.nifontbus.settings_domain.model.MainEvent
-import ru.nifontbus.settings_domain.service.MetadataService
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class EventsRepositoryImpl(
     private val context: Context,
-    metadataService: MetadataService
 ) : EventsRepository {
 
     private val _events = MutableStateFlow<List<Event>>(emptyList())
@@ -35,34 +31,14 @@ class EventsRepositoryImpl(
     init {
         CoroutineScope(Dispatchers.Default).launch {
             eventsUpdate()
-            metadataService.subscribeEvent(MainEvent.Sync) {
-                Log.e("my", "--> Sync Events...")
-                eventsUpdate()
-            }
         }
     }
 
-    private fun getEventsCursor(): Cursor? {
-        val uri: Uri = ContactsContract.Data.CONTENT_URI
-        val projection = arrayOf(
-            ContactsContract.CommonDataKinds.Event._ID,
-            ContactsContract.CommonDataKinds.Event.DISPLAY_NAME,
-            ContactsContract.CommonDataKinds.Event.CONTACT_ID,
-            ContactsContract.CommonDataKinds.Event.LOOKUP_KEY,
-            ContactsContract.CommonDataKinds.Event.LABEL,
-            ContactsContract.CommonDataKinds.Event.START_DATE,
-            ContactsContract.CommonDataKinds.Event.TYPE,
-        )
-
-        val where = ContactsContract.Data.MIMETYPE + "= ?"
-        val selectionArgs = arrayOf(
-            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
-        )
-        val sortOrder = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
-        return context.contentResolver.query(uri, projection, where, selectionArgs, sortOrder)
+    override suspend fun syncEvents() {
+        eventsUpdate()
     }
 
-    private fun eventsUpdate() {
+    private suspend fun eventsUpdate() {
         val cursor = getEventsCursor()
         cursor?.let {
             val idIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event._ID)
@@ -89,6 +65,7 @@ class EventsRepositoryImpl(
                     label = ""
                 }
 
+                yield()
                 _events.value = events.value +
                         listOf(
                             Event(
@@ -103,6 +80,26 @@ class EventsRepositoryImpl(
             }
             it.close()
         }
+    }
+
+    private fun getEventsCursor(): Cursor? {
+        val uri: Uri = ContactsContract.Data.CONTENT_URI
+        val projection = arrayOf(
+            ContactsContract.CommonDataKinds.Event._ID,
+            ContactsContract.CommonDataKinds.Event.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Event.CONTACT_ID,
+            ContactsContract.CommonDataKinds.Event.LOOKUP_KEY,
+            ContactsContract.CommonDataKinds.Event.LABEL,
+            ContactsContract.CommonDataKinds.Event.START_DATE,
+            ContactsContract.CommonDataKinds.Event.TYPE,
+        )
+
+        val where = ContactsContract.Data.MIMETYPE + "= ?"
+        val selectionArgs = arrayOf(
+            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
+        )
+        val sortOrder = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
+        return context.contentResolver.query(uri, projection, where, selectionArgs, sortOrder)
     }
 
     override suspend fun addEvent(event: Event): Resource<Unit> {

@@ -7,42 +7,36 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.Contacts.openContactPhotoInputStream
-import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_domain.model.PersonInfo
 import ru.nifontbus.persons_domain.model.Phone
 import ru.nifontbus.persons_domain.repository.PersonsRepository
-import ru.nifontbus.settings_domain.model.MainEvent
-import ru.nifontbus.settings_domain.service.MetadataService
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class PersonsRepositoryImpl(
     private val context: Context,
-    metadataService: MetadataService
 ) : PersonsRepository {
 
     private val _persons = MutableStateFlow<List<Person>>(emptyList())
     override val persons = _persons.asStateFlow()
 
-    var job: Job = Job()
-
     init {
         CoroutineScope(Dispatchers.Default).launch {
-            personsUpdate()
-            metadataService.subscribeEvent(MainEvent.Sync) {
-                job.cancel()
-                delay(50) // Время на перехват отмены предидущей корутины
-                job = launch {
-                    personsUpdate()
-                }
-            }
+            syncPersons()
         }
+    }
+
+    override suspend fun syncPersons() {
+        personsUpdate()
     }
 
     private suspend fun personsUpdate() {
@@ -213,7 +207,7 @@ class PersonsRepositoryImpl(
             )
         }
     }
-} // EOC
+}
 
 fun String.toIntDefault(default: Int) =
     try {

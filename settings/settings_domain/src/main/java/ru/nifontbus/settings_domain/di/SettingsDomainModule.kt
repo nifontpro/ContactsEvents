@@ -17,14 +17,21 @@ object SettingsDomainModule {
     @ViewModelScoped
     fun provideSettingsUseCases(
         repository: SettingsRepository,
-        metadataService: MetadataService
     ) = SettingsUseCases(
         getReposeFeatures = GetReposeFeatures(repository),
         getAdd40Day = GetAdd40Day(repository),
         saveReposeFeatures = SaveReposeFeatures(repository),
         saveAdd40Day = SaveAdd40Day(repository),
+    )
+
+    @Provides
+    @ViewModelScoped
+    fun provideMetadataUseCases(
+        metadataService: MetadataService
+    ) = MetadataUseCases(
         sendMessage = SendMessage(metadataService),
         subscribeMessage = SubscribeMessage(metadataService),
-        sendEvent = SendEvent(metadataService)
+        sendEvent = SendEvent(metadataService),
+        subscribeEvent = SubscribeEvent(metadataService)
     )
 }

@@ -72,7 +72,7 @@ fun PersonsScreen(
                     text = stringResource(R.string.sNoPersonInGroup),
                     modifier = Modifier
                         .align(Alignment.TopCenter)
-                        .padding(20.dp),
+                        .padding(bigPadding),
                     style = MaterialTheme.typography.h5,
                     color = MaterialTheme.colors.secondary,
                 )
@@ -127,9 +127,9 @@ private fun PersonCard(
     onClick: () -> Unit,
 ) {
     Card(
-        shape = RoundedCornerShape(8.dp),
+        shape = MaterialTheme.shapes.medium,
         modifier = Modifier
-            .padding(vertical = smallPadding)
+            .padding(vertical = normalPadding)
             .clickable { onClick() },
         elevation = 4.dp
     ) {

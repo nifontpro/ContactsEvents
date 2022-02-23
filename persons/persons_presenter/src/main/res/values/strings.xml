@@ -1,6 +1,6 @@
 <resources>
     <!--    Person screen-->
-    <string name="sNoPersonInGroup">No contacts in group</string>
+    <string name="sNoPersonInGroup">Contacts not found</string>
 
     <!--    Person info-->
     <string name="sPersonInfo">Contact info</string>

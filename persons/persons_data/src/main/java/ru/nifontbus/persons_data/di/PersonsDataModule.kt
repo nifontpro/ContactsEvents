@@ -17,7 +17,9 @@ object PersonsDataModule {
     @Provides
     @Singleton
     fun providePersonsRepository(
-        @ApplicationContext context: Context
-    ): PersonsRepository = PersonsRepositoryImpl(context)
+        @ApplicationContext context: Context,
+    ): PersonsRepository = PersonsRepositoryImpl(
+        context = context,
+    )
 
 }

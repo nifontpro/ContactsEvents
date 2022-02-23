@@ -5,4 +5,5 @@ data class GroupsUseCases(
     val getGroupById: GetGroupById,
     val setCurrentGroup: SetCurrentGroup,
     val getCurrentGroup: GetCurrentGroup,
+    val syncGroups: SyncGroups
 )

@@ -3,29 +3,50 @@ package ru.nifontbus.events_presenter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
 import ru.nifontbus.core_ui.component.BottomNavItem
 import ru.nifontbus.events_domain.use_cases.EventsUseCases
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_domain.use_cases.PersonsUseCases
+import ru.nifontbus.settings_domain.model.MainEvent
+import ru.nifontbus.settings_domain.use_cases.MetadataUseCases
 import javax.inject.Inject
 
 @HiltViewModel
 class EventsViewModel @Inject constructor(
-    eventsUseCases: EventsUseCases,
+    private val eventsUseCases: EventsUseCases,
     private val personsUseCases: PersonsUseCases,
+    private val metadataUseCases: MetadataUseCases
 ) : ViewModel() {
 
     val events = eventsUseCases.getSortedEvents()
 
-    fun getPersonByIdFlow(id: Long): Flow<Person?> = personsUseCases.getPersonByIdFlow(id)
+    private var job: Job = Job()
 
     init {
         viewModelScope.launch {
-            events.collect {
+            syncEventsSubscribe()
+
+            events.collectLatest {
                 BottomNavItem.EventItem.badgeCount.value = it.size
             }
         }
+    }
+
+    private fun syncEventsSubscribe() = viewModelScope.launch {
+        metadataUseCases.subscribeEvent(MainEvent.SyncAll) {
+            job.cancelAndJoin()
+            job = CoroutineScope(Dispatchers.Default).launch {
+                eventsUseCases.syncEvents()
+            }
+        }
+    }
+
+    fun getPersonByIdFlow(id: Long): Flow<Person?> = personsUseCases.getPersonByIdFlow(id)
+
+    fun syncAll() = viewModelScope.launch {
+        metadataUseCases.sendEvent(MainEvent.SyncAll)
     }
 }

@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_domain.model.PersonInfo
 import ru.nifontbus.persons_domain.model.Phone
@@ -21,19 +22,24 @@ import ru.nifontbus.persons_domain.repository.PersonsRepository
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-
 class PersonsRepositoryImpl(
-    private val context: Context
+    private val context: Context,
 ) : PersonsRepository {
 
     private val _persons = MutableStateFlow<List<Person>>(emptyList())
     override val persons = _persons.asStateFlow()
 
     init {
+        CoroutineScope(Dispatchers.Default).launch {
+            syncPersons()
+        }
+    }
+
+    override suspend fun syncPersons() {
         personsUpdate()
     }
 
-    private fun personsUpdate() = CoroutineScope(Dispatchers.Default).launch {
+    private suspend fun personsUpdate() {
         val uri = ContactsContract.Contacts.CONTENT_URI
 
         val projection = arrayOf(
@@ -50,24 +56,30 @@ class PersonsRepositoryImpl(
             uri, projection, null, null, sortOrder
         )
 
+//                Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
+
         cursor?.let {
             val idRef = it.getColumnIndex(ContactsContract.Contacts._ID)
             val lookupRef = it.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)
             val displayNameRef = it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
             val hasPhoneNumberRef = it.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)
-
+            _persons.value = emptyList()
             while (it.moveToNext()) {
                 val lookup = it.getString(lookupRef)
                 val id = it.getLong(idRef)
                 val hasPhoneNumber = it.getInt(hasPhoneNumberRef) == 1
                 val displayName = it.getString(displayNameRef) ?: "?"
                 val groups = getGroupsByContact(id)
-
+                yield()
                 _persons.value =
                     persons.value + listOf(
                         Person(
                             displayName = displayName,
-                            groups = groups,
+                            groups = if (groups.isNotEmpty()) {
+                                groups
+                            } else {
+                                listOf(-1)
+                            },
                             hasPhoneNumber = hasPhoneNumber,
                             photo = getPhotoById(id),
                             id = id,
@@ -118,7 +130,6 @@ class PersonsRepositoryImpl(
         val cursorInfo = context.contentResolver.query(
             infoUri, null, null, null, null
         )
-//        Log.e("my", DatabaseUtils.dumpCursorToString(cursorInfo))
         val phones = mutableListOf<Phone>()
 
         cursorInfo?.let {
@@ -196,7 +207,7 @@ class PersonsRepositoryImpl(
             )
         }
     }
-} // EOC
+}
 
 fun String.toIntDefault(default: Int) =
     try {

@@ -4,5 +4,5 @@ data class SettingsUseCases(
     val getReposeFeatures: GetReposeFeatures,
     val getAdd40Day: GetAdd40Day,
     val saveReposeFeatures: SaveReposeFeatures,
-    val saveAdd40Day: SaveAdd40Day
+    val saveAdd40Day: SaveAdd40Day,
 )

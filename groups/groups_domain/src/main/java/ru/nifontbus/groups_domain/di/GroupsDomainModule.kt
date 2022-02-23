@@ -19,5 +19,6 @@ object GroupsDomainModule {
         getGroupById = GetGroupById(repository),
         setCurrentGroup = SetCurrentGroup(repository),
         getCurrentGroup = GetCurrentGroup(repository),
+        syncGroups = SyncGroups(repository)
     )
 }

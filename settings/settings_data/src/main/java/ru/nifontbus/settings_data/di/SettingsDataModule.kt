@@ -9,7 +9,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.nifontbus.settings_data.repository.SettingsRepositoryImpl
+import ru.nifontbus.settings_data.service.MetadataServiceImpl
 import ru.nifontbus.settings_domain.repository.SettingsRepository
+import ru.nifontbus.settings_domain.service.MetadataService
 import javax.inject.Singleton
 
 @Module
@@ -29,6 +31,10 @@ object SettingsDataModule {
             Context.MODE_PRIVATE
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideMetadataService(): MetadataService = MetadataServiceImpl()
 }
 
 const val SHARED_PREF_NAME = "Current_setting"

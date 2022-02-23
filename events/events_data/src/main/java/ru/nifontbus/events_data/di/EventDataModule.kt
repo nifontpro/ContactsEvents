@@ -17,7 +17,9 @@ object EventDataModule {
     @Provides
     @Singleton
     fun provideEventsRepository(
-        @ApplicationContext context: Context
-    ): EventsRepository = EventsRepositoryImpl(context)
+        @ApplicationContext context: Context,
+    ): EventsRepository = EventsRepositoryImpl(
+        context = context,
+    )
 
 }

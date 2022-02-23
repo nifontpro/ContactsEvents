@@ -22,7 +22,8 @@ object PersonsDomainModule {
             getPersonsFromGroup = GetPersonsFromGroup(repository),
             getPersonsFilteredFromGroup = GetPersonsFilteredFromGroup(repository),
             getPersonInfo = GetPersonInfo(repository),
-            getDisplayPhoto = GetDisplayPhoto(repository)
+            getDisplayPhoto = GetDisplayPhoto(repository),
+            syncPersons = SyncPersons(repository)
         )
 
 }

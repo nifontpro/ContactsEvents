@@ -8,4 +8,5 @@ data class PersonsUseCases(
     val getPersonsFilteredFromGroup: GetPersonsFilteredFromGroup,
     val getPersonInfo : GetPersonInfo,
     val getDisplayPhoto: GetDisplayPhoto,
+    val syncPersons: SyncPersons
 )

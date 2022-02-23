@@ -6,8 +6,10 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,18 +19,27 @@ import ru.nifontbus.events_data.R
 import ru.nifontbus.events_domain.model.Event
 import ru.nifontbus.events_domain.model.EventType
 import ru.nifontbus.events_domain.repository.EventsRepository
+import ru.nifontbus.settings_domain.model.MainEvent
+import ru.nifontbus.settings_domain.service.MetadataService
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class EventsRepositoryImpl(
-    private val context: Context
+    private val context: Context,
+    metadataService: MetadataService
 ) : EventsRepository {
 
     private val _events = MutableStateFlow<List<Event>>(emptyList())
     override val events: StateFlow<List<Event>> = _events.asStateFlow()
 
     init {
-        eventsUpdate()
+        CoroutineScope(Dispatchers.Default).launch {
+            eventsUpdate()
+            metadataService.subscribeEvent(MainEvent.Sync) {
+                Log.e("my", "--> Sync Events...")
+                eventsUpdate()
+            }
+        }
     }
 
     private fun getEventsCursor(): Cursor? {
@@ -51,7 +62,7 @@ class EventsRepositoryImpl(
         return context.contentResolver.query(uri, projection, where, selectionArgs, sortOrder)
     }
 
-    private fun eventsUpdate() = CoroutineScope(Dispatchers.Default).launch {
+    private fun eventsUpdate() {
         val cursor = getEventsCursor()
         cursor?.let {
             val idIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event._ID)

@@ -9,17 +9,18 @@ import ru.nifontbus.core_ui.component.BottomNavItem
 import ru.nifontbus.events_domain.use_cases.EventsUseCases
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_domain.use_cases.PersonsUseCases
+import ru.nifontbus.settings_domain.model.MainEvent
+import ru.nifontbus.settings_domain.use_cases.SettingsUseCases
 import javax.inject.Inject
 
 @HiltViewModel
 class EventsViewModel @Inject constructor(
     eventsUseCases: EventsUseCases,
     private val personsUseCases: PersonsUseCases,
+    private val settingsUseCase: SettingsUseCases
 ) : ViewModel() {
 
     val events = eventsUseCases.getSortedEvents()
-
-    fun getPersonByIdFlow(id: Long): Flow<Person?> = personsUseCases.getPersonByIdFlow(id)
 
     init {
         viewModelScope.launch {
@@ -27,5 +28,11 @@ class EventsViewModel @Inject constructor(
                 BottomNavItem.EventItem.badgeCount.value = it.size
             }
         }
+    }
+
+    fun getPersonByIdFlow(id: Long): Flow<Person?> = personsUseCases.getPersonByIdFlow(id)
+
+    fun syncAll() = viewModelScope.launch {
+        settingsUseCase.sendEvent(MainEvent.Sync)
     }
 }

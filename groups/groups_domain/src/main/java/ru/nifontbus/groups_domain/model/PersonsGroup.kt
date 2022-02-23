@@ -5,7 +5,7 @@ import ru.nifontbus.groups_domain.R
 
 data class PersonsGroup(
     val title: String = "",
-    val account: String = "",
+    val account: String = "-",
     val id: Long = -1, // Без группы
 ) {
     fun localTitle(context: Context): String =

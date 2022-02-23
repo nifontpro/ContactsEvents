@@ -7,32 +7,45 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.Contacts.openContactPhotoInputStream
+import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_domain.model.PersonInfo
 import ru.nifontbus.persons_domain.model.Phone
 import ru.nifontbus.persons_domain.repository.PersonsRepository
+import ru.nifontbus.settings_domain.model.MainEvent
+import ru.nifontbus.settings_domain.service.MetadataService
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class PersonsRepositoryImpl(
-    private val context: Context
+    private val context: Context,
+    metadataService: MetadataService
 ) : PersonsRepository {
 
     private val _persons = MutableStateFlow<List<Person>>(emptyList())
     override val persons = _persons.asStateFlow()
 
+    var job: Job = Job()
+
     init {
-        personsUpdate()
+        CoroutineScope(Dispatchers.Default).launch {
+            personsUpdate()
+            metadataService.subscribeEvent(MainEvent.Sync) {
+                job.cancel()
+                delay(50) // Время на перехват отмены предидущей корутины
+                job = launch {
+                    personsUpdate()
+                }
+            }
+        }
     }
 
-    private fun personsUpdate() = CoroutineScope(Dispatchers.Default).launch {
+    private suspend fun personsUpdate() {
         val uri = ContactsContract.Contacts.CONTENT_URI
 
         val projection = arrayOf(
@@ -56,14 +69,14 @@ class PersonsRepositoryImpl(
             val lookupRef = it.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)
             val displayNameRef = it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
             val hasPhoneNumberRef = it.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)
-
+            _persons.value = emptyList()
             while (it.moveToNext()) {
                 val lookup = it.getString(lookupRef)
                 val id = it.getLong(idRef)
                 val hasPhoneNumber = it.getInt(hasPhoneNumberRef) == 1
                 val displayName = it.getString(displayNameRef) ?: "?"
                 val groups = getGroupsByContact(id)
-
+                yield()
                 _persons.value =
                     persons.value + listOf(
                         Person(

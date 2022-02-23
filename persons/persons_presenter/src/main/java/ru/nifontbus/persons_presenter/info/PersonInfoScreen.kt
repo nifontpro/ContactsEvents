@@ -79,7 +79,6 @@ fun PersonInfoScreen(
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
-//                .padding(horizontal = normalPadding)
         ) {
 
             val collapsingState = rememberCollapsingToolbarScaffoldState()
@@ -106,6 +105,7 @@ fun PersonInfoScreen(
                             bitmap = it,
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .height(maxHeight / 2.2f)
                                 .parallax(0.3f)
                                 .graphicsLayer { alpha = progress * 1.3f }
                                 .road(
@@ -123,7 +123,8 @@ fun PersonInfoScreen(
                         person.displayName,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(surfaceBrush())
+                            .background(MaterialTheme.colors.surface
+                                .copy(alpha = 0.5f + (1f - progress) / 2f))
                             .padding(normalPadding)
                             .road(
                                 whenCollapsed = Alignment.BottomStart,

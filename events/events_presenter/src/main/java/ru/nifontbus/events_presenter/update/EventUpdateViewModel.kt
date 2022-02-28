@@ -97,11 +97,11 @@ class EventUpdateViewModel @Inject constructor(
     fun updateEvent() = viewModelScope.launch {
         val newEvent =
             Event(
-                eventLabel.value,
-                getRealDate(),
-                eventType.value,
-                person.value.id,
-                oldEvent.value.id
+                label = eventLabel.value,
+                date = getRealDate(),
+                type = eventType.value,
+                personId = person.value.id,
+                id = oldEvent.value.id
             )
         when (val result =
             eventsUseCases.updateEvent(newEvent, oldEvent.value)

@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath(Build.androidBuildTools)
-//        classpath("com.android.tools.build:gradle:7.1.1") // For update
+//        classpath("com.android.tools.build:gradle:7.1.2") // For update
 
         classpath(Build.hiltAndroidGradlePlugin)
         classpath(Build.kotlinGradlePlugin)

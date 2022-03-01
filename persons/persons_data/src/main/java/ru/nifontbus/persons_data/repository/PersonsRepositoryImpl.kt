@@ -2,19 +2,19 @@ package ru.nifontbus.persons_data.repository
 
 import android.content.ContentUris
 import android.content.Context
+import android.database.ContentObserver
 import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.provider.ContactsContract
 import android.provider.ContactsContract.Contacts.openContactPhotoInputStream
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_domain.model.PersonInfo
 import ru.nifontbus.persons_domain.model.Phone
@@ -29,9 +29,17 @@ class PersonsRepositoryImpl(
     private val _persons = MutableStateFlow<List<Person>>(emptyList())
     override val persons = _persons.asStateFlow()
 
+    private var lastUpdateTime: Long = 0
+    private var job: Job? = null
+
     init {
         CoroutineScope(Dispatchers.Default).launch {
             syncPersons()
+
+            context.contentResolver.registerContentObserver(
+                ContactsContract.Contacts.CONTENT_URI, false,
+                MyObserver(Handler(Looper.getMainLooper()))
+            )
         }
     }
 
@@ -39,35 +47,34 @@ class PersonsRepositoryImpl(
         personsUpdate()
     }
 
+    //    https://www.grokkingandroid.com/use-contentobserver-to-listen-to-changes/
+    inner class MyObserver(handler: Handler?) : ContentObserver(handler) {
+        override fun onChange(selfChange: Boolean) {
+            super.onChange(selfChange)
+            val time = System.currentTimeMillis()
+            // Установка минимального времени между синхронизациями (15с.)
+            if (time - lastUpdateTime > 1000 * 15) {
+                lastUpdateTime = time
+                job?.cancel()
+                job = CoroutineScope(Dispatchers.Default).launch {
+                    personsSilenceUpdate()
+                }
+            }
+        }
+    }
+
     private suspend fun personsUpdate() {
-        val uri = ContactsContract.Contacts.CONTENT_URI
-
-        val projection = arrayOf(
-            ContactsContract.Contacts._ID,
-            ContactsContract.Contacts.LOOKUP_KEY,
-            ContactsContract.Contacts.DISPLAY_NAME,
-            ContactsContract.Contacts.HAS_PHONE_NUMBER,
-            ContactsContract.Contacts.PHOTO_URI,
-        )
-
-        val sortOrder = ContactsContract.Contacts.DISPLAY_NAME
-
-        val cursor = context.contentResolver.query(
-            uri, projection, null, null, sortOrder
-        )
-
+        val cursor = getPersonCursor()
 //                Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
 
         cursor?.let {
             val idRef = it.getColumnIndex(ContactsContract.Contacts._ID)
             val lookupRef = it.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)
             val displayNameRef = it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
-            val hasPhoneNumberRef = it.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)
             _persons.value = emptyList()
             while (it.moveToNext()) {
                 val lookup = it.getString(lookupRef)
                 val id = it.getLong(idRef)
-                val hasPhoneNumber = it.getInt(hasPhoneNumberRef) == 1
                 val displayName = it.getString(displayNameRef) ?: "?"
                 val groups = getGroupsByContact(id)
                 yield()
@@ -80,7 +87,6 @@ class PersonsRepositoryImpl(
                             } else {
                                 listOf(-1)
                             },
-                            hasPhoneNumber = hasPhoneNumber,
                             photo = getPhotoById(id),
                             id = id,
                             lookup = lookup
@@ -89,6 +95,60 @@ class PersonsRepositoryImpl(
             }
             cursor.close()
         }
+    }
+
+    private suspend fun personsSilenceUpdate() {
+        val cursor = getPersonCursor()
+        cursor?.let {
+            val idRef = it.getColumnIndex(ContactsContract.Contacts._ID)
+            val lookupRef = it.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)
+            val displayNameRef = it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
+            val list = mutableListOf<Person>()
+            while (it.moveToNext()) {
+                val lookup = it.getString(lookupRef)
+                val id = it.getLong(idRef)
+                val displayName = it.getString(displayNameRef) ?: "?"
+                val groups = getGroupsByContact(id)
+                yield()
+                list.add(
+                    Person(
+                        displayName = displayName,
+                        groups = if (groups.isNotEmpty()) {
+                            groups
+                        } else {
+                            listOf(-1)
+                        },
+                        photo = getPhotoById(id),
+                        id = id,
+                        lookup = lookup
+                    )
+                )
+            }
+            _persons.value = list
+            cursor.close()
+        }
+    }
+
+    private fun getPersonCursor(): Cursor? {
+        val uri = ContactsContract.Contacts.CONTENT_URI
+        context.contentResolver.registerContentObserver(
+            uri,
+            true,
+            MyObserver(Handler(Looper.getMainLooper()))
+        )
+
+        val projection = arrayOf(
+            ContactsContract.Contacts._ID,
+            ContactsContract.Contacts.LOOKUP_KEY,
+            ContactsContract.Contacts.DISPLAY_NAME,
+            ContactsContract.Contacts.PHOTO_URI,
+        )
+
+        val sortOrder = ContactsContract.Contacts.DISPLAY_NAME
+
+        return context.contentResolver.query(
+            uri, projection, null, null, sortOrder
+        )
     }
 
     private fun getGroupsByContact(contactId: Long): List<Long> {
@@ -227,14 +287,6 @@ fun String.toIntDefault(default: Int) =
         )
         intent.action = "com.google.android.syncadapters.contacts.SYNC_HIGH_RES_PHOTO"
         context.startService(intent)
-    }*/
-
-//    https://www.grokkingandroid.com/use-contentobserver-to-listen-to-changes/
-/*    inner class MyObserver(handler: Handler?) : ContentObserver(handler) {
-        override fun onChange(selfChange: Boolean, uri: Uri?) {
-            super.onChange(selfChange, uri)
-            Log.e("my", "---> Change $uri")
-        }
     }*/
 
 // +event:

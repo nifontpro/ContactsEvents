@@ -1,5 +1,6 @@
 package ru.nifontbus.settings_presenter
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -10,7 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,7 +40,7 @@ fun SettingScreen(paddingValues: PaddingValues) {
                 Icon(
                     imageVector = Icons.Default.Sync,
                     contentDescription = "Sync",
-                    tint = MaterialTheme.colors.onSecondary
+                    tint = MaterialTheme.colors.onSecondary,
                 )
             }
         },
@@ -48,6 +53,15 @@ fun SettingScreen(paddingValues: PaddingValues) {
         ) {
             val screenWidth = maxWidth
             val screenHeight = maxHeight
+
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(R.drawable.fon_a),
+                contentDescription = null,
+                contentScale = ContentScale.FillHeight,
+                alpha = 0.3f
+            )
+
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -79,7 +93,7 @@ fun SettingScreen(paddingValues: PaddingValues) {
             )
             val iconSize = 50.dp
             SettingBox(iconSize, viewModel)
-//            BottomIcon(iconSize)
+            BottomIcon(iconSize)
         }
     }
 }
@@ -141,37 +155,35 @@ private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
     }
 }
 
-/*
 @Composable
 private fun BoxScope.BottomIcon(iconSize: Dp) {
+
+/*    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+    }*/
     Row(
         modifier = Modifier
             .align(Alignment.BottomCenter)
-            .padding(bottom = 20.dp)
+            .fillMaxWidth()
+            .padding(bottom = bigPadding)
+            .padding(horizontal = 40.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Image(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_android_studio),
-            contentDescription = "",
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .size(iconSize)
-
-        )
         Image(
             imageVector = ImageVector.vectorResource(R.drawable.ic_kotlin_icon),
             contentDescription = "",
             modifier = Modifier
-                .padding(horizontal = 20.dp)
                 .size(iconSize)
-
         )
         Image(
             imageVector = ImageVector.vectorResource(R.drawable.ic_compose),
             contentDescription = "",
             modifier = Modifier
-                .padding(horizontal = 20.dp)
                 .size(iconSize)
         )
     }
 }
-*/

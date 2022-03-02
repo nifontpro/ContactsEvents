@@ -56,9 +56,9 @@ fun SettingScreen(paddingValues: PaddingValues) {
 
             Image(
                 modifier = Modifier.fillMaxSize(),
-                painter = painterResource(R.drawable.fon_a),
+                painter = painterResource(R.drawable.decor),
                 contentDescription = null,
-                contentScale = ContentScale.FillHeight,
+                contentScale = ContentScale.FillWidth,
                 alpha = 0.3f
             )
 
@@ -86,7 +86,7 @@ fun SettingScreen(paddingValues: PaddingValues) {
             Icon(
                 imageVector = Icons.Default.VolunteerActivism,
                 contentDescription = "Volunteer Activism",
-                tint = MaterialTheme.colors.error.copy(alpha = 0.6f),
+                tint = MaterialTheme.colors.error.copy(alpha = 0.7f),
                 modifier = Modifier
                     .size(screenHeight / 2.8f)
                     .align(Alignment.Center)

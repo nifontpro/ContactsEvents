@@ -106,6 +106,7 @@ fun PersonsScreen(
                 }
 
                 items(contactsForInitial) { person ->
+
                     PersonCard(
                         person = person,
                         searchState = viewModel.searchState,

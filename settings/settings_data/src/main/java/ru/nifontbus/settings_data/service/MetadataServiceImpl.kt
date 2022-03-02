@@ -6,13 +6,11 @@ import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.ContactsContract
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.nifontbus.settings_domain.model.MainEvent
 import ru.nifontbus.settings_domain.service.MetadataService
@@ -65,7 +63,7 @@ class MetadataServiceImpl(
     }
 
     /**
-     * Класс-наблюдатель за изменениями в данных контактов
+     * Класс-наблюдатель за изменениями в данных контактов (не работает в последних API)
      */
     inner class MyObserver(handler: Handler?) : ContentObserver(handler) {
 

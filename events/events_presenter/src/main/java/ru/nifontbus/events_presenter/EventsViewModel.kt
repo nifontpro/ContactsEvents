@@ -51,8 +51,4 @@ class EventsViewModel @Inject constructor(
     }
 
     fun getPersonByIdFlow(id: Long): Flow<Person?> = personsUseCases.getPersonByIdFlow(id)
-
-    fun syncAll() = viewModelScope.launch {
-        metadataUseCases.sendEvent(MainEvent.SyncAll)
-    }
 }

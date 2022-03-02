@@ -48,20 +48,6 @@ fun EventsScreen(
         scaffoldState = scaffoldState,
         backgroundColor = MaterialTheme.colors.background,
         modifier = Modifier.padding(bottom = bottomPadding),
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.syncAll()
-                },
-                backgroundColor = MaterialTheme.colors.secondary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Sync,
-                    contentDescription = "Sync",
-                    tint = MaterialTheme.colors.onSecondary
-                )
-            }
-        }
     ) {
         LazyColumn(
             modifier = Modifier

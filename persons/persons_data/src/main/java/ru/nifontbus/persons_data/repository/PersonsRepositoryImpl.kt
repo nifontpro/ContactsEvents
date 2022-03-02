@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.Contacts.openContactPhotoInputStream
-import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import kotlinx.coroutines.*
@@ -46,7 +45,6 @@ class PersonsRepositoryImpl(
         CoroutineScope(Dispatchers.Default).launch {
             job?.cancelAndJoin()
             job = launch {
-                Log.e("my", "Real sync persons")
                 silentPersonsUpdate()
             }
         }

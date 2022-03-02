@@ -71,15 +71,12 @@ class MetadataServiceImpl(
 
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             super.onChange(selfChange)
-            Log.e("my", "Sync data, uri = $uri")
             val time = System.currentTimeMillis()
             // Проверка минимального времени между синхронизациями (30с.)
             if (time - lastUpdateTime > 1000 * 30) {
                 lastUpdateTime = time
                 CoroutineScope(Dispatchers.Default).launch {
-//                    sendEvent(MainEvent.SilentSyncAll)
                     _event.emit(MainEvent.SilentSyncAll)
-                    Log.e("my", "Real sync data")
                 }
             }
         }

@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.nifontbus.core_ui.component.BottomNavItem
 import ru.nifontbus.events_domain.use_cases.EventsUseCases
+import ru.nifontbus.groups_domain.use_cases.GroupsUseCases
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_domain.use_cases.PersonsUseCases
 import ru.nifontbus.settings_domain.model.MainEvent
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class EventsViewModel @Inject constructor(
     private val eventsUseCases: EventsUseCases,
     private val personsUseCases: PersonsUseCases,
+    private val groupsUseCases: GroupsUseCases,
     private val metadataUseCases: MetadataUseCases
 ) : ViewModel() {
 
@@ -41,6 +43,8 @@ class EventsViewModel @Inject constructor(
                 }
                 is MainEvent.SilentSyncAll -> {
                     eventsUseCases.silentSync()
+                    personsUseCases.silentSync()
+                    groupsUseCases.syncGroups()
                 }
             }
         }

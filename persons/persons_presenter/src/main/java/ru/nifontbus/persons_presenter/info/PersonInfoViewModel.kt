@@ -21,6 +21,7 @@ import ru.nifontbus.groups_domain.use_cases.GroupsUseCases
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_domain.model.PersonInfo
 import ru.nifontbus.persons_domain.use_cases.PersonsUseCases
+import ru.nifontbus.settings_domain.use_cases.MetadataUseCases
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,6 +29,7 @@ class PersonInfoViewModel @Inject constructor(
     private val personsUseCases: PersonsUseCases,
     private val groupsUseCases: GroupsUseCases,
     private val eventsUseCases: EventsUseCases,
+    private val metadataUseCases: MetadataUseCases,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -65,6 +67,7 @@ class PersonInfoViewModel @Inject constructor(
     private suspend fun getDisplayPhoto(id: Long) = personsUseCases.getDisplayPhoto(id)
 
     fun deleteEvent(event: Event) = viewModelScope.launch {
+        metadataUseCases.resetSyncTime()
         when (val result = eventsUseCases.deleteEvent(event)) {
             is Resource.Success -> {
                 sendMessage(result.message)

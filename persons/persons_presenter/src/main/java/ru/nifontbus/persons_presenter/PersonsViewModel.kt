@@ -35,13 +35,8 @@ class PersonsViewModel @Inject constructor(
 
     private fun syncPersonsSubscribe() = viewModelScope.launch {
         metadataUseCases.getEvent().collectLatest { event ->
-            when (event) {
-                is MainEvent.SyncAll -> {
-                    personsUseCases.syncPersons()
-                }
-                is MainEvent.SilentSyncAll -> {
-                    personsUseCases.silentSync()
-                }
+            if (event is MainEvent.SyncAll) {
+                personsUseCases.syncPersons()
             }
         }
     }

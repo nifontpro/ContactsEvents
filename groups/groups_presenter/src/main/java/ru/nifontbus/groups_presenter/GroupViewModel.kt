@@ -3,11 +3,11 @@ package ru.nifontbus.groups_presenter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import ru.nifontbus.core_ui.component.BottomNavItem
 import ru.nifontbus.groups_domain.model.PersonsGroup
 import ru.nifontbus.groups_domain.use_cases.GroupsUseCases
@@ -34,12 +34,11 @@ class GroupViewModel @Inject constructor(
     }
 
     private fun syncGroupsSubscribe() = viewModelScope.launch {
-        /*metadataUseCases.subscribeEvent(MainEvent.SyncAll) {
-            job.cancelAndJoin()
-            job = CoroutineScope(Dispatchers.Default).launch {
+        metadataUseCases.getEvent().collectLatest { event ->
+            if (event is MainEvent.SyncAll) {
                 groupsUseCases.syncGroups()
             }
-        }*/
+        }
     }
 
     private fun groupsCountSubscribe() = viewModelScope.launch {

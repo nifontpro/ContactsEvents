@@ -9,5 +9,6 @@ data class EventsUseCases constructor(
     val deleteEvent: DeleteEvent,
     val getEventById: GetEventById,
     val updateEvent: UpdateEvent,
-    val syncEvents: SyncEvents
+    val syncEvents: SyncEvents,
+    val silentSync: SilentSync
 )

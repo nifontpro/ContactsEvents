@@ -9,12 +9,13 @@ import kotlinx.coroutines.flow.SharedFlow
 
 interface MetadataService {
 
+    val event: SharedFlow<MainEvent>
+
     suspend fun sendMessage(msg: String)
+
     fun subscribeMessage(): SharedFlow<String>
 
     suspend fun sendEvent(newEvent: MainEvent)
-    suspend fun subscribeEvent(
-        desiredEvent: MainEvent,
-        run: suspend () -> Unit
-    )
+
+    fun resetSyncTime()
 }

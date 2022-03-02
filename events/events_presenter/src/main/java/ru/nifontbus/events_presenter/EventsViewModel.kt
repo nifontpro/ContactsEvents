@@ -3,9 +3,9 @@ package ru.nifontbus.events_presenter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import ru.nifontbus.core_ui.component.BottomNavItem
 import ru.nifontbus.events_domain.use_cases.EventsUseCases
 import ru.nifontbus.persons_domain.model.Person
@@ -23,8 +23,6 @@ class EventsViewModel @Inject constructor(
 
     val events = eventsUseCases.getSortedEvents()
 
-    private var job: Job = Job()
-
     init {
         viewModelScope.launch {
             syncEventsSubscribe()
@@ -36,10 +34,14 @@ class EventsViewModel @Inject constructor(
     }
 
     private fun syncEventsSubscribe() = viewModelScope.launch {
-        metadataUseCases.subscribeEvent(MainEvent.SyncAll) {
-            job.cancelAndJoin()
-            job = CoroutineScope(Dispatchers.Default).launch {
-                eventsUseCases.syncEvents()
+        metadataUseCases.getEvent().collectLatest { event ->
+            when (event) {
+                is MainEvent.SyncAll -> {
+                    eventsUseCases.syncEvents()
+                }
+                is MainEvent.SilentSyncAll -> {
+                    eventsUseCases.silentSync()
+                }
             }
         }
     }

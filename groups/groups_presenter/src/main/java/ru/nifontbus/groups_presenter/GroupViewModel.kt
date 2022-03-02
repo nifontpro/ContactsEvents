@@ -28,20 +28,18 @@ class GroupViewModel @Inject constructor(
     private val _action = MutableSharedFlow<String>()
     val action: SharedFlow<String> = _action.asSharedFlow()
 
-    private var job: Job = Job()
-
     init {
         syncGroupsSubscribe()
         groupsCountSubscribe()
     }
 
     private fun syncGroupsSubscribe() = viewModelScope.launch {
-        metadataUseCases.subscribeEvent(MainEvent.SyncAll) {
+        /*metadataUseCases.subscribeEvent(MainEvent.SyncAll) {
             job.cancelAndJoin()
             job = CoroutineScope(Dispatchers.Default).launch {
                 groupsUseCases.syncGroups()
             }
-        }
+        }*/
     }
 
     private fun groupsCountSubscribe() = viewModelScope.launch {

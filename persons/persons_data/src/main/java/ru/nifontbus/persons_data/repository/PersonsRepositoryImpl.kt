@@ -2,14 +2,12 @@ package ru.nifontbus.persons_data.repository
 
 import android.content.ContentUris
 import android.content.Context
-import android.database.ContentObserver
 import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Handler
-import android.os.Looper
 import android.provider.ContactsContract
 import android.provider.ContactsContract.Contacts.openContactPhotoInputStream
+import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import kotlinx.coroutines.*
@@ -29,44 +27,33 @@ class PersonsRepositoryImpl(
     private val _persons = MutableStateFlow<List<Person>>(emptyList())
     override val persons = _persons.asStateFlow()
 
-    private var lastUpdateTime: Long = 0
     private var job: Job? = null
 
     init {
-        CoroutineScope(Dispatchers.Default).launch {
-            syncPersons()
+        syncPersons()
+    }
 
-            context.contentResolver.registerContentObserver(
-                ContactsContract.Contacts.CONTENT_URI, false,
-                MyObserver(Handler(Looper.getMainLooper()))
-            )
+    override fun syncPersons() {
+        CoroutineScope(Dispatchers.Default).launch {
+            job?.cancelAndJoin()
+            job = launch {
+                personsUpdate()
+            }
         }
     }
 
-    override suspend fun syncPersons() {
-        personsUpdate()
-    }
-
-    //    https://www.grokkingandroid.com/use-contentobserver-to-listen-to-changes/
-    inner class MyObserver(handler: Handler?) : ContentObserver(handler) {
-        override fun onChange(selfChange: Boolean) {
-            super.onChange(selfChange)
-            val time = System.currentTimeMillis()
-            // Установка минимального времени между синхронизациями (15с.)
-            if (time - lastUpdateTime > 1000 * 15) {
-                lastUpdateTime = time
-                job?.cancel()
-                job = CoroutineScope(Dispatchers.Default).launch {
-                    personsSilenceUpdate()
-                }
+    override fun silentSync() {
+        CoroutineScope(Dispatchers.Default).launch {
+            job?.cancelAndJoin()
+            job = launch {
+                Log.e("my", "Real sync persons")
+                silentPersonsUpdate()
             }
         }
     }
 
     private suspend fun personsUpdate() {
         val cursor = getPersonCursor()
-//                Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
-
         cursor?.let {
             val idRef = it.getColumnIndex(ContactsContract.Contacts._ID)
             val lookupRef = it.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)
@@ -97,13 +84,15 @@ class PersonsRepositoryImpl(
         }
     }
 
-    private suspend fun personsSilenceUpdate() {
+    private suspend fun silentPersonsUpdate() {
         val cursor = getPersonCursor()
         cursor?.let {
             val idRef = it.getColumnIndex(ContactsContract.Contacts._ID)
             val lookupRef = it.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY)
             val displayNameRef = it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
+
             val list = mutableListOf<Person>()
+
             while (it.moveToNext()) {
                 val lookup = it.getString(lookupRef)
                 val id = it.getLong(idRef)
@@ -131,11 +120,6 @@ class PersonsRepositoryImpl(
 
     private fun getPersonCursor(): Cursor? {
         val uri = ContactsContract.Contacts.CONTENT_URI
-        context.contentResolver.registerContentObserver(
-            uri,
-            true,
-            MyObserver(Handler(Looper.getMainLooper()))
-        )
 
         val projection = arrayOf(
             ContactsContract.Contacts._ID,
@@ -275,6 +259,7 @@ fun String.toIntDefault(default: Int) =
     } catch (e: Exception) {
         default
     }
+//    Log.e("my", DatabaseUtils.dumpCursorToString(cursor))
 
 //    https://stackoverflow.com/questions/57727876/android-contacts-high-res-displayphoto-not-showing-up
 /*    private fun dispatchSyncHighResPhotoIntent(uri: Uri) {

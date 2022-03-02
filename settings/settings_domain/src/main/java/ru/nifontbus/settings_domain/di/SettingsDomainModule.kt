@@ -32,6 +32,7 @@ object SettingsDomainModule {
         sendMessage = SendMessage(metadataService),
         subscribeMessage = SubscribeMessage(metadataService),
         sendEvent = SendEvent(metadataService),
-        subscribeEvent = SubscribeEvent(metadataService)
+        getEvent = GetEvent(metadataService),
+        resetSyncTime = ResetSyncTime(metadataService)
     )
 }

@@ -14,5 +14,7 @@ interface EventsRepository {
 
     suspend fun deleteEvent(event: Event): Resource<Unit>
 
-    suspend fun syncEvents()
+    fun syncEvents()
+
+    fun silentSync()
 }

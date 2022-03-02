@@ -34,7 +34,9 @@ object SettingsDataModule {
 
     @Provides
     @Singleton
-    fun provideMetadataService(): MetadataService = MetadataServiceImpl()
+    fun provideMetadataService(
+        @ApplicationContext context: Context
+    ): MetadataService = MetadataServiceImpl(context = context)
 }
 
 const val SHARED_PREF_NAME = "Current_setting"

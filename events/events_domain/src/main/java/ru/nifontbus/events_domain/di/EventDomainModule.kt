@@ -31,7 +31,8 @@ object EventDomainModule {
             deleteEvent = DeleteEvent(repository),
             getEventById = GetEventById(repository),
             updateEvent = UpdateEvent(repository),
-            syncEvents = SyncEvents(repository)
+            syncEvents = SyncEvents(repository),
+            silentSync = SilentSync(repository)
         )
     }
 }

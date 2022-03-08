@@ -3,6 +3,6 @@ apply {
 }
 
 dependencies {
-    "implementation" (project(":core"))
-    "implementation" (project(":events:events_domain"))
+    "implementation" (project(Modules.core))
+    "implementation" (project(Modules.eventsDomain))
 }

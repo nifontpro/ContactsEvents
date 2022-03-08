@@ -55,7 +55,6 @@ dependencies {
     implementation(Compose.hiltNavigationCompose)
     implementation(Compose.material)
     implementation(Compose.runtime)
-    implementation(Compose.navigation)
     implementation(Compose.viewModelCompose)
     implementation(Compose.activityCompose)
     implementation(Compose.materialIcon)
@@ -63,31 +62,33 @@ dependencies {
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)
 
-    implementation(project(":core"))
-    implementation(project(":core-ui"))
+    implementation(project(Modules.core))
+    implementation(project(Modules.coreUi))
 
-    implementation(project(":events:events_data"))
-    implementation(project(":events:events_domain"))
-    implementation(project(":events:events_presenter"))
+    implementation(project(Modules.eventsData))
+    implementation(project(Modules.eventsDomain))
+    implementation(project(Modules.eventsPresenter))
 
-    implementation(project(":persons:persons_data"))
-    implementation(project(":persons:persons_domain"))
-    implementation(project(":persons:persons_presenter"))
+    implementation(project(Modules.personsData))
+    implementation(project(Modules.personsDomain))
+    implementation(project(Modules.personsPresenter))
 
-    implementation(project(":groups:groups_data"))
-    implementation(project(":groups:groups_domain"))
-    implementation(project(":groups:groups_presenter"))
+    implementation(project(Modules.groupsData))
+    implementation(project(Modules.groupsDomain))
+    implementation(project(Modules.groupsPresenter))
 
-    implementation(project(":templates:templates_data"))
-    implementation(project(":templates:templates_domain"))
-    implementation(project(":templates:templates_presenter"))
+    implementation(project(Modules.templatesData))
+    implementation(project(Modules.templatesDomain))
+    implementation(project(Modules.templatesPresenter))
 
-    implementation(project(":settings:settings_data"))
-    implementation(project(":settings:settings_domain"))
-    implementation(project(":settings:settings_presenter"))
+    implementation(project(Modules.settingsData))
+    implementation(project(Modules.settingsDomain))
+    implementation(project(Modules.settingsPresenter))
 
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)
+    implementation(WorkManager.work)
+    implementation(WorkManager.hiltWork)
 
     implementation(Coil.coilCompose)
 

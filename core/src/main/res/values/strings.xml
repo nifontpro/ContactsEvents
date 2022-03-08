@@ -1,12 +1,4 @@
 <resources>
-
-<!--    <string name="group_my_contacts">My Contacts</string>
-    <string name="group_starred_in_android">Starred in Android</string>
-    <string name="group_friends">Friends</string>
-    <string name="group_family">Family</string>
-    <string name="group_coworkers">Coworkers</string>-->
-
     <string name="sNewLifeDay">Day of Repose</string>
     <string name="sDayOfRepose" translatable="false">Day of Repose</string>
-
 </resources>

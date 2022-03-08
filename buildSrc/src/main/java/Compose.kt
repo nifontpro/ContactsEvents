@@ -9,10 +9,7 @@ object Compose {
     const val compiler = "androidx.compose.compiler:compiler:$composeCompilerVersion"
     const val materialIcon = "androidx.compose.material:material-icons-extended:$composeVersion"
 
-    private const val navigationVersion = "2.4.0-beta02"
-    const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
-
-    private const val hiltNavigationComposeVersion = "1.0.0-beta01"
+    private const val hiltNavigationComposeVersion = "1.0.0"
     const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion"
 
     private const val activityComposeVersion = "1.4.0"
@@ -21,6 +18,6 @@ object Compose {
     private const val lifecycleVersion = "2.4.0"
     const val viewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
 
-    private const val coilVersion = "1.3.2"
+    private const val coilVersion = "1.4.0"
     const val coilCompose = "io.coil-kt:coil-compose:$coilVersion"
 }

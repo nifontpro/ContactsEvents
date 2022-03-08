@@ -3,6 +3,6 @@ apply {
 }
 
 dependencies {
-    "implementation" (project(":core"))
-    "implementation" (project(":settings:settings_domain"))
+    "implementation" (project(Modules.core))
+    "implementation" (project(Modules.settingsDomain))
 }

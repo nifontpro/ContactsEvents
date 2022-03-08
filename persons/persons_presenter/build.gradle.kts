@@ -3,13 +3,13 @@ apply {
 }
 
 dependencies {
-    "implementation"(project(":core"))
-    "implementation"(project(":core-ui"))
-    "implementation"(project(":persons:persons_domain"))
-    "implementation"(project(":settings:settings_domain"))
-    "implementation"(project(":events:events_presenter"))
-    "implementation"(project(":events:events_domain"))
-    "implementation" (project(":groups:groups_domain"))
+    "implementation"(project(Modules.core))
+    "implementation"(project(Modules.coreUi))
+    "implementation"(project(Modules.personsDomain))
+    "implementation"(project(Modules.settingsDomain))
+    "implementation"(project(Modules.eventsPresenter))
+    "implementation"(project(Modules.eventsDomain))
+    "implementation" (project(Modules.groupsDomain))
 
     // Toolbar
     "implementation"("me.onebone:toolbar-compose:2.3.1")

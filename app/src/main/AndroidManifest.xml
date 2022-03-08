@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Starting"
         tools:ignore="AllowBackup">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -27,6 +28,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove">
+        </provider>
+
     </application>
 
 </manifest>

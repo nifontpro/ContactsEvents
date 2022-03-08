@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<string name="group_my_contacts">Мои контакты</string>
-    <string name="group_starred_in_android">Избранное</string>
-    <string name="group_friends">Друзья</string>
-    <string name="group_family">Семья</string>
-    <string name="group_coworkers">Коллеги</string>-->
-
     <string name="sNewLifeDay">День преставления</string>
 </resources>

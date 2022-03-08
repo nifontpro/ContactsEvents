@@ -147,8 +147,6 @@ class EventsRepositoryImpl(
             ContactsContract.CommonDataKinds.Event.LABEL,
             ContactsContract.CommonDataKinds.Event.START_DATE,
             ContactsContract.CommonDataKinds.Event.TYPE,
-            ContactsContract.CommonDataKinds.Event.DATA5, // lat
-            ContactsContract.CommonDataKinds.Event.DATA6, // lng
         )
 
         val where = ContactsContract.Data.MIMETYPE + "= ?"

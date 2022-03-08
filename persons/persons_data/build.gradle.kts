@@ -3,7 +3,7 @@ apply {
 }
 
 dependencies {
-    "implementation" (project(":core"))
-    "implementation"(project(":persons:persons_domain"))
+    "implementation" (project(Modules.core))
+    "implementation"(project(Modules.personsDomain))
     "implementation"(Compose.uiGraphics)
 }

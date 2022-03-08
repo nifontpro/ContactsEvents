@@ -50,7 +50,7 @@ class GetSortedEvents(
             if (event.type == EventType.NEW_LIFE_DAY) {
                 try {
                     val day40date = event.date.toLocalDate().plusDays(39)
-                    if (day40date > LocalDate.now()) {
+                    if (day40date >= LocalDate.now()) {
                         mutableEvents.add(
                             Event(
                                 label = context.getString(

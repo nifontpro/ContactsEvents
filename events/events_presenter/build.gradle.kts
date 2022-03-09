@@ -10,9 +10,5 @@ dependencies {
     "implementation" (project(Modules.groupsDomain))
     "implementation"(project(Modules.templatesDomain))
     "implementation"(project(Modules.settingsDomain))
-
-    "implementation" ("com.google.accompanist:accompanist-permissions:0.22.0-rc")
-
-
-
+    "implementation" (Compose.permission)
 }

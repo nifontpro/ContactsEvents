@@ -58,6 +58,8 @@ dependencies {
     implementation(Compose.viewModelCompose)
     implementation(Compose.activityCompose)
     implementation(Compose.materialIcon)
+    implementation(Compose.splashScreen)
+    implementation (Compose.permission)
 
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)
@@ -114,9 +116,4 @@ dependencies {
     androidTestImplementation(Testing.hiltTesting)
     kaptAndroidTest(DaggerHilt.hiltCompiler)
     androidTestImplementation(Testing.testRunner)
-
-    // Splash Screen
-    implementation("androidx.core:core-splashscreen:1.0.0-beta01")
-
-    implementation ("com.google.accompanist:accompanist-permissions:0.22.0-rc")
 }

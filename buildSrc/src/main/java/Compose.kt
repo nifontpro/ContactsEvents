@@ -20,4 +20,10 @@ object Compose {
 
     private const val coilVersion = "1.4.0"
     const val coilCompose = "io.coil-kt:coil-compose:$coilVersion"
+
+    private const val permissionVersion = "0.24.3-alpha"
+    const val permission = "com.google.accompanist:accompanist-permissions:$permissionVersion"
+
+    private const val splashVersion = "1.0.0-beta01"
+    const val splashScreen = "androidx.core:core-splashscreen:$splashVersion"
 }

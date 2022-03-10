@@ -16,6 +16,7 @@ data class Event(
     val personId: Long = -1,
     val id: Long = -1,
     val lookup: String = "",
+    val displayName: String = ""
 ) {
 
     companion object {

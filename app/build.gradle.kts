@@ -63,6 +63,8 @@ dependencies {
 
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)
+    implementation(WorkManager.work)
+    implementation(WorkManager.hiltWork)
 
     implementation(project(Modules.core))
     implementation(project(Modules.coreUi))
@@ -87,10 +89,11 @@ dependencies {
     implementation(project(Modules.settingsDomain))
     implementation(project(Modules.settingsPresenter))
 
+    implementation(project(Modules.workerData))
+    implementation(project(Modules.workerDomain))
+
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)
-    implementation(WorkManager.work)
-    implementation(WorkManager.hiltWork)
 
     implementation(Coil.coilCompose)
 

@@ -23,4 +23,7 @@ object Modules {
     const val settingsDomain = ":settings:settings_domain"
     const val settingsPresenter = ":settings:settings_presenter"
 
+    const val workerData = ":worker:worker_data"
+    const val workerDomain = ":worker:worker_domain"
+
 }

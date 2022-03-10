@@ -52,7 +52,13 @@ fun GetPermission(
             }
         }
         else -> {
-            Text(text = text, style = MaterialTheme.typography.h4)
+            Text(
+                text = text,
+                style = MaterialTheme.typography.h4,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(normalPadding)
+            )
             LaunchedEffect(true) {
                 permissionState.launchPermissionRequest()
             }

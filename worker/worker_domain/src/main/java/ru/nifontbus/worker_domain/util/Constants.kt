@@ -1,4 +1,4 @@
-package ru.nifontbus.core.util
+package ru.nifontbus.worker_domain.util
 
 const val MESSAGE_STATUS = "message_status"
 

@@ -17,6 +17,8 @@
         <entry key="..\:/Kotlin/ContactsEvents/persons/persons_presenter/src/main/res/drawable/no_persons.xml" value="0.1545" />
         <entry key="..\:/Kotlin/ContactsEvents/settings/settings_presenter/src/main/res/drawable/folder_off.xml" value="0.156" />
         <entry key="..\:/Kotlin/ContactsEvents/settings/settings_presenter/src/main/res/drawable/ic_compose.xml" value="0.1545" />
+        <entry key="..\:/Kotlin/ContactsEvents/worker/worker_domain/src/main/res/drawable/ic_outline_notifications.xml" value="0.1645" />
+        <entry key="..\:/Kotlin/ContactsEvents/workmanager/src/main/res/drawable/ic_outline_notifications_active_24.xml" value="0.1645" />
       </map>
     </option>
   </component>

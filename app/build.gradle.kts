@@ -63,6 +63,7 @@ dependencies {
 
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)
+    kapt (WorkManager.hiltCompiler)
     implementation(WorkManager.work)
     implementation(WorkManager.hiltWork)
 

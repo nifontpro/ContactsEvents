@@ -2,6 +2,7 @@ package ru.nifontbus.contactsevents
 
 import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -11,6 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -20,6 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.work.*
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import ru.nifontbus.contactsevents.ui.navigation.BottomBar
@@ -37,6 +40,9 @@ import ru.nifontbus.persons_presenter.info.PersonInfoScreen
 import ru.nifontbus.settings_presenter.SettingScreen
 import ru.nifontbus.templates_domain.model.Template
 import ru.nifontbus.templates_presenter.TemplatesScreen
+import ru.nifontbus.worker_domain.NotificationWorker
+import ru.nifontbus.worker_domain.util.WORK_TAG
+import java.time.Duration
 
 @ExperimentalPermissionsApi
 @ExperimentalFoundationApi
@@ -59,15 +65,51 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-            ContactsEventsTheme() {
+            ContactsEventsTheme {
                 Surface(color = MaterialTheme.colors.background) {
                     GetPermission(
                         permission = Manifest.permission.READ_CONTACTS,
                         text = stringResource(R.string.sReadDenied)
                     ) {
                         ConfigureExtNavigate()
+                        InitWorker()
                     }
                 }
+            }
+        }
+    }
+
+    @Composable
+    private fun InitWorker() {
+
+        val mainActivity = this
+        LaunchedEffect(key1 = true) {
+            val workManager = WorkManager.getInstance(applicationContext)
+
+//            val myWorkRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+            val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(
+                Duration.ofMinutes(15), // Периодичность
+                Duration.ofMinutes(0) // Смещение внутри периода
+            )
+                .addTag(WORK_TAG)
+//            .setInitialDelay(1, TimeUnit.MINUTES) // Начальная задержка
+                .build()
+
+                workManager.enqueueUniquePeriodicWork(
+                    "worker",
+                    ExistingPeriodicWorkPolicy.KEEP,
+                    workRequest
+                )
+
+//            workManager.enqueueUniqueWork("worker", ExistingWorkPolicy.KEEP, myWorkRequest)
+
+            if (BuildConfig.DEBUG) {
+                workManager.getWorkInfoByIdLiveData(workRequest.id)
+                    .observe(mainActivity) { workInfo ->
+                        workInfo?.let {
+                            Log.e("my", "Worker state: " + workInfo.state)
+                        }
+                    }
             }
         }
     }

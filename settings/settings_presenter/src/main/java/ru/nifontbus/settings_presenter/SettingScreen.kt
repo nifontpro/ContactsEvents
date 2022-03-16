@@ -124,10 +124,21 @@ private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
+                        checked = viewModel.notificationState.collectAsState().value,
+                        colors = checkboxColors(),
+                        onCheckedChange = { viewModel.setNotificationState(it) },
+                    )
+                    Text(
+                        stringResource(R.string.sShowNotifications)
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
                         checked = viewModel.reposeFeatures.collectAsState().value,
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-                        ),
+                        colors = checkboxColors(),
                         onCheckedChange = { viewModel.setReposeFeatures(it) },
                     )
                     Text(
@@ -140,9 +151,7 @@ private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                 ) {
                     Checkbox(
                         checked = viewModel.add40Day.collectAsState().value,
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-                        ),
+                        colors = checkboxColors(),
                         enabled = viewModel.reposeFeatures.collectAsState().value,
                         onCheckedChange = { viewModel.setAdd40Day(it) }
                     )
@@ -154,6 +163,11 @@ private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
         }
     }
 }
+
+@Composable
+private fun checkboxColors() = CheckboxDefaults.colors(
+    checkedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+)
 
 @Composable
 private fun BoxScope.BottomIcon(iconSize: Dp) {

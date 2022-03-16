@@ -22,8 +22,8 @@ class WorkerRepositoryImpl @Inject constructor(
 
 //            val myWorkRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
         val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(
-            Duration.ofMinutes(15), // Периодичность
-            Duration.ofMinutes(0) // Смещение внутри периода
+            Duration.ofDays(1), // Периодичность
+            Duration.ofMinutes(5) // Смещение внутри периода, пусть проснутся
         )
             .addTag(WORK_TAG)
 //            .setInitialDelay(1, TimeUnit.MINUTES) // Начальная задержка

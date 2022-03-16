@@ -13,6 +13,9 @@ class SettingsRepositoryImpl(
     private val sharedPreferences: SharedPreferences
 ) : SettingsRepository {
 
+    private val _showNotification: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    override val showNotification = _showNotification.asStateFlow()
+
     private val _reposeFeatures: MutableStateFlow<Boolean> = MutableStateFlow(false)
     override val reposeFeatures = _reposeFeatures.asStateFlow()
 
@@ -26,6 +29,16 @@ class SettingsRepositoryImpl(
     private fun loadSettings() {
         _reposeFeatures.value = sharedPreferences.getBoolean(IS_REPOSE_FUN, false)
         _add40Day.value = sharedPreferences.getBoolean(IS_40_DAY, false)
+        _showNotification.value = sharedPreferences.getBoolean(SHOW_NOTIFICATION, false)
+    }
+
+    override fun saveNotificationState(value: Boolean) {
+        CoroutineScope(Dispatchers.Main).launch {
+            _showNotification.value = value
+            val editor = sharedPreferences.edit()
+            editor.putBoolean(SHOW_NOTIFICATION, value)
+            editor.apply()
+        }
     }
 
     override fun saveReposeState(value: Boolean) {
@@ -49,5 +62,6 @@ class SettingsRepositoryImpl(
     companion object {
         private const val IS_REPOSE_FUN = "repose_features"
         private const val IS_40_DAY = "add_40_day"
+        private const val SHOW_NOTIFICATION = "show_notification"
     }
 }

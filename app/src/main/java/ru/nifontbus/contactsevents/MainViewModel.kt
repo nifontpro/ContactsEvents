@@ -7,11 +7,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.nifontbus.settings_domain.use_cases.SettingsUseCases
 import ru.nifontbus.worker_domain.use_cases.WorkerUseCases
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    private val settingsUseCases: SettingsUseCases,
     workerUseCases: WorkerUseCases
 ) : ViewModel() {
 
@@ -20,9 +22,11 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            delay(10)
+            delay(1)
             _isLoading.value = false
-            workerUseCases.startWorker()
+            if (settingsUseCases.getNotificationState().value) {
+                workerUseCases.startWorker()
+            }
         }
     }
 }

@@ -3,6 +3,7 @@
     <!--    Settings screen-->
     <string name="sContact">Contact</string>
     <string name="sEventsSetting">Events</string>
+    <string name="sShowNotifications">Show notifications</string>
     <string name="sReposeFeatures">Repose events</string>
     <string name="s40Day">Counting the 40th day</string>
 

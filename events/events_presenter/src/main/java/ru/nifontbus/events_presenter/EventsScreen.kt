@@ -106,18 +106,16 @@ fun EventCard(
             ) {
 
                 if (isShowNameAndImage) {
-                    person?.let {
-                        Text(
-                            text = it.displayName,
-                            modifier = modText,
-                            style = MaterialTheme.typography.h5,
-                            color = MaterialTheme.colors.onBackground
-                        )
-                        Divider(
-                            modifier = Modifier.padding(end = normalPadding),
-                            color = MaterialTheme.colors.onSurface
-                        )
-                    }
+                    Text(
+                        text = event.displayName,
+                        modifier = modText,
+                        style = MaterialTheme.typography.h5,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                    Divider(
+                        modifier = Modifier.padding(end = normalPadding),
+                        color = MaterialTheme.colors.onSurface
+                    )
                 }
 
                 val description = event.getDescription(LocalContext.current)

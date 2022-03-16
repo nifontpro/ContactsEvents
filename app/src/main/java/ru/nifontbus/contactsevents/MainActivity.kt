@@ -40,9 +40,7 @@ import ru.nifontbus.persons_presenter.info.PersonInfoScreen
 import ru.nifontbus.settings_presenter.SettingScreen
 import ru.nifontbus.templates_domain.model.Template
 import ru.nifontbus.templates_presenter.TemplatesScreen
-import ru.nifontbus.worker_domain.NotificationWorker
 import ru.nifontbus.worker_domain.util.WORK_TAG
-import java.time.Duration
 
 @ExperimentalPermissionsApi
 @ExperimentalFoundationApi
@@ -73,6 +71,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         ConfigureExtNavigate()
                         InitWorker()
+
                     }
                 }
             }
@@ -86,6 +85,7 @@ class MainActivity : ComponentActivity() {
         LaunchedEffect(key1 = true) {
             val workManager = WorkManager.getInstance(applicationContext)
 
+/*
 //            val myWorkRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
             val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(
                 Duration.ofMinutes(15), // Периодичность
@@ -102,16 +102,19 @@ class MainActivity : ComponentActivity() {
                 )
 
 //            workManager.enqueueUniqueWork("worker", ExistingWorkPolicy.KEEP, myWorkRequest)
+*/
 
             if (BuildConfig.DEBUG) {
-                workManager.getWorkInfoByIdLiveData(workRequest.id)
+                workManager.getWorkInfosByTagLiveData(WORK_TAG)
                     .observe(mainActivity) { workInfo ->
                         workInfo?.let {
-                            Log.e("my", "Worker state: " + workInfo.state)
+                            workInfo.forEach {
+                                Log.e("my", "Worker state: ${it.state}")
+                            }
                         }
                     }
             }
-        }
+        } // Launch
     }
 
     @Composable

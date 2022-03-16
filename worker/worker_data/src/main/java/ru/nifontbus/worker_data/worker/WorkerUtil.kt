@@ -1,4 +1,4 @@
-package ru.nifontbus.worker_domain.util
+package ru.nifontbus.worker_data.worker
 
 import android.content.Context
 import androidx.core.app.NotificationCompat
@@ -6,6 +6,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import ru.nifontbus.worker_domain.R
+import ru.nifontbus.worker_domain.util.CHANNEL_ID
 import kotlin.random.Random
 
 fun showNotification(

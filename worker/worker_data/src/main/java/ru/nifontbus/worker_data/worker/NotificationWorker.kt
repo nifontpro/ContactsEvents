@@ -1,4 +1,4 @@
-package ru.nifontbus.worker_domain
+package ru.nifontbus.worker_data.worker
 
 import android.content.Context
 import android.util.Log
@@ -8,14 +8,13 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
-import ru.nifontbus.worker_domain.repository.WorkerRepository
-import ru.nifontbus.worker_domain.util.showNotification
+import ru.nifontbus.worker_data.repository.WorkerContacts
 
 @HiltWorker
 class NotificationWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
-    private val repository: WorkerRepository
+    private val workerContacts: WorkerContacts
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -26,7 +25,7 @@ class NotificationWorker @AssistedInject constructor(
 //            val taskDataString = inputData.getString(MESSAGE_STATUS)
 //            showNotificationForeground(taskDataString.toString(), context)
 //            showNotification(taskDataString.toString(), context)
-            val events = repository.getEventsNow()
+            val events = workerContacts.getEventsNow()
             events.forEach {
                 showNotification(
                     title = it.displayName,

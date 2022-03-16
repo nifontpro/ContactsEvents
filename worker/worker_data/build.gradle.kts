@@ -5,4 +5,8 @@ apply {
 dependencies {
     "implementation" (project(Modules.workerDomain))
     "implementation" (project(Modules.eventsDomain))
+
+    "kapt" (WorkManager.hiltCompiler) // Для внедрения зависимостей (репозитория) в Worker
+    "implementation" (WorkManager.work)
+    "implementation" (WorkManager.hiltWork)
 }

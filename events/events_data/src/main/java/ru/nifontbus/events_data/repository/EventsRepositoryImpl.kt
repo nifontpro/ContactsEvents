@@ -53,6 +53,7 @@ class EventsRepositoryImpl(
         val cursor = getEventsCursor()
         cursor?.let {
             val idIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event._ID)
+            val nameIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.DISPLAY_NAME)
             val labelIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL)
             val contactIdIdx =
                 it.getColumnIndex(ContactsContract.CommonDataKinds.Event.CONTACT_ID)
@@ -65,6 +66,7 @@ class EventsRepositoryImpl(
 
             while (it.moveToNext()) {
                 val id = it.getLong(idIdx)
+                val name = it.getString(nameIdx) ?: ""
                 val lookup = it.getString(lookupIdx)
                 val contactId = it.getLong(contactIdIdx)
                 var label = it.getString(labelIdx) ?: ""
@@ -85,7 +87,8 @@ class EventsRepositoryImpl(
                                 type = type,
                                 personId = contactId,
                                 id = id,
-                                lookup = lookup
+                                lookup = lookup,
+                                displayName = name
                             )
                         )
             }
@@ -97,6 +100,7 @@ class EventsRepositoryImpl(
         val cursor = getEventsCursor()
         cursor?.let {
             val idIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event._ID)
+            val nameIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.DISPLAY_NAME)
             val labelIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL)
             val contactIdIdx =
                 it.getColumnIndex(ContactsContract.CommonDataKinds.Event.CONTACT_ID)
@@ -109,6 +113,7 @@ class EventsRepositoryImpl(
 
             while (it.moveToNext()) {
                 val id = it.getLong(idIdx)
+                val name = it.getString(nameIdx) ?: ""
                 val lookup = it.getString(lookupIdx)
                 val contactId = it.getLong(contactIdIdx)
                 var label = it.getString(labelIdx) ?: ""
@@ -128,7 +133,8 @@ class EventsRepositoryImpl(
                         type = type,
                         personId = contactId,
                         id = id,
-                        lookup = lookup
+                        lookup = lookup,
+                        displayName = name
                     )
                 )
             }

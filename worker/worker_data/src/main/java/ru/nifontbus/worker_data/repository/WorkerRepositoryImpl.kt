@@ -1,90 +1,44 @@
 package ru.nifontbus.worker_data.repository
 
 import android.content.Context
-import android.database.Cursor
-import android.net.Uri
-import android.provider.ContactsContract
-import ru.nifontbus.events_domain.model.Event
-import ru.nifontbus.events_domain.model.EventType
-import ru.nifontbus.worker_data.R
+import android.util.Log
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import ru.nifontbus.worker_data.worker.NotificationWorker
 import ru.nifontbus.worker_domain.repository.WorkerRepository
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
+import ru.nifontbus.worker_domain.util.WORK_TAG
+import java.time.Duration
 import javax.inject.Inject
 
 class WorkerRepositoryImpl @Inject constructor(
-    private val context: Context
-) : WorkerRepository {
-    override fun getEventsNow(): List<Event> {
-        val list = mutableListOf<Event>()
-        val cursor = getEventsCursor()
-        cursor?.let {
-            val labelIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL)
-            val nameIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.DISPLAY_NAME)
-            val dateIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE)
-            val typeIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE)
+    context: Context
+): WorkerRepository {
 
-            val now = LocalDate.now().asString()
-            val day40minus = LocalDate.now().minusDays(39).asString()
+    private val workManager = WorkManager.getInstance(context)
 
-            while (it.moveToNext()) {
-                val date = it.getString(dateIdx)
-                var label = it.getString(labelIdx) ?: ""
-                val name = it.getString(nameIdx) ?: ""
-                var type = it.getInt(typeIdx)
-                val isNewLifeDay =
-                    type == EventType.CUSTOM && label == context.getString(R.string.sDayOfRepose)
-                val is40day = date == day40minus && isNewLifeDay
-                if (date == now || is40day) {
+    override fun startWorker() {
+        Log.e("my", "Init Worker on repository")
 
-                    if (is40day) {
-                        type = EventType.CUSTOM
-                        label = "40 days of $date"
-                    } else {
-                        if (isNewLifeDay) {
-                            type = EventType.NEW_LIFE_DAY
-                            label = ""
-                        }
-                    }
+//            val myWorkRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+        val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(
+            Duration.ofMinutes(15), // Периодичность
+            Duration.ofMinutes(0) // Смещение внутри периода
+        )
+            .addTag(WORK_TAG)
+//            .setInitialDelay(1, TimeUnit.MINUTES) // Начальная задержка
+            .build()
 
-                    list.add(
-                        Event(
-                            label = label,
-                            date = date,
-                            type = type,
-                            displayName = name
-                        )
-                    )
-                }
-            }
-            it.close()
-        }
-        return list
-    }
-
-    private fun getEventsCursor(): Cursor? {
-        val uri: Uri = ContactsContract.Data.CONTENT_URI
-        val projection = arrayOf(
-            ContactsContract.CommonDataKinds.Event.DISPLAY_NAME,
-            ContactsContract.CommonDataKinds.Event.LABEL,
-            ContactsContract.CommonDataKinds.Event.START_DATE,
-            ContactsContract.CommonDataKinds.Event.TYPE,
+        workManager.enqueueUniquePeriodicWork(
+            "worker",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
         )
 
-        val where = ContactsContract.Data.MIMETYPE + "= ?"
-        val selectionArgs = arrayOf(
-            ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
-        )
-        val sortOrder = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
-        return context.contentResolver.query(uri, projection, where, selectionArgs, sortOrder)
+//            workManager.enqueueUniqueWork("worker", ExistingWorkPolicy.KEEP, myWorkRequest)
     }
-}
 
-fun LocalDate.asString(
-    pattern: String = "yyyy-MM-dd",
-    locale: Locale = Locale.getDefault()
-): String {
-    val formatter = DateTimeFormatter.ofPattern(pattern, locale)
-    return formatter.format(this)
+    override fun cancelWorks() {
+        workManager.cancelAllWorkByTag(WORK_TAG)
+    }
 }

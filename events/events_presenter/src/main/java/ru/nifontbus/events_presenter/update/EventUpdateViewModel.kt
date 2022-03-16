@@ -85,7 +85,8 @@ class EventUpdateViewModel @Inject constructor(
                     date = getRealDate(),
                     type = eventType.value,
                     personId = person.value.id,
-                    lookup = person.value.lookup
+                    lookup = person.value.lookup,
+                    displayName = person.value.displayName
                 )
             )) {
             is Resource.Success -> {
@@ -105,7 +106,9 @@ class EventUpdateViewModel @Inject constructor(
                 date = getRealDate(),
                 type = eventType.value,
                 personId = person.value.id,
-                id = oldEvent.value.id
+                id = oldEvent.value.id,
+                lookup = person.value.lookup,
+                displayName = person.value.displayName
             )
         when (val result =
             eventsUseCases.updateEvent(newEvent, oldEvent.value)

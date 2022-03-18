@@ -177,14 +177,16 @@ private fun SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                         .align(Alignment.CenterHorizontally)
                         .padding(bottom = normalPadding),
                     border = BorderStroke(2.dp, Color.Red),
-                    shape = RoundedCornerShape(50), // = 50% percent
-                    // or shape = CircleShape
+                    shape = RoundedCornerShape(50),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.Red,
                         backgroundColor = Color.Transparent
                     )
                 ) {
-                    Text(text = "Synchronize")
+                    Text(
+                        text = stringResource(R.string.sSyncing),
+                        style = MaterialTheme.typography.h5
+                    )
                 }
             } // Column
         }
@@ -199,13 +201,6 @@ private fun checkboxColors() = CheckboxDefaults.colors(
 @Composable
 private fun BoxScope.BottomIcon(iconSize: Dp) {
 
-/*    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-    }*/
     Row(
         modifier = Modifier
             .align(Alignment.BottomCenter)

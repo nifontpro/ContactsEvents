@@ -7,5 +7,6 @@
     <string name="sShowNotifications">Включить уведомления</string>
     <string name="sReposeFeatures">События усопших</string>
     <string name="s40Day">Считать 40-й день</string>
+    <string name="sSyncing">Синхронизация</string>
 
 </resources>

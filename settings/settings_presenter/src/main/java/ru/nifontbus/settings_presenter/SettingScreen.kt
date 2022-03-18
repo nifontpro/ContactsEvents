@@ -1,16 +1,19 @@
 package ru.nifontbus.settings_presenter
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.VolunteerActivism
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -26,6 +29,9 @@ import ru.nifontbus.core_ui.normalPadding
 @Composable
 fun SettingScreen(paddingValues: PaddingValues) {
     val viewModel: SettingsViewModel = hiltViewModel()
+    var settingsState by remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         backgroundColor = MaterialTheme.colors.background,
@@ -33,13 +39,13 @@ fun SettingScreen(paddingValues: PaddingValues) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.syncAll()
+                    settingsState = !settingsState
                 },
                 backgroundColor = MaterialTheme.colors.secondary
             ) {
                 Icon(
-                    imageVector = Icons.Default.Sync,
-                    contentDescription = "Sync",
+                    imageVector = Icons.Outlined.Settings,
+                    contentDescription = "Settings",
                     tint = MaterialTheme.colors.onSecondary,
                 )
             }
@@ -92,19 +98,24 @@ fun SettingScreen(paddingValues: PaddingValues) {
                     .align(Alignment.Center)
             )
             val iconSize = 50.dp
-            SettingBox(iconSize, viewModel)
+
+            AnimatedVisibility(
+                visible = settingsState,
+                modifier = Modifier.align(Alignment.BottomStart),
+            ) {
+                SettingBox(iconSize, viewModel)
+            }
             BottomIcon(iconSize)
         }
     }
 }
 
 @Composable
-private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
+private fun SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
     Card(
         shape = MaterialTheme.shapes.large,
         modifier = Modifier
             .fillMaxWidth()
-            .align(Alignment.BottomStart)
             .padding(bottom = iconSize + 40.dp)
             .padding(horizontal = 40.dp),
         elevation = 10.dp
@@ -158,6 +169,22 @@ private fun BoxScope.SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                     Text(
                         stringResource(R.string.s40Day),
                     )
+                }
+
+                OutlinedButton(
+                    onClick = { viewModel.syncAll() },
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = normalPadding),
+                    border = BorderStroke(2.dp, Color.Red),
+                    shape = RoundedCornerShape(50), // = 50% percent
+                    // or shape = CircleShape
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color.Red,
+                        backgroundColor = Color.Transparent
+                    )
+                ) {
+                    Text(text = "Synchronize")
                 }
             } // Column
         }

@@ -3,7 +3,7 @@ apply {
 }
 
 dependencies {
-    "implementation"(project(":core-ui"))
-    "implementation"(project(":templates:templates_domain"))
-    "implementation"(project(":events:events_domain"))
+    "implementation"(project(Modules.coreUi))
+    "implementation"(project(Modules.templatesDomain))
+    "implementation"(project(Modules.eventsDomain))
 }

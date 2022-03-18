@@ -2,7 +2,7 @@
 <resources>
 
     <!--    Person screen-->
-    <string name="sNoPersonInGroup">Нет контактов в группе</string>
+    <string name="sNoPersonInGroup">Контакты не найдены</string>
 
     <!--    Person info-->
     <string name="sPersonInfo">О контакте</string>

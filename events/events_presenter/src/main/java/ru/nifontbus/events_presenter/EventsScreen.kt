@@ -9,8 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Sync
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -48,20 +46,6 @@ fun EventsScreen(
         scaffoldState = scaffoldState,
         backgroundColor = MaterialTheme.colors.background,
         modifier = Modifier.padding(bottom = bottomPadding),
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.syncAll()
-                },
-                backgroundColor = MaterialTheme.colors.secondary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Sync,
-                    contentDescription = "Sync",
-                    tint = MaterialTheme.colors.onSecondary
-                )
-            }
-        }
     ) {
         LazyColumn(
             modifier = Modifier
@@ -122,18 +106,16 @@ fun EventCard(
             ) {
 
                 if (isShowNameAndImage) {
-                    person?.let {
-                        Text(
-                            text = it.displayName,
-                            modifier = modText,
-                            style = MaterialTheme.typography.h5,
-                            color = MaterialTheme.colors.onBackground
-                        )
-                        Divider(
-                            modifier = Modifier.padding(end = normalPadding),
-                            color = MaterialTheme.colors.onSurface
-                        )
-                    }
+                    Text(
+                        text = event.displayName,
+                        modifier = modText,
+                        style = MaterialTheme.typography.h5,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                    Divider(
+                        modifier = Modifier.padding(end = normalPadding),
+                        color = MaterialTheme.colors.onSurface
+                    )
                 }
 
                 val description = event.getDescription(LocalContext.current)

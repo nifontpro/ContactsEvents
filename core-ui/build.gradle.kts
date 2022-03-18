@@ -4,5 +4,5 @@ apply {
 
 dependencies {
     // Permissions
-    "implementation" ("com.google.accompanist:accompanist-permissions:0.22.0-rc")
+    "implementation" (Compose.permission)
 }

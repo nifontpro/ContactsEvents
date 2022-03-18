@@ -20,6 +20,7 @@ import ru.nifontbus.events_domain.model.EventType
 import ru.nifontbus.events_domain.use_cases.EventsUseCases
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_domain.use_cases.PersonsUseCases
+import ru.nifontbus.settings_domain.use_cases.MetadataUseCases
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -27,6 +28,7 @@ import javax.inject.Inject
 class EventUpdateViewModel @Inject constructor(
     private val eventsUseCases: EventsUseCases,
     private val personsUseCases: PersonsUseCases,
+    private val metadataUseCases: MetadataUseCases,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -75,6 +77,7 @@ class EventUpdateViewModel @Inject constructor(
     }
 
     fun addEvent() = viewModelScope.launch {
+        metadataUseCases.resetSyncTime()
         when (val result =
             eventsUseCases.addEvent(
                 Event(
@@ -82,7 +85,8 @@ class EventUpdateViewModel @Inject constructor(
                     date = getRealDate(),
                     type = eventType.value,
                     personId = person.value.id,
-                    lookup = person.value.lookup
+                    lookup = person.value.lookup,
+                    displayName = person.value.displayName
                 )
             )) {
             is Resource.Success -> {
@@ -95,13 +99,16 @@ class EventUpdateViewModel @Inject constructor(
     }
 
     fun updateEvent() = viewModelScope.launch {
+        metadataUseCases.resetSyncTime()
         val newEvent =
             Event(
-                eventLabel.value,
-                getRealDate(),
-                eventType.value,
-                person.value.id,
-                oldEvent.value.id
+                label = eventLabel.value,
+                date = getRealDate(),
+                type = eventType.value,
+                personId = person.value.id,
+                id = oldEvent.value.id,
+                lookup = person.value.lookup,
+                displayName = person.value.displayName
             )
         when (val result =
             eventsUseCases.updateEvent(newEvent, oldEvent.value)

@@ -14,6 +14,7 @@ interface PersonsRepository {
 
     suspend fun getDisplayPhoto(contactId: Long): ImageBitmap?
 
-    suspend fun syncPersons()
+    fun syncPersons()
 
+    fun silentSync()
 }

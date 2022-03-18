@@ -3,14 +3,12 @@ apply {
 }
 
 dependencies {
-    "implementation"(project(":core"))
-    "implementation"(project(":core-ui"))
-    "implementation"(project(":events:events_domain"))
-    "implementation"(project(":persons:persons_domain"))
-    "implementation"(project(":templates:templates_domain"))
-    "implementation"(project(":settings:settings_domain"))
-
-    "implementation" ("com.google.accompanist:accompanist-permissions:0.22.0-rc")
-
-
+    "implementation"(project(Modules.core))
+    "implementation"(project(Modules.coreUi))
+    "implementation"(project(Modules.eventsDomain))
+    "implementation"(project(Modules.personsDomain))
+    "implementation" (project(Modules.groupsDomain))
+    "implementation"(project(Modules.templatesDomain))
+    "implementation"(project(Modules.settingsDomain))
+    "implementation" (Compose.permission)
 }

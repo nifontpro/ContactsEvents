@@ -4,5 +4,6 @@ data class MetadataUseCases(
     val sendMessage: SendMessage,
     val subscribeMessage: SubscribeMessage,
     val sendEvent: SendEvent,
-    val subscribeEvent: SubscribeEvent
+    val getEvent: GetEvent,
+    val resetSyncTime: ResetSyncTime
 )

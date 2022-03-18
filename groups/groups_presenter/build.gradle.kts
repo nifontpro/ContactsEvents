@@ -3,7 +3,7 @@ apply {
 }
 
 dependencies {
-    "implementation"(project(":core-ui"))
-    "implementation"(project(":groups:groups_domain"))
-    "implementation"(project(":settings:settings_domain"))
+    "implementation"(project(Modules.coreUi))
+    "implementation"(project(Modules.groupsDomain))
+    "implementation"(project(Modules.settingsDomain))
 }

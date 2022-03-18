@@ -18,8 +18,10 @@ object SettingsDomainModule {
     fun provideSettingsUseCases(
         repository: SettingsRepository,
     ) = SettingsUseCases(
+        getNotificationState = GetNotificationState(repository),
         getReposeFeatures = GetReposeFeatures(repository),
         getAdd40Day = GetAdd40Day(repository),
+        saveNotificationState = SaveNotificationState(repository),
         saveReposeFeatures = SaveReposeFeatures(repository),
         saveAdd40Day = SaveAdd40Day(repository),
     )
@@ -32,6 +34,7 @@ object SettingsDomainModule {
         sendMessage = SendMessage(metadataService),
         subscribeMessage = SubscribeMessage(metadataService),
         sendEvent = SendEvent(metadataService),
-        subscribeEvent = SubscribeEvent(metadataService)
+        getEvent = GetEvent(metadataService),
+        resetSyncTime = ResetSyncTime(metadataService)
     )
 }

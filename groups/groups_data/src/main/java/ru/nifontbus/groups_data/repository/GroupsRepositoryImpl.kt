@@ -4,12 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.ContactsContract
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 import ru.nifontbus.groups_domain.model.PersonsGroup
 import ru.nifontbus.groups_domain.repository.GroupsRepository
 
@@ -24,14 +21,21 @@ class GroupsRepositoryImpl(
     private val _currentGroup: MutableStateFlow<PersonsGroup?> = MutableStateFlow(null)
     override val currentGroup = _currentGroup.asStateFlow()
 
+    private var job: Job? = null
+
     init {
         CoroutineScope(Dispatchers.Default).launch {
             groupsUpdate()
         }
     }
 
-    override suspend fun syncGroups() {
-        groupsUpdate()
+    override fun syncGroups() {
+        CoroutineScope(Dispatchers.Default).launch {
+            job?.cancelAndJoin()
+            job = launch {
+                groupsUpdate()
+            }
+        }
     }
 
     private suspend fun groupsUpdate() {

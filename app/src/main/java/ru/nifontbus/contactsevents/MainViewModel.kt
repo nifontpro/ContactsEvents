@@ -24,7 +24,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             delay(1)
             _isLoading.value = false
-            if (settingsUseCases.getNotificationState().value) {
+            if (settingsUseCases.getSettings().value.showNotifications) {
                 workerUseCases.startWorker()
             }
         }

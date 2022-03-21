@@ -25,13 +25,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ru.nifontbus.core_ui.bigPadding
 import ru.nifontbus.core_ui.component.surfaceBrush
 import ru.nifontbus.core_ui.normalPadding
-import ru.nifontbus.settings_domain.repository.AppSettings
 
 @Composable
 fun SettingScreen(paddingValues: PaddingValues) {
 
     val viewModel: SettingsViewModel = hiltViewModel()
-    var settingsState by remember {
+
+    var showSettings by remember {
         mutableStateOf(false)
     }
 
@@ -41,7 +41,7 @@ fun SettingScreen(paddingValues: PaddingValues) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    settingsState = !settingsState
+                    showSettings = !showSettings
                 },
                 backgroundColor = MaterialTheme.colors.secondary
             ) {
@@ -102,7 +102,7 @@ fun SettingScreen(paddingValues: PaddingValues) {
             val iconSize = 50.dp
 
             AnimatedVisibility(
-                visible = settingsState,
+                visible = showSettings,
                 modifier = Modifier.align(Alignment.BottomStart),
             ) {
                 SettingBox(iconSize, viewModel)
@@ -115,7 +115,7 @@ fun SettingScreen(paddingValues: PaddingValues) {
 @Composable
 private fun SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
 
-    val settings = viewModel.settings.collectAsState(initial = AppSettings()).value
+    val settings = viewModel.settings.collectAsState().value
 
     Card(
         shape = MaterialTheme.shapes.large,

@@ -17,10 +17,6 @@ class SettingsViewModel @Inject constructor(
     private val workerUseCases: WorkerUseCases,
 ) : ViewModel() {
 
-    val notificationState = settingsUseCases.getNotificationState()
-    val reposeFeatures = settingsUseCases.getReposeFeatures()
-    val add40Day = settingsUseCases.getAdd40Day()
-
     val settings = settingsUseCases.getSettings()
 
     fun setNotificationState(value: Boolean) {

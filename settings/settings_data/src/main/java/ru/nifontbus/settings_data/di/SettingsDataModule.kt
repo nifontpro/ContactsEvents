@@ -15,10 +15,10 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import ru.nifontbus.settings_domain.repository.AppSettings
 import ru.nifontbus.settings_data.model.AppSettingsSerializer
 import ru.nifontbus.settings_data.repository.SettingsRepositoryImpl
 import ru.nifontbus.settings_data.service.MetadataServiceImpl
+import ru.nifontbus.settings_domain.repository.AppSettings
 import ru.nifontbus.settings_domain.repository.SettingsRepository
 import ru.nifontbus.settings_domain.service.MetadataService
 import javax.inject.Singleton
@@ -29,10 +29,8 @@ object SettingsDataModule {
     @Provides
     @Singleton
     fun provideSettingsRepository(
-        sharedPreferences: SharedPreferences,
         dataStore: DataStore<AppSettings>
     ): SettingsRepository = SettingsRepositoryImpl(
-        sharedPreferences = sharedPreferences,
         dataStore = dataStore
     )
 

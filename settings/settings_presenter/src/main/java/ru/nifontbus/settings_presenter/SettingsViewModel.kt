@@ -21,6 +21,8 @@ class SettingsViewModel @Inject constructor(
     val reposeFeatures = settingsUseCases.getReposeFeatures()
     val add40Day = settingsUseCases.getAdd40Day()
 
+    val settings = settingsUseCases.getSettings()
+
     fun setNotificationState(value: Boolean) {
         settingsUseCases.saveNotificationState(value)
         if (value) {

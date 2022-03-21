@@ -25,9 +25,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ru.nifontbus.core_ui.bigPadding
 import ru.nifontbus.core_ui.component.surfaceBrush
 import ru.nifontbus.core_ui.normalPadding
+import ru.nifontbus.settings_domain.repository.AppSettings
 
 @Composable
 fun SettingScreen(paddingValues: PaddingValues) {
+
     val viewModel: SettingsViewModel = hiltViewModel()
     var settingsState by remember {
         mutableStateOf(false)
@@ -112,6 +114,9 @@ fun SettingScreen(paddingValues: PaddingValues) {
 
 @Composable
 private fun SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
+
+    val settings = viewModel.settings.collectAsState(initial = AppSettings()).value
+
     Card(
         shape = MaterialTheme.shapes.large,
         modifier = Modifier
@@ -135,7 +140,8 @@ private fun SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = viewModel.notificationState.collectAsState().value,
+//                        checked = viewModel.notificationState.collectAsState().value,
+                        checked = settings.showNotifications,
                         colors = checkboxColors(),
                         onCheckedChange = { viewModel.setNotificationState(it) },
                     )
@@ -148,7 +154,8 @@ private fun SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = viewModel.reposeFeatures.collectAsState().value,
+//                        checked = viewModel.reposeFeatures.collectAsState().value,
+                        checked = settings.reposeFeatures,
                         colors = checkboxColors(),
                         onCheckedChange = { viewModel.setReposeFeatures(it) },
                     )
@@ -161,9 +168,10 @@ private fun SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = viewModel.add40Day.collectAsState().value,
+//                        checked = viewModel.add40Day.collectAsState().value,
+                        checked = settings.add40Day,
                         colors = checkboxColors(),
-                        enabled = viewModel.reposeFeatures.collectAsState().value,
+                        enabled = settings.reposeFeatures,
                         onCheckedChange = { viewModel.setAdd40Day(it) }
                     )
                     Text(

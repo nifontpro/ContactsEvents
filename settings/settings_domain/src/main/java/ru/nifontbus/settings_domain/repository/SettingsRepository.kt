@@ -1,9 +1,11 @@
 package ru.nifontbus.settings_domain.repository
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
-import ru.nifontbus.groups_domain.model.PersonsGroup
 
 interface SettingsRepository {
+
+    val settings: Flow<AppSettings>
 
     val showNotification: StateFlow<Boolean>
 

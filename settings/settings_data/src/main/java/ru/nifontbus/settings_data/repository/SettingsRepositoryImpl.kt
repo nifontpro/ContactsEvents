@@ -14,7 +14,7 @@ class SettingsRepositoryImpl(
     private val dataStore: DataStore<AppSettings>
 ) : SettingsRepository {
 
-    private val _settings = MutableStateFlow<AppSettings>(AppSettings())
+    private val _settings = MutableStateFlow(AppSettings())
     override val settings = _settings.asStateFlow()
 
     init {

@@ -1,8 +1,6 @@
 package ru.nifontbus.settings_data.di
 
-import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
@@ -36,15 +34,6 @@ object SettingsDataModule {
 
     @Provides
     @Singleton
-    fun provideSharedPref(app: Application): SharedPreferences {
-        return app.getSharedPreferences(
-            SHARED_PREF_NAME,
-            Context.MODE_PRIVATE
-        )
-    }
-
-    @Provides
-    @Singleton
     fun provideMetadataService(
         @ApplicationContext context: Context
     ): MetadataService = MetadataServiceImpl(context = context)
@@ -64,6 +53,4 @@ object SettingsDataModule {
         )
     }
 }
-
-const val SHARED_PREF_NAME = "Current_setting"
 private const val DATA_STORE_FILE_NAME = "settings.json"

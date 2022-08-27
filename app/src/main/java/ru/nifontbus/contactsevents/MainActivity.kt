@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -52,6 +53,7 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
+    @RequiresApi(33)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -117,6 +119,7 @@ class MainActivity : ComponentActivity() {
         } // Launch
     }
 
+    @RequiresApi(33)
     @Composable
     private fun ConfigureExtNavigate() {
         val extNavController = rememberNavController()
@@ -140,7 +143,7 @@ class MainActivity : ComponentActivity() {
                 arguments = listOf(navArgument(Argument.personId)),
             ) { entry ->
                 val returnTemplate =
-                    entry.arguments?.getParcelable<Template>(Argument.template)
+                    entry.arguments?.getParcelable(Argument.template, Template::class.java)
                 NewEventScreen(extNavController, returnTemplate)
             }
 
@@ -151,7 +154,7 @@ class MainActivity : ComponentActivity() {
                 ),
             ) { entry ->
                 val returnTemplate =
-                    entry.arguments?.getParcelable<Template>(Argument.template)
+                    entry.arguments?.getParcelable(Argument.template, Template::class.java)
                 EventUpdateScreen(extNavController, returnTemplate)
             }
 

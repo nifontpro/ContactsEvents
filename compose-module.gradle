@@ -50,6 +50,8 @@ dependencies {
     implementation Compose.activityCompose
     implementation Compose.coilCompose
 
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.26.2-beta")
+
     kapt DaggerHilt.hiltCompiler
     implementation DaggerHilt.hiltAndroid
 

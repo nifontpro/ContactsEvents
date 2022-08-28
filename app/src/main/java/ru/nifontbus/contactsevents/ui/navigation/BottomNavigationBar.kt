@@ -27,96 +27,94 @@ import ru.nifontbus.core_ui.component.BottomNavItem
 @ExperimentalMaterialApi
 @Composable
 fun BottomNavigationBar(
-    items: List<BottomNavItem>,
-    navController: NavController,
-    modifier: Modifier = Modifier,
-    onItemClick: (BottomNavItem) -> Unit
+	items: List<BottomNavItem>,
+	navController: NavController,
+	modifier: Modifier = Modifier,
+	onItemClick: (BottomNavItem) -> Unit
 ) {
-    /*   val backgroundColor = Color(
-           ColorUtils.blendARGB(MaterialTheme.colors.background.toArgb(), 0x000000, 0.2f)
-       )*/
-    val backStackEntry = navController.currentBackStackEntryAsState()
-    BottomNavigation(
-        modifier = modifier,
-        backgroundColor = MaterialTheme.colors.primaryVariant,
-        elevation = 5.dp
-    ) {
-        items.forEach { item ->
+	/*   val backgroundColor = Color(
+				 ColorUtils.blendARGB(MaterialTheme.colors.background.toArgb(), 0x000000, 0.2f)
+		 )*/
+	val backStackEntry = navController.currentBackStackEntryAsState()
+	BottomNavigation(
+		modifier = modifier,
+		backgroundColor = MaterialTheme.colors.primaryVariant,
+		elevation = 5.dp
+	) {
+		items.forEach { item ->
 
 //            Здесь recomposition не работает, т.к. это не State объект!!!
 //            val selected = item.route == navController.currentDestination?.route
 
-            val selected = item.route == backStackEntry.value?.destination?.route
+			val selected = item.route == backStackEntry.value?.destination?.route
 
-            val lineLength = animateFloatAsState(
-                targetValue = if (selected) 1f else 0f,
-                animationSpec = tween(
-                    durationMillis = 300
-                )
-            )
-            val selectedColor = MaterialTheme.colors.onSecondary
-            BottomNavigationItem(
-                selected = selected,
-                onClick = {
-                    onItemClick(item)
-                },
-                selectedContentColor = selectedColor,
-                unselectedContentColor = selectedColor.copy(alpha = 0.9f),
-                icon = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(8.dp)
-                            .drawBehind {
-                                if (lineLength.value > 0f) {
-                                    drawLine(
-                                        color = if (selected) selectedColor
-                                        else selectedColor,
-                                        start = Offset(
-                                            size.width / 2f - lineLength.value * 15.dp.toPx(),
-                                            size.height
-                                        ),
-                                        end = Offset(
-                                            size.width / 2f + lineLength.value * 15.dp.toPx(),
-                                            size.height
-                                        ),
-                                        strokeWidth = 2.dp.toPx(),
-                                        cap = StrokeCap.Round
-                                    )
-                                }
+			val lineLength = animateFloatAsState(
+				targetValue = if (selected) 1f else 0f,
+				animationSpec = tween(
+					durationMillis = 300
+				)
+			)
+			val selectedColor = MaterialTheme.colors.onSecondary
+			BottomNavigationItem(
+				selected = selected,
+				onClick = {
+					onItemClick(item)
+				},
+				selectedContentColor = selectedColor,
+				unselectedContentColor = selectedColor.copy(alpha = 0.9f),
+				icon = {
+					Box(
+						modifier = Modifier
+							.fillMaxSize()
+							.padding(8.dp)
+							.drawBehind {
+								if (lineLength.value > 0f) {
+									drawLine(
+										color = if (selected) selectedColor
+										else selectedColor,
+										start = Offset(
+											size.width / 2f - lineLength.value * 15.dp.toPx(),
+											size.height
+										),
+										end = Offset(
+											size.width / 2f + lineLength.value * 15.dp.toPx(),
+											size.height
+										),
+										strokeWidth = 2.dp.toPx(),
+										cap = StrokeCap.Round
+									)
+								}
+							}
+					) {
+						Icon(
+							imageVector = item.icon,
+							contentDescription = null,
+							modifier = Modifier
+								.align(Alignment.Center)
+						)
 
-
-                            }
-                    ) {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                        )
-
-                        if (item.badgeCount.value > 0) {
-                            /*val alertText = if (item.badgeCount.value > 999) {
-                                "999+"
-                            } else {
-                                item.badgeCount.value.toString()
-                            }*/
-                            Text(
-                                text = " ${item.badgeCount.value} ",
-                                color = MaterialTheme.colors.onPrimary,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center,
-                                fontSize = 10.sp,
-                                modifier = Modifier
-                                    .align(Alignment.TopCenter)
-                                    .offset(10.dp)
-                                    .clip(RoundedCornerShape(percent = 100))
-                                    .background(MaterialTheme.colors.secondary)
-                            )
-                        }
-                    }
-                }
-            )
-        }
-    }
+						if (item.badgeCount.value > 0) {
+							/*val alertText = if (item.badgeCount.value > 999) {
+									"999+"
+							} else {
+									item.badgeCount.value.toString()
+							}*/
+							Text(
+								text = " ${item.badgeCount.value} ",
+								color = MaterialTheme.colors.onPrimary,
+								fontWeight = FontWeight.Bold,
+								textAlign = TextAlign.Center,
+								fontSize = 10.sp,
+								modifier = Modifier
+									.align(Alignment.TopCenter)
+									.offset(10.dp)
+									.clip(RoundedCornerShape(percent = 100))
+									.background(MaterialTheme.colors.secondary)
+							)
+						}
+					}
+				}
+			)
+		}
+	}
 }

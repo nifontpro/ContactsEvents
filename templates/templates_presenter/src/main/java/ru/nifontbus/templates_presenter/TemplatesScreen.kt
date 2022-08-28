@@ -1,5 +1,6 @@
 package ru.nifontbus.templates_presenter
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.gson.Gson
 import ru.nifontbus.core_ui.Argument
 import ru.nifontbus.core_ui.component.TemplateSwipeToDismiss
 import ru.nifontbus.core_ui.component.TopBar
@@ -30,112 +32,116 @@ import ru.nifontbus.core_ui.smallPadding
 import ru.nifontbus.events_domain.model.EventType
 import ru.nifontbus.templates_domain.model.Template
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalMaterialApi
 @Composable
 fun TemplatesScreen(
-    extNavController: NavController,
+	extNavController: NavController,
+	gson: Gson,
 ) {
-    val viewModel: TemplateViewModel = hiltViewModel()
-    val scaffoldState = rememberScaffoldState()
-    val templates = viewModel.templates.value
+	val viewModel: TemplateViewModel = hiltViewModel()
+	val scaffoldState = rememberScaffoldState()
+	val templates = viewModel.templates.value
 
-    LaunchedEffect(scaffoldState) {
-        viewModel.action.collect { message ->
-            scaffoldState.snackbarHostState.showSnackbar(message)
-        }
-    }
+	LaunchedEffect(scaffoldState) {
+		viewModel.action.collect { message ->
+			scaffoldState.snackbarHostState.showSnackbar(message)
+		}
+	}
 
-    Scaffold(
-        topBar = {
-            TopBar(extNavController, stringResource(R.string.sTypeEvents))
-        },
-        /*floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate(Screen.NavNewTemplateScreen.route) },
-                backgroundColor = MaterialTheme.colors.primary
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add template")
-            }
-        },*/
-        scaffoldState = scaffoldState,
-        backgroundColor = MaterialTheme.colors.background
-    ) {
-        val context = LocalContext.current
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-        ) {
+	Scaffold(
+		topBar = {
+			TopBar(extNavController, stringResource(R.string.sTypeEvents))
+		},
+		/*floatingActionButton = {
+				FloatingActionButton(
+						onClick = { navController.navigate(Screen.NavNewTemplateScreen.route) },
+						backgroundColor = MaterialTheme.colors.primary
+				) {
+						Icon(imageVector = Icons.Default.Add, contentDescription = "Add template")
+				}
+		},*/
+		scaffoldState = scaffoldState,
+		backgroundColor = MaterialTheme.colors.background
+	) {
+		val context = LocalContext.current
+		LazyColumn(
+			modifier = Modifier
+				.fillMaxSize()
+				.padding(10.dp)
+		) {
 
-            itemsIndexed(
-                items = templates,
-                key = { _, item -> item.id }
-            ) { _, template ->
+			itemsIndexed(
+				items = templates,
+				key = { _, item -> item.id }
+			) { _, template ->
 
-                TemplateSwipeToDismiss(
-                    onDelete = {
+				TemplateSwipeToDismiss(
+					onDelete = {
 //                        viewModel.deleteTemplate(template)
-                    },
-                    enabled = false // template.type == 0,
-                ) {
-                    TemplateCard(template) {
-                        extNavController.previousBackStackEntry?.arguments?.putParcelable(
-                            Argument.template,
-                            Template(
-                                type = template.type,
-                                label = template.getDescriptionForSelect(context)
-                            )
-                        )
-                        extNavController.popBackStack()
-                    }
-                }
-            }
-        }
-    }
+					},
+					enabled = false // template.type == 0,
+				) {
+					TemplateCard(template) {
+						extNavController.previousBackStackEntry?.arguments?.putString(
+							Argument.template,
+							gson.toJson(
+								Template(
+									type = template.type,
+									label = template.getDescriptionForSelect(context)
+								)
+							)
+						)
+						extNavController.popBackStack()
+					}
+				}
+			}
+		}
+	}
 }
 
 @Composable
 private fun TemplateCard(
-    template: Template,
-    onSelect: () -> Unit = {},
+	template: Template,
+	onSelect: () -> Unit = {},
 ) {
-    Card(
-        elevation = 4.dp,
-        shape = MaterialTheme.shapes.medium,
-        modifier = Modifier
-            .padding(vertical = smallPadding)
-            .clickable { onSelect() }
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(surfaceBrush()),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                template.getDescription(LocalContext.current),
-                modifier = Modifier.padding(normalPadding),
-                style = MaterialTheme.typography.h5,
-            )
-            if (template.type == EventType.CUSTOM) {
-                Icon(
-                    imageVector = Icons.Outlined.Edit,
-                    contentDescription = "",
-                    modifier = Modifier.padding(normalPadding),
-                    tint = MaterialTheme.colors.primaryVariant
-                )
-            }
-            if (template.type == EventType.BIRTHDAY || template.type == EventType.ANNIVERSARY ||
-                template.type == EventType.OTHER
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Android,
-                    contentDescription = "",
-                    modifier = Modifier.padding(normalPadding),
-                    tint = MaterialTheme.colors.primaryVariant
-                )
-            }
-        }
-    }
+	Card(
+		elevation = 4.dp,
+		shape = MaterialTheme.shapes.medium,
+		modifier = Modifier
+			.padding(vertical = smallPadding)
+			.clickable { onSelect() }
+	) {
+		Row(
+			modifier = Modifier
+				.fillMaxSize()
+				.background(surfaceBrush()),
+			horizontalArrangement = Arrangement.SpaceBetween,
+			verticalAlignment = Alignment.CenterVertically
+		) {
+			Text(
+				template.getDescription(LocalContext.current),
+				modifier = Modifier.padding(normalPadding),
+				style = MaterialTheme.typography.h5,
+			)
+			if (template.type == EventType.CUSTOM) {
+				Icon(
+					imageVector = Icons.Outlined.Edit,
+					contentDescription = "",
+					modifier = Modifier.padding(normalPadding),
+					tint = MaterialTheme.colors.primaryVariant
+				)
+			}
+			if (template.type == EventType.BIRTHDAY || template.type == EventType.ANNIVERSARY ||
+				template.type == EventType.OTHER
+			) {
+				Icon(
+					imageVector = Icons.Outlined.Android,
+					contentDescription = "",
+					modifier = Modifier.padding(normalPadding),
+					tint = MaterialTheme.colors.primaryVariant
+				)
+			}
+		}
+	}
 }

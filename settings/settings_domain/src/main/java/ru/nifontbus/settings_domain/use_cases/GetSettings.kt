@@ -2,8 +2,8 @@ package ru.nifontbus.settings_domain.use_cases
 
 import ru.nifontbus.settings_domain.repository.SettingsRepository
 
-class GetReposeFeatures(
+class GetSettings(
     private val repository: SettingsRepository
 ) {
-    operator fun invoke() = repository.reposeFeatures
+    operator fun invoke() = repository.settings
 }

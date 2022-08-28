@@ -1,5 +1,6 @@
 package ru.nifontbus.persons_presenter.info
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -37,6 +38,7 @@ import ru.nifontbus.events_presenter.EventCard
 import ru.nifontbus.persons_domain.model.Person
 import ru.nifontbus.persons_presenter.R
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @Composable

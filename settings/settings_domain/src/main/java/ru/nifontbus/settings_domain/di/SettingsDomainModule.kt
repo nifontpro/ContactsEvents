@@ -18,12 +18,10 @@ object SettingsDomainModule {
     fun provideSettingsUseCases(
         repository: SettingsRepository,
     ) = SettingsUseCases(
-        getNotificationState = GetNotificationState(repository),
-        getReposeFeatures = GetReposeFeatures(repository),
-        getAdd40Day = GetAdd40Day(repository),
         saveNotificationState = SaveNotificationState(repository),
         saveReposeFeatures = SaveReposeFeatures(repository),
         saveAdd40Day = SaveAdd40Day(repository),
+        getSettings = GetSettings(repository)
     )
 
     @Provides

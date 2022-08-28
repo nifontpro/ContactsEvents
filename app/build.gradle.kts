@@ -67,6 +67,9 @@ dependencies {
     implementation(WorkManager.work)
     implementation(WorkManager.hiltWork)
 
+//    implementation("com.google.accompanist:accompanist-navigation-animation:0.26.2-beta")
+    implementation ("com.google.code.gson:gson:2.9.0")
+
     implementation(project(Modules.core))
     implementation(project(Modules.coreUi))
 

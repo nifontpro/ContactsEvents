@@ -28,8 +28,10 @@ import ru.nifontbus.core_ui.normalPadding
 
 @Composable
 fun SettingScreen(paddingValues: PaddingValues) {
+
     val viewModel: SettingsViewModel = hiltViewModel()
-    var settingsState by remember {
+
+    var showSettings by remember {
         mutableStateOf(false)
     }
 
@@ -39,7 +41,7 @@ fun SettingScreen(paddingValues: PaddingValues) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    settingsState = !settingsState
+                    showSettings = !showSettings
                 },
                 backgroundColor = MaterialTheme.colors.secondary
             ) {
@@ -100,7 +102,7 @@ fun SettingScreen(paddingValues: PaddingValues) {
             val iconSize = 50.dp
 
             AnimatedVisibility(
-                visible = settingsState,
+                visible = showSettings,
                 modifier = Modifier.align(Alignment.BottomStart),
             ) {
                 SettingBox(iconSize, viewModel)
@@ -112,6 +114,9 @@ fun SettingScreen(paddingValues: PaddingValues) {
 
 @Composable
 private fun SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
+
+    val settings = viewModel.settings.collectAsState().value
+
     Card(
         shape = MaterialTheme.shapes.large,
         modifier = Modifier
@@ -135,7 +140,8 @@ private fun SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = viewModel.notificationState.collectAsState().value,
+//                        checked = viewModel.notificationState.collectAsState().value,
+                        checked = settings.showNotifications,
                         colors = checkboxColors(),
                         onCheckedChange = { viewModel.setNotificationState(it) },
                     )
@@ -148,7 +154,8 @@ private fun SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = viewModel.reposeFeatures.collectAsState().value,
+//                        checked = viewModel.reposeFeatures.collectAsState().value,
+                        checked = settings.reposeFeatures,
                         colors = checkboxColors(),
                         onCheckedChange = { viewModel.setReposeFeatures(it) },
                     )
@@ -161,9 +168,10 @@ private fun SettingBox(iconSize: Dp, viewModel: SettingsViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = viewModel.add40Day.collectAsState().value,
+//                        checked = viewModel.add40Day.collectAsState().value,
+                        checked = settings.add40Day,
                         colors = checkboxColors(),
-                        enabled = viewModel.reposeFeatures.collectAsState().value,
+                        enabled = settings.reposeFeatures,
                         onCheckedChange = { viewModel.setAdd40Day(it) }
                     )
                     Text(

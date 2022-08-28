@@ -1,6 +1,7 @@
 package ru.nifontbus.events_presenter.update
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -41,226 +42,227 @@ import java.time.LocalDate
 @ExperimentalComposeUiApi
 @Composable
 fun NewEventScreen(
-    extNavController: NavHostController,
-    returnTemplate: Template?,
+	extNavController: NavHostController,
+	returnTemplate: Template?,
 ) {
-    GetPermission(
-        Manifest.permission.WRITE_CONTACTS,
-        stringResource(R.string.sWriteDenied)
-    ) {
-        NewEventScreenMain(extNavController, returnTemplate)
-    }
+	GetPermission(
+		Manifest.permission.WRITE_CONTACTS,
+		stringResource(R.string.sWriteDenied)
+	) {
+		NewEventScreenMain(extNavController, returnTemplate)
+	}
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalComposeUiApi
 @Composable
 fun NewEventScreenMain(
-    extNavController: NavHostController,
-    returnTemplate: Template?,
+	extNavController: NavHostController,
+	returnTemplate: Template?,
 ) {
-    val viewModel: EventUpdateViewModel = hiltViewModel()
-    val scaffoldState = rememberScaffoldState()
-    val person = viewModel.person.value
+	val viewModel: EventUpdateViewModel = hiltViewModel()
+	val scaffoldState = rememberScaffoldState()
+	val person = viewModel.person.value
 
-    LaunchedEffect(returnTemplate) {
-        returnTemplate?.let {
-            viewModel.setEventLabel(returnTemplate.label)
-            viewModel.eventType.value = returnTemplate.type
-        }
-    }
+	LaunchedEffect(returnTemplate) {
+		returnTemplate?.let {
+			viewModel.setEventLabel(returnTemplate.label)
+			viewModel.eventType.value = returnTemplate.type
+		}
+	}
 
-    LaunchedEffect(scaffoldState) {
-        viewModel.action.collect { message ->
-            scaffoldState.snackbarHostState.showSnackbar(message)
-        }
-    }
+	LaunchedEffect(scaffoldState) {
+		viewModel.action.collect { message ->
+			scaffoldState.snackbarHostState.showSnackbar(message)
+		}
+	}
 
-    Scaffold(scaffoldState = scaffoldState, backgroundColor = MaterialTheme.colors.background,
-        topBar = {
-            TopBar(navController = extNavController, header = stringResource(R.string.sNewEvent))
-        }
-    ) {
+	Scaffold(scaffoldState = scaffoldState, backgroundColor = MaterialTheme.colors.background,
+		topBar = {
+			TopBar(navController = extNavController, header = stringResource(R.string.sNewEvent))
+		}
+	) {
 
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+		BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
 
-            Icon(
-                imageVector = Icons.Outlined.NotificationAdd, contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bigPadding)
-                    .size(maxHeight / 2),
-                tint = MaterialTheme.colors.secondary.copy(alpha = 0.2f)
-            )
+			Icon(
+				imageVector = Icons.Outlined.NotificationAdd, contentDescription = null,
+				modifier = Modifier
+					.align(Alignment.BottomCenter)
+					.padding(bigPadding)
+					.size(maxHeight / 2),
+				tint = MaterialTheme.colors.secondary.copy(alpha = 0.2f)
+			)
 
-            Column(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(horizontal = normalPadding)
-                    .fillMaxWidth()
-                    .background(Color.Transparent)
-            ) {
+			Column(
+				modifier = Modifier
+					.align(Alignment.TopStart)
+					.padding(horizontal = normalPadding)
+					.fillMaxWidth()
+					.background(Color.Transparent)
+			) {
 
-                val sYouCanCreateEvent = stringResource(R.string.sYouCanCreateEvent)
-                Text(
-                    buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = MaterialTheme.colors.onBackground)) {
-                            append(sYouCanCreateEvent)
-                        }
-                        withStyle(style = SpanStyle(color = MaterialTheme.colors.primaryVariant)) {
-                            append(person.displayName)
-                        }
-                    },
-                    modifier = Modifier.padding(normalPadding),
-                    style = MaterialTheme.typography.h5
-                )
+				val sYouCanCreateEvent = stringResource(R.string.sYouCanCreateEvent)
+				Text(
+					buildAnnotatedString {
+						withStyle(style = SpanStyle(color = MaterialTheme.colors.onBackground)) {
+							append(sYouCanCreateEvent)
+						}
+						withStyle(style = SpanStyle(color = MaterialTheme.colors.primaryVariant)) {
+							append(person.displayName)
+						}
+					},
+					modifier = Modifier.padding(normalPadding),
+					style = MaterialTheme.typography.h5
+				)
 
 
-                Card(
-                    shape = MaterialTheme.shapes.large,
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = 8.dp
-                ) {
+				Card(
+					shape = MaterialTheme.shapes.large,
+					modifier = Modifier.fillMaxWidth(),
+					elevation = 8.dp
+				) {
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(surfaceBrush())
-                    ) {
+					Box(
+						modifier = Modifier
+							.fillMaxWidth()
+							.background(surfaceBrush())
+					) {
 
-                        Column(
-                            verticalArrangement = Arrangement.SpaceBetween,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bigPadding)
-                        ) {
+						Column(
+							verticalArrangement = Arrangement.SpaceBetween,
+							horizontalAlignment = Alignment.CenterHorizontally,
+							modifier = Modifier
+								.fillMaxWidth()
+								.padding(bigPadding)
+						) {
 
-                            val edMod = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = normalPadding)
-                                .clip(MaterialTheme.shapes.small)
+							val edMod = Modifier
+								.fillMaxWidth()
+								.padding(bottom = normalPadding)
+								.clip(MaterialTheme.shapes.small)
 
-                            val keyboardController = LocalSoftwareKeyboardController.current
+							val keyboardController = LocalSoftwareKeyboardController.current
 
-                            OutlinedTextField(
-                                value = viewModel.eventLabel.value,
-                                enabled = viewModel.isEnabledEdit(),
-                                onValueChange = {
-                                    viewModel.setEventLabel(it)
-                                },
-                                modifier = edMod,
-                                singleLine = true,
-                                placeholder = { Text(stringResource(R.string.sEventLabel)) },
-                                colors = textFieldColors(),
-                                trailingIcon = {
-                                    IconButton(onClick = {
-                                        extNavController.navigate(Screen.ExtTemplatesScreen.route)
-                                    }) {
-                                        Icon(imageVector = Icons.Default.ReadMore, null)
-                                    }
-                                },
-                            )
+							OutlinedTextField(
+								value = viewModel.eventLabel.value,
+								enabled = viewModel.isEnabledEdit(),
+								onValueChange = {
+									viewModel.setEventLabel(it)
+								},
+								modifier = edMod,
+								singleLine = true,
+								placeholder = { Text(stringResource(R.string.sEventLabel)) },
+								colors = textFieldColors(),
+								trailingIcon = {
+									IconButton(onClick = {
+										extNavController.navigate(Screen.ExtTemplatesScreen.route)
+									}) {
+										Icon(imageVector = Icons.Default.ReadMore, null)
+									}
+								},
+							)
 
-                            SelectDate(viewModel.date, viewModel.isNoYear)
+							SelectDate(viewModel.date, viewModel.isNoYear)
 
-                            Button(
-                                onClick = {
-                                    keyboardController?.hide()
-                                    viewModel.addEvent()
-                                }, modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(55.dp),
-                                enabled = viewModel.isEnabledSave(),
-                                colors = buttonColors()
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.sCreateEvent),
-                                    style = MaterialTheme.typography.body1,
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+							Button(
+								onClick = {
+									keyboardController?.hide()
+									viewModel.addEvent()
+								}, modifier = Modifier
+									.fillMaxWidth()
+									.height(55.dp),
+								enabled = viewModel.isEnabledSave(),
+								colors = buttonColors()
+							) {
+								Text(
+									text = stringResource(R.string.sCreateEvent),
+									style = MaterialTheme.typography.body1,
+								)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 @Composable
 fun SelectDate(
-    stateDate: MutableState<String>,
-    isNoYear: MutableState<Boolean> = remember { mutableStateOf(false) }
+	stateDate: MutableState<String>,
+	isNoYear: MutableState<Boolean> = remember { mutableStateOf(false) }
 ) {
 
-    val context = LocalContext.current
-    val localDate = if (stateDate.value.isNotEmpty()) stateDate.value.toLocalDate()
-    else LocalDate.now()
+	val context = LocalContext.current
+	val localDate = if (stateDate.value.isNotEmpty()) stateDate.value.toLocalDate()
+	else LocalDate.now()
 
-    val datePickerDialog = DatePickerDialog(
-        context,
-        { _, year, month, day ->
-            val date = LocalDate.of(year, month + 1, day)
-            stateDate.value = date.toString()
-        }, localDate.year, localDate.monthValue - 1, localDate.dayOfMonth
-    )
+	val datePickerDialog = DatePickerDialog(
+		context,
+		{ _, year, month, day ->
+			val date = LocalDate.of(year, month + 1, day)
+			stateDate.value = date.toString()
+		}, localDate.year, localDate.monthValue - 1, localDate.dayOfMonth
+	)
 
-    Column {
-        Button(
-            onClick = {
-                datePickerDialog.show()
-            }, modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp)
-                .height(55.dp),
-            colors = buttonColors()
+	Column {
+		Button(
+			onClick = {
+				datePickerDialog.show()
+			}, modifier = Modifier
+				.fillMaxWidth()
+				.padding(top = 10.dp)
+				.height(55.dp),
+			colors = buttonColors()
 
-        ) {
-            val sDate = stringResource(R.string.sDate)
-            val txt = if (stateDate.value.isNotEmpty()) {
-                if (!isNoYear.value) "$sDate ${stateDate.value.getLocalizedDate()}"
-                else "$sDate ${stateDate.value.toShortDate().getLocalizedDate()}"
-            } else stringResource(R.string.sSelectDate)
-            Text(
-                text = txt,
-                color = MaterialTheme.colors.onSecondary,
-                style = MaterialTheme.typography.body1,
-            )
-        }
+		) {
+			val sDate = stringResource(R.string.sDate)
+			val txt = if (stateDate.value.isNotEmpty()) {
+				if (!isNoYear.value) "$sDate ${stateDate.value.getLocalizedDate()}"
+				else "$sDate ${stateDate.value.toShortDate().getLocalizedDate()}"
+			} else stringResource(R.string.sSelectDate)
+			Text(
+				text = txt,
+				color = MaterialTheme.colors.onSecondary,
+				style = MaterialTheme.typography.body1,
+			)
+		}
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = isNoYear.value,
-                colors = CheckboxDefaults.colors(
-                    checkedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-                ),
-                onCheckedChange = { isNoYear.value = it },
-            )
-            Text(stringResource(R.string.sWithoutYear))
-        }
+		Row(
+			verticalAlignment = Alignment.CenterVertically
+		) {
+			Checkbox(
+				checked = isNoYear.value,
+				colors = CheckboxDefaults.colors(
+					checkedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+				),
+				onCheckedChange = { isNoYear.value = it },
+			)
+			Text(stringResource(R.string.sWithoutYear))
+		}
 
-    }
+	}
 }
 
 @Composable
 fun textFieldColors() = TextFieldDefaults.textFieldColors(
-    textColor = MaterialTheme.colors.onBackground,
-    backgroundColor = MaterialTheme.colors.surface,
-    cursorColor = MaterialTheme.colors.secondary,
-    focusedIndicatorColor = MaterialTheme.colors.secondary,
-    unfocusedIndicatorColor = MaterialTheme.colors.onSurface,
-    placeholderColor = MaterialTheme.colors.onSurface,
-    leadingIconColor = MaterialTheme.colors.onSurface,
-    trailingIconColor = MaterialTheme.colors.onSurface,
+	textColor = MaterialTheme.colors.onBackground,
+	backgroundColor = MaterialTheme.colors.surface,
+	cursorColor = MaterialTheme.colors.secondary,
+	focusedIndicatorColor = MaterialTheme.colors.secondary,
+	unfocusedIndicatorColor = MaterialTheme.colors.onSurface,
+	placeholderColor = MaterialTheme.colors.onSurface,
+	leadingIconColor = MaterialTheme.colors.onSurface,
+	trailingIconColor = MaterialTheme.colors.onSurface,
 )
 
 @Composable
 fun buttonColors() =
-    ButtonDefaults.buttonColors(
-        backgroundColor = MaterialTheme.colors.secondary,
-        contentColor = MaterialTheme.colors.onSecondary,
-        disabledBackgroundColor = MaterialTheme.colors.background.copy(alpha = 0.5f),
-        disabledContentColor = MaterialTheme.colors.onSurface
-            .copy(alpha = ContentAlpha.disabled)
-    )
+	ButtonDefaults.buttonColors(
+		backgroundColor = MaterialTheme.colors.secondary,
+		contentColor = MaterialTheme.colors.onSecondary,
+		disabledBackgroundColor = MaterialTheme.colors.background.copy(alpha = 0.5f),
+		disabledContentColor = MaterialTheme.colors.onSurface
+			.copy(alpha = ContentAlpha.disabled)
+	)

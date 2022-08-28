@@ -38,157 +38,159 @@ import ru.nifontbus.templates_domain.model.Template
 @ExperimentalComposeUiApi
 @Composable
 fun EventUpdateScreen(
-    extNavController: NavHostController,
-    returnTemplate: Template?
+	extNavController: NavHostController,
+	returnTemplate: Template?
 ) {
-    GetPermission(
-        Manifest.permission.WRITE_CONTACTS,
-        stringResource(R.string.sWriteDenied)
-    ) {
-        EventUpdateScreenMain(extNavController, returnTemplate)
-    }
+	GetPermission(
+		Manifest.permission.WRITE_CONTACTS,
+		stringResource(R.string.sWriteDenied)
+	) {
+		EventUpdateScreenMain(extNavController, returnTemplate)
+	}
 }
 
 @ExperimentalComposeUiApi
 @Composable
 fun EventUpdateScreenMain(
-    extNavController: NavHostController,
-    returnTemplate: Template?
+	extNavController: NavHostController,
+	returnTemplate: Template?
 ) {
-    val viewModel: EventUpdateViewModel = hiltViewModel()
-    val scaffoldState = rememberScaffoldState()
-    val person = viewModel.person.value
+	val viewModel: EventUpdateViewModel = hiltViewModel()
+	val scaffoldState = rememberScaffoldState()
+	val person = viewModel.person.value
 
-    LaunchedEffect(returnTemplate) {
-        returnTemplate?.let {
-            viewModel.setEventLabel(returnTemplate.label)
-            viewModel.eventType.value = returnTemplate.type
-        }
-    }
+	LaunchedEffect(returnTemplate) {
+		returnTemplate?.let {
+			viewModel.setEventLabel(returnTemplate.label)
+			viewModel.eventType.value = returnTemplate.type
+		}
+	}
 
-    val context = LocalContext.current
-    LaunchedEffect(viewModel.eventType.value) {
-        viewModel.setEventLabel(
-            Event.getTypeLabel(
-                type = viewModel.eventType.value,
-                label = viewModel.eventLabel.value,
-                context = context
-            )
-        )
-    }
+	val context = LocalContext.current
+	LaunchedEffect(viewModel.eventType.value) {
+		viewModel.setEventLabel(
+			Event.getTypeLabel(
+				type = viewModel.eventType.value,
+				label = viewModel.eventLabel.value,
+				context = context
+			)
+		)
+	}
 
-    LaunchedEffect(scaffoldState) {
-        viewModel.action.collect { message ->
-            scaffoldState.snackbarHostState.showSnackbar(message)
-        }
-    }
+	LaunchedEffect(scaffoldState) {
+		viewModel.action.collect { message ->
+			scaffoldState.snackbarHostState.showSnackbar(message)
+		}
+	}
 
-    Scaffold(scaffoldState = scaffoldState, backgroundColor = MaterialTheme.colors.background,
-        topBar = {
-            TopBar(navController = extNavController, header = stringResource(R.string.sUpdateEvent))
-        }
-    ) {
+	Scaffold(scaffoldState = scaffoldState, backgroundColor = MaterialTheme.colors.background,
+		topBar = {
+			TopBar(navController = extNavController, header = stringResource(R.string.sUpdateEvent))
+		}
+	) {
 
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+		BoxWithConstraints(modifier = Modifier
+			.fillMaxSize()
+			.padding(it)) {
 
-            Icon(
-                imageVector = Icons.Outlined.EditNotifications, contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bigPadding)
-                    .size(maxHeight / 2),
-                tint = MaterialTheme.colors.secondary.copy(alpha = 0.2f)
-            )
+			Icon(
+				imageVector = Icons.Outlined.EditNotifications, contentDescription = null,
+				modifier = Modifier
+					.align(Alignment.BottomCenter)
+					.padding(bigPadding)
+					.size(maxHeight / 2),
+				tint = MaterialTheme.colors.secondary.copy(alpha = 0.2f)
+			)
 
-            Column(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(horizontal = normalPadding)
-                    .fillMaxWidth()
-                    .background(Color.Transparent)
-            ) {
+			Column(
+				modifier = Modifier
+					.align(Alignment.TopStart)
+					.padding(horizontal = normalPadding)
+					.fillMaxWidth()
+					.background(Color.Transparent)
+			) {
 
-                val youCanUpdateEvent = stringResource(R.string.sYouCanUpdateEvent)
-                Text(
-                    buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = MaterialTheme.colors.onBackground)) {
-                            append(youCanUpdateEvent)
-                        }
-                        withStyle(style = SpanStyle(color = MaterialTheme.colors.primaryVariant)) {
-                            append(person.displayName)
-                        }
-                    },
-                    modifier = Modifier.padding(normalPadding),
-                    style = MaterialTheme.typography.h5
-                )
+				val youCanUpdateEvent = stringResource(R.string.sYouCanUpdateEvent)
+				Text(
+					buildAnnotatedString {
+						withStyle(style = SpanStyle(color = MaterialTheme.colors.onBackground)) {
+							append(youCanUpdateEvent)
+						}
+						withStyle(style = SpanStyle(color = MaterialTheme.colors.primaryVariant)) {
+							append(person.displayName)
+						}
+					},
+					modifier = Modifier.padding(normalPadding),
+					style = MaterialTheme.typography.h5
+				)
 
-                Card(
-                    shape = MaterialTheme.shapes.large,
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = 8.dp
-                ) {
+				Card(
+					shape = MaterialTheme.shapes.large,
+					modifier = Modifier.fillMaxWidth(),
+					elevation = 8.dp
+				) {
 
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(surfaceBrush())
-                ) {
+				}
+				Box(
+					modifier = Modifier
+						.fillMaxWidth()
+						.background(surfaceBrush())
+				) {
 
-                    Column(
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bigPadding)
-                    ) {
+					Column(
+						verticalArrangement = Arrangement.SpaceBetween,
+						horizontalAlignment = Alignment.CenterHorizontally,
+						modifier = Modifier
+							.fillMaxWidth()
+							.padding(bigPadding)
+					) {
 
-                        val edMod = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = normalPadding)
-                            .clip(MaterialTheme.shapes.small)
+						val edMod = Modifier
+							.fillMaxWidth()
+							.padding(bottom = normalPadding)
+							.clip(MaterialTheme.shapes.small)
 
-                        val keyboardController = LocalSoftwareKeyboardController.current
+						val keyboardController = LocalSoftwareKeyboardController.current
 
-                        OutlinedTextField(
-                            value = viewModel.eventLabel.value,
-                            enabled = viewModel.isEnabledEdit(),
-                            onValueChange = {
-                                viewModel.setEventLabel(it)
-                            },
-                            modifier = edMod,
-                            singleLine = true,
-                            placeholder = { Text(stringResource(R.string.sEventLabel)) },
-                            colors = textFieldColors(),
-                            trailingIcon = {
-                                IconButton(onClick = {
-                                    extNavController.navigate(Screen.ExtTemplatesScreen.route)
-                                }) {
-                                    Icon(imageVector = Icons.Default.ReadMore, null)
-                                }
-                            },
-                        )
+						OutlinedTextField(
+							value = viewModel.eventLabel.value,
+							enabled = viewModel.isEnabledEdit(),
+							onValueChange = {
+								viewModel.setEventLabel(it)
+							},
+							modifier = edMod,
+							singleLine = true,
+							placeholder = { Text(stringResource(R.string.sEventLabel)) },
+							colors = textFieldColors(),
+							trailingIcon = {
+								IconButton(onClick = {
+									extNavController.navigate(Screen.ExtTemplatesScreen.route)
+								}) {
+									Icon(imageVector = Icons.Default.ReadMore, null)
+								}
+							},
+						)
 
-                        SelectDate(viewModel.date, viewModel.isNoYear)
+						SelectDate(viewModel.date, viewModel.isNoYear)
 
-                        Button(
-                            onClick = {
-                                keyboardController?.hide()
-                                viewModel.updateEvent()
-                            }, modifier = Modifier
-                                .fillMaxWidth()
-                                .height(55.dp),
-                            enabled = viewModel.isEnabledUpdate(),
-                            colors = buttonColors()
-                        ) {
-                            Text(
-                                text= stringResource(R.string.sUpdateEvent),
-                                style = MaterialTheme.typography.body1,
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
+						Button(
+							onClick = {
+								keyboardController?.hide()
+								viewModel.updateEvent()
+							}, modifier = Modifier
+								.fillMaxWidth()
+								.height(55.dp),
+							enabled = viewModel.isEnabledUpdate(),
+							colors = buttonColors()
+						) {
+							Text(
+								text = stringResource(R.string.sUpdateEvent),
+								style = MaterialTheme.typography.body1,
+							)
+						}
+					}
+				}
+			}
+		}
+	}
 }

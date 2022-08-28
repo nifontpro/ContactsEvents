@@ -29,11 +29,13 @@ class GetSortedEvents(
     operator fun invoke(): Flow<List<Event>> = flow {
 
         repository.events.collect {
-            val events = (if (settingsRepo.reposeFeatures.value && settingsRepo.add40Day.value) {
+            val events = (if (settingsRepo.settings.value.reposeFeatures &&
+                settingsRepo.settings.value.add40Day) {
                 add40Day(it)
             } else it).filter { event ->
-                settingsRepo.reposeFeatures.value ||
-                        (!settingsRepo.reposeFeatures.value && event.type != EventType.NEW_LIFE_DAY)
+                settingsRepo.settings.value.reposeFeatures ||
+                        (!settingsRepo.settings.value.reposeFeatures &&
+                                event.type != EventType.NEW_LIFE_DAY)
             }
             val now = LocalDate.now().asString().toMonthAndDay()
             coroutineScope {

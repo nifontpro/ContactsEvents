@@ -1,5 +1,6 @@
 package ru.nifontbus.groups_data.di
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import dagger.Module
@@ -22,4 +23,14 @@ object GroupsDataModule {
         sharedPreferences: SharedPreferences
     ): GroupsRepository = GroupsRepositoryImpl(context, sharedPreferences)
 
+    @Provides
+    @Singleton
+    fun provideSharedPref(app: Application): SharedPreferences {
+        return app.getSharedPreferences(
+            SHARED_PREF_NAME,
+            Context.MODE_PRIVATE
+        )
+    }
 }
+
+private const val SHARED_PREF_NAME = "Current_setting"

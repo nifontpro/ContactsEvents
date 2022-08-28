@@ -8,5 +8,5 @@ class GetTemplates(
     private val repository: TemplatesRepository,
     private val settingsRepository: SettingsRepository
 ) {
-    operator fun invoke() = repository.getTemplates(settingsRepository.reposeFeatures.value)
+    operator fun invoke() = repository.getTemplates(settingsRepository.settings.value.reposeFeatures)
 }

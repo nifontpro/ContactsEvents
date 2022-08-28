@@ -26,124 +26,124 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EventUpdateViewModel @Inject constructor(
-    private val eventsUseCases: EventsUseCases,
-    private val personsUseCases: PersonsUseCases,
-    private val metadataUseCases: MetadataUseCases,
-    savedStateHandle: SavedStateHandle
+	private val eventsUseCases: EventsUseCases,
+	private val personsUseCases: PersonsUseCases,
+	private val metadataUseCases: MetadataUseCases,
+	savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _person = mutableStateOf(Person())
-    val person: State<Person> = _person
+	private val _person = mutableStateOf(Person())
+	val person: State<Person> = _person
 
-    private val _oldEvent = mutableStateOf(Event())
-    private val oldEvent: State<Event> = _oldEvent
+	private val _oldEvent = mutableStateOf(Event())
+	private val oldEvent: State<Event> = _oldEvent
 
-    private val _eventLabel = mutableStateOf("")
-    val eventLabel: State<String> = _eventLabel
+	private val _eventLabel = mutableStateOf("")
+	val eventLabel: State<String> = _eventLabel
 
-    val eventType = mutableStateOf(EventType.CUSTOM)
+	val eventType = mutableStateOf(EventType.CUSTOM)
 
-    val date = mutableStateOf("")
+	val date = mutableStateOf("")
 
-    val isNoYear = mutableStateOf(false)
+	val isNoYear = mutableStateOf(false)
 
-    private val _action = MutableSharedFlow<String>()
-    val action: SharedFlow<String> = _action.asSharedFlow()
+	private val _action = MutableSharedFlow<String>()
+	val action: SharedFlow<String> = _action.asSharedFlow()
 
-    init {
-        savedStateHandle.get<Long>(Argument.personId)?.let { it ->
-            personsUseCases.getPersonById(it)?.let { findPerson ->
-                _person.value = findPerson
-            }
-        }
+	init {
+		savedStateHandle.get<Long>(Argument.personId)?.let { it ->
+			personsUseCases.getPersonById(it)?.let { findPerson ->
+				_person.value = findPerson
+			}
+		}
 
-        savedStateHandle.get<Long>(Argument.eventId)?.let { it ->
-            eventsUseCases.getEventById(it)?.let { findEvent ->
-                _oldEvent.value = findEvent
-                _eventLabel.value = findEvent.label
-                eventType.value = findEvent.type
+		savedStateHandle.get<Long>(Argument.eventId)?.let { it ->
+			eventsUseCases.getEventById(it)?.let { findEvent ->
+				_oldEvent.value = findEvent
+				_eventLabel.value = findEvent.label
+				eventType.value = findEvent.type
 
-                if (!findEvent.date.isShortDate()) {
-                    date.value = findEvent.date
-                    isNoYear.value = false
-                } else {
-                    val now = LocalDate.now()
-                    val year = now.year
-                    date.value = "$year-${findEvent.date.toMonthAndDay()}"
-                    isNoYear.value = true
-                }
-            }
-        }
-    }
+				if (!findEvent.date.isShortDate()) {
+					date.value = findEvent.date
+					isNoYear.value = false
+				} else {
+					val now = LocalDate.now()
+					val year = now.year
+					date.value = "$year-${findEvent.date.toMonthAndDay()}"
+					isNoYear.value = true
+				}
+			}
+		}
+	}
 
-    fun addEvent() = viewModelScope.launch {
-        metadataUseCases.resetSyncTime()
-        when (val result =
-            eventsUseCases.addEvent(
-                Event(
-                    label = eventLabel.value,
-                    date = getRealDate(),
-                    type = eventType.value,
-                    personId = person.value.id,
-                    lookup = person.value.lookup,
-                    displayName = person.value.displayName
-                )
-            )) {
-            is Resource.Success -> {
-                _eventLabel.value = ""
-                eventType.value = EventType.CUSTOM
-                sendMessage(result.message)
-            }
-            is Resource.Error -> sendMessage(result.message)
-        }
-    }
+	fun addEvent() = viewModelScope.launch {
+		metadataUseCases.resetSyncTime()
+		when (val result =
+			eventsUseCases.addEvent(
+				Event(
+					label = eventLabel.value,
+					date = getRealDate(),
+					type = eventType.value,
+					personId = person.value.id,
+					lookup = person.value.lookup,
+					displayName = person.value.displayName
+				)
+			)) {
+			is Resource.Success -> {
+				_eventLabel.value = ""
+				eventType.value = EventType.CUSTOM
+				sendMessage(result.message)
+			}
+			is Resource.Error -> sendMessage(result.message)
+		}
+	}
 
-    fun updateEvent() = viewModelScope.launch {
-        metadataUseCases.resetSyncTime()
-        val newEvent =
-            Event(
-                label = eventLabel.value,
-                date = getRealDate(),
-                type = eventType.value,
-                personId = person.value.id,
-                id = oldEvent.value.id,
-                lookup = person.value.lookup,
-                displayName = person.value.displayName
-            )
-        when (val result =
-            eventsUseCases.updateEvent(newEvent, oldEvent.value)
-        ) {
-            is Resource.Success -> {
-                sendMessage(result.message)
-                _oldEvent.value = newEvent
-            }
-            is Resource.Error -> sendMessage(result.message)
-        }
-    }
+	fun updateEvent() = viewModelScope.launch {
+		metadataUseCases.resetSyncTime()
+		val newEvent =
+			Event(
+				label = eventLabel.value,
+				date = getRealDate(),
+				type = eventType.value,
+				personId = person.value.id,
+				id = oldEvent.value.id,
+				lookup = person.value.lookup,
+				displayName = person.value.displayName
+			)
+		when (val result =
+			eventsUseCases.updateEvent(newEvent, oldEvent.value)
+		) {
+			is Resource.Success -> {
+				sendMessage(result.message)
+				_oldEvent.value = newEvent
+			}
+			is Resource.Error -> sendMessage(result.message)
+		}
+	}
 
-    private fun getRealDate() = if (isNoYear.value) date.value.toShortDate() else date.value
+	private fun getRealDate() = if (isNoYear.value) date.value.toShortDate() else date.value
 
-    private suspend fun sendMessage(msg: String) {
-        _action.emit(msg)
-    }
+	private suspend fun sendMessage(msg: String) {
+		_action.emit(msg)
+	}
 
-    fun setEventLabel(name: String) {
-        _eventLabel.value = name
-    }
+	fun setEventLabel(name: String) {
+		_eventLabel.value = name
+	}
 
-    fun isEnabledSave(): Boolean = eventLabel.value.isNotEmpty() && date.value.isNotEmpty()
+	fun isEnabledSave(): Boolean = eventLabel.value.isNotEmpty() && date.value.isNotEmpty()
 
-    fun isEnabledEdit(): Boolean = eventType.value == EventType.CUSTOM
+	fun isEnabledEdit(): Boolean = eventType.value == EventType.CUSTOM
 
-    fun isEnabledUpdate(): Boolean = eventLabel.value.isNotEmpty() && date.value.isNotEmpty() &&
+	fun isEnabledUpdate(): Boolean = eventLabel.value.isNotEmpty() && date.value.isNotEmpty() &&
 
-            (oldEvent.value.type == EventType.CUSTOM &&
-                    !(oldEvent.value.label == eventLabel.value &&
-                            oldEvent.value.type == eventType.value &&
-                            oldEvent.value.date == getRealDate()) ||
+			(oldEvent.value.type == EventType.CUSTOM &&
+					!(oldEvent.value.label == eventLabel.value &&
+							oldEvent.value.type == eventType.value &&
+							oldEvent.value.date == getRealDate()) ||
 
-                    oldEvent.value.type != EventType.CUSTOM &&
-                    !(oldEvent.value.type == eventType.value &&
-                            oldEvent.value.date == getRealDate())
-                    )
+					oldEvent.value.type != EventType.CUSTOM &&
+					!(oldEvent.value.type == eventType.value &&
+							oldEvent.value.date == getRealDate())
+					)
 }

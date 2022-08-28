@@ -17,9 +17,7 @@ data class Template(
     fun getDescription(context: Context) =
         when (type) {
             EventType.CUSTOM -> {
-                if (label.isEmpty())
-                    context.getString(ContactsContract.CommonDataKinds.Event.getTypeResource(type))
-                else label
+                label.ifEmpty { context.getString(ContactsContract.CommonDataKinds.Event.getTypeResource(type)) }
             }
             EventType.NEW_LIFE_DAY -> context.getString(R.string.sNewLifeDay)
             else -> context.getString(ContactsContract.CommonDataKinds.Event.getTypeResource(type))
@@ -28,8 +26,7 @@ data class Template(
     fun getDescriptionForSelect(context: Context) =
         when (type) {
             EventType.CUSTOM -> {
-                if (label.isEmpty()) ""
-                else label
+                label.ifEmpty { "" }
             }
             EventType.NEW_LIFE_DAY -> context.getString(R.string.sNewLifeDay)
             else -> context.getString(ContactsContract.CommonDataKinds.Event.getTypeResource(type))
